@@ -1,0 +1,97 @@
+/* Campo de pesquisa unificado */
+.campo-pesquisa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    margin-bottom: 40px;
+  }
+  
+  /* Input */
+  .campo-pesquisa input {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid var(--senary-color);
+    border-radius: 18px;
+    font-size: 16px;
+    outline: none;
+    color: var(--primary-color);
+    transition: border-color 0.3s;
+  }
+  
+  .campo-pesquisa input::placeholder {
+    color: #555;
+  }
+  
+  .campo-pesquisa input:focus {
+    border-color: #007bff;
+  }
+  
+  /* Botões: lupa e filtro */
+  .botao-lupa,
+  .botao-filtro {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+  }
+  
+  .botao-lupa:hover,
+  .botao-filtro:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Ícones */
+  .lupa,
+  .icone-filtro {
+    width: 20px;
+    height: 20px;
+  }
+  .painel-filtros-popup {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 6px;
+    min-width: 250px;
+    max-width: 100%;
+  }
+  
+  /* Filtros */
+  .filtro-grupo {
+    margin-bottom: 12px;
+  }
+  
+  .filtro-grupo strong {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .filtro-grupo label {
+    display: block;
+    font-size: 14px;
+    color: #444;
+    margin-left: 8px;
+    margin-bottom: 4px;
+    cursor: pointer;
+  }
+  
+  .filtro-grupo input[type="radio"],
+  .filtro-grupo input[type="checkbox"] {
+    margin-right: 6px;
+  }
+  

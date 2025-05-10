@@ -1,0 +1,161 @@
+:root {
+  --primary-color: #752512;
+  --secondary-color: #A73A21;
+  --tertiary-color: #C65338;
+  --quaternary-color: #FEAA80;
+  --quinary-color: #FDBC9B;
+  --senary-color: #FFEBE1;
+  --septenary-color-vibrant: #ee5e3a;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  padding: 20px;
+  background-color: #FFEBE1;
+  border-radius: 200px 200px 0px 0px;
+  margin: 50px 10px 10px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  margin: 50px 150px 0 150px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.chat-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: var(--senary-color);
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: var(--quaternary-color);
+  border-radius: 4px;
+}
+
+.message-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 70%;
+  margin:0 10%;
+}
+
+.message-container.user {
+  flex-direction: row-reverse;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 40px;
+  padding: 1% 2.5%;
+}
+
+
+
+.message.user {
+  background-color: var(--quinary-color);
+  color: var(--primary-color);
+  align-self: flex-end;
+}
+
+.message.ia {
+  background-color: var(--quaternary-color);
+  color: var(--primary-color);
+  align-self: flex-start;
+}
+
+.message-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+.produtos-sugeridos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-content:center;
+  justify-content:center;
+}
+
+.imagens-produtos-sugeridos{
+  display: inline-flex;
+  margin: 0 14%;
+}
+
+.veja-mais {
+  text-align: right;
+  align-content: end;
+  margin: 9px 5% 0 1%;
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.produto-card {
+  border: 1px solid var(--quinary-color);
+  border-radius: 10px;
+  padding: 10px;
+  width: 150px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.produto-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.veja-mais {
+  display: inline;
+  margin-top: 10px;
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+  margin: 5px 15%;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid var(--quinary-color);
+  font-size: 16px;
+}
+.chat-input input:focus {
+  border-color: var(--tertiary-color); /* Ou qualquer cor que você preferir */
+  outline: none; /* Opcional: remove o contorno padrão ao focar no input */
+}
+
+.chat-input button {
+  padding: 10px 20px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.chat-input button:hover {
+  background-color: var(--tertiary-color);
+}

@@ -1,11 +1,19 @@
-//Programa inteiro, pronto para a realização de uma única renderização
+import React from 'react';
+import { createRoot } from 'react-dom/client'; // Importe createRoot
+import App from './App';
+import { CarrinhoProvider } from './context/CarrinhoContext'; 
+import axios from 'axios';
 
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
+// Crie a raiz do aplicativo
+const container = document.getElementById('root');
+const root = createRoot(container);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+
+// Renderize o aplicativo
+root.render(
 	<React.StrictMode>
-		<App />
+		<CarrinhoProvider>
+			<App />
+		</CarrinhoProvider>
 	</React.StrictMode>
-)
+);

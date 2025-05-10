@@ -1,0 +1,168 @@
+.meus-produtos-container {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Filtros de Status */
+.status-filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+}
+
+.status-filtros button {
+  padding: 8px 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  position: relative;
+}
+
+.status-filtros button.ativo {
+  color: #000;
+  font-weight: bold;
+}
+
+.status-filtros button.ativo::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #A73A21;
+}
+
+/* Card de Produto */
+.produto-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.produto-info h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.produto-info .autor {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.produto-info .quantidade {
+  font-size: 14px;
+  color: #333;
+}
+
+.produto-valores {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+  margin: 10px 0;
+}
+
+.produto-valores p {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+
+.produto-valores .subtotal {
+  font-size: 14px;
+  color: #666;
+}
+
+.produto-valores .total {
+  font-weight: bold;
+  color: #333;
+}
+
+
+.produto-card-meus-produtos .card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  width: 100%; /* Ajuste conforme necessário */
+  display: flex; /* Muda para flex container */
+  align-items: center; /* Alinha os itens verticalmente ao centro */
+  gap: 16px; /* Espaço entre a imagem e o conteúdo */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.produto-card-meus-produtos .card-image {
+  width: 80px; /* Largura fixa para a imagem */
+  height: 120px; /* Altura fixa para manter proporção */
+  object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+  border-radius: 4px;
+}
+
+.produto-card-meus-produtos .card-content {
+  flex: 1; /* Faz o conteúdo ocupar o espaço restante */
+  text-align: left; /* Alinha o texto à esquerda */
+}
+
+.produto-card-meus-produtos .card-nome {
+  align-items:start;
+  justify-content:start;
+  font-size: 18px;
+  margin: 0 0 8px 0; /* Ajuste das margens */
+}
+
+.produto-card-meus-produtos .card-preco {
+  font-size: 16px;
+  color: #888;
+  margin: 0;
+}
+
+/* Ajuste para o container de cards */
+.produto-card-meus-produtos .cards-container {
+  margin-left: 10px;
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* Muda para coluna para empilhar os cards verticalmente */
+  gap: 20px;
+  height: auto; /* Remove altura fixa */
+}
+
+
+.detalhes-btn {
+  align-self: flex-end;
+  padding: 8px 20px;
+  background-color: #fff;
+  border: 1px solid #A73A21;
+  color: #A73A21;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.detalhes-btn:hover {
+  background-color: #A73A21;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .status-filtros {
+    flex-wrap: wrap;
+  }
+
+  .status-filtros button {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
