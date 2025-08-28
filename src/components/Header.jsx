@@ -19,7 +19,7 @@ const Header = () => {
   return (
     <header className="header">
       <h1><Link to="/">MARTHE</Link></h1>
-      <Nav BotaoComponent={BotaoComponent} tipoUsuario={user?.tipoUsuario} logout={logout} />
+      <Nav BotaoComponent={BotaoComponent} user={user} logout={logout} />
     </header>
   );
 };

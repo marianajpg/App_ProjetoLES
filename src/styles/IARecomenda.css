@@ -11,22 +11,23 @@
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 80vh; /* Manter altura para o chat */
+  max-width: 900px; /* Limitar largura em telas grandes */
+  margin: 50px auto 10px auto; /* Centralizar e ajustar margens */
   padding: 20px;
-  background-color: #FFEBE1;
-  border-radius: 200px 200px 0px 0px;
-  margin: 50px 10px 10px 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--senary-color); /* Usar variável de cor */
+  border-radius: 15px; /* Arredondamento mais sutil */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada */
 }
 
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  margin: 50px 150px 0 150px;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  min-height: 0; /* Garante que o flex item possa encolher */
 }
 
 
@@ -47,8 +48,11 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  max-width: 70%;
-  margin:0 10%;
+  max-width: 80%;
+  margin: 0;
+  position: relative; /* Adicionar para posicionamento absoluto dos ícones */
+  padding-left: 55px; /* Espaço para o ícone da IA */
+  padding-right: 55px; /* Espaço para o ícone do usuário */
 }
 
 .message-container.user {
@@ -58,10 +62,9 @@
 .message {
   display: flex;
   flex-direction: column;
-  max-width: 70%;
-  padding: 10px;
-  border-radius: 40px;
-  padding: 1% 2.5%;
+  max-width: 100%; /* Permitir que a bolha ocupe a largura total do container */
+  padding: 12px 18px; /* Ajustar padding */
+  border-radius: 20px; /* Arredondamento mais suave */
 }
 
 
@@ -82,19 +85,32 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
+  position: absolute; /* Posicionamento absoluto */
+  top: 0; /* Alinhar ao topo da mensagem */
+}
+
+.message-container.ia .message-icon {
+  left: 0; /* Ícone da IA à esquerda */
+}
+
+.message-container.user .message-icon {
+  right: 0; /* Ícone do usuário à direita */
 }
 
 .produtos-sugeridos {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-content:center;
-  justify-content:center;
+  flex-wrap: wrap; /* Permitir que os cards quebrem a linha */
+  gap: 15px; /* Aumentar o espaçamento entre os cards */
+  justify-content: center; /* Centralizar os cards */
+  margin-top: 10px; /* Adicionar margem superior */
 }
 
 .imagens-produtos-sugeridos{
-  display: inline-flex;
-  margin: 0 14%;
+  display: flex; /* Usar flex para melhor controle */
+  flex-wrap: wrap; /* Permitir que os cards quebrem a linha */
+  justify-content: center; /* Centralizar os cards */
+  gap: 15px; /* Espaçamento entre os cards */
+  margin: 0; /* Remover margens fixas */
 }
 
 .veja-mais {
@@ -110,9 +126,16 @@
   border: 1px solid var(--quinary-color);
   border-radius: 10px;
   padding: 10px;
-  width: 150px;
+  width: 160px; /* Aumentar um pouco a largura */
+  flex-shrink: 0; /* Evitar que o card encolha */
   cursor: pointer;
   background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Adicionar uma sombra sutil */
+  transition: transform 0.2s ease-in-out;
+}
+
+.produto-card:hover {
+  transform: translateY(-3px); /* Efeito de hover */
 }
 
 .produto-card img {
@@ -131,7 +154,7 @@
 .chat-input {
   display: flex;
   gap: 10px;
-  margin: 5px 15%;
+  margin: 20px 0 0 0; /* Ajustar margem para melhor espaçamento */
 }
 
 .chat-input input {
@@ -151,11 +174,15 @@
   background-color: var(--secondary-color);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px; /* Mais arredondado */
   font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .chat-input button:hover {
   background-color: var(--tertiary-color);
 }
+
+
+

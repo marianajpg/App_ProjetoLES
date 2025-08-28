@@ -18,7 +18,9 @@
 }
 
 .carrinho-container h1{
-  font-weight: normal;
+    color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .carrinho-cabecalho {
@@ -65,6 +67,7 @@
 .carrinho-detalhes-produto h3 {
   margin: 0;
   font-size: 16px;
+  font-weight: normal;
 }
 
 .carrinho-detalhes-produto p {

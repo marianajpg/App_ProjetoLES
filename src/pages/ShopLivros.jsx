@@ -4,8 +4,68 @@ import Header from '../components/Header';
 import Breadcrumb from '../components/Breadcrumb';
 import FiltrosLivro from '../components/FiltrosLivro';
 import ProdutoCard from '../components/ProdutoCard';
-import '../styles/ShopCamisetas.css';
+import '../styles/ShopLivros.css';
 import CampoPesquisa from '../components/CampoPesquisa';
+import InfoSection from '../components/InfoSection.jsx';
+
+// --- DADOS MOCKADOS ---
+const mockLivros = [
+  {
+    id: 1,
+    titulo: 'A Vida Secreta das Árvores',
+    autor: { nome: 'Peter Wohlleben' },
+    editora: { nome: 'Sextante' },
+    ano: 2016,
+    valorVenda: 48.99,
+    categorias: [{ nome: 'Não-ficção' }, { nome: 'Ciência' }],
+    imagens: [{ url: 'https://m.media-amazon.com/images/I/414U616yzqL._SY445_SX342_.jpg' }],
+    estoque: [{ quantidade: 15 }]
+  },
+  {
+    id: 2,
+    titulo: 'O Homem Mais Rico da Babilônia',
+    autor: { nome: 'George S. Clason' },
+    editora: { nome: 'HarperCollins' },
+    ano: 2017,
+    valorVenda: 25.99,
+    categorias: [{ nome: 'Finanças' }, { nome: 'Desenvolvimento Pessoal' }],
+    imagens: [{ url: 'https://m.media-amazon.com/images/I/41Xc4wyyMIL._SY445_SX342_.jpg' }],
+    estoque: [{ quantidade: 30 }]
+  },
+  {
+    id: 3,
+    titulo: 'Pai Rico, Pai Pobre',
+    autor: { nome: 'Robert T. Kiyosaki' },
+    editora: { nome: 'Alta Books' },
+    ano: 2018,
+    valorVenda: 35.50,
+    categorias: [{ nome: 'Finanças' }, { nome: 'Desenvolvimento Pessoal' }],
+    imagens: [{ url: 'https://m.media-amazon.com/images/I/51UjO3YMafL._SY445_SX342_.jpg' }],
+    estoque: [{ quantidade: 25 }]
+  },
+  {
+    id: 4,
+    titulo: 'Sapiens: Uma Breve História da Humanidade',
+    autor: { nome: 'Yuval Noah Harari' },
+    editora: { nome: 'L&PM' },
+    ano: 2015,
+    valorVenda: 69.90,
+    categorias: [{ nome: 'História' }, { nome: 'Antropologia' }],
+    imagens: [{ url: 'https://m.media-amazon.com/images/I/41FU42ESk5L._SY445_SX342_.jpg' }],
+    estoque: [{ quantidade: 10 }]
+  },
+  {
+    id: 5,
+    titulo: '1984',
+    autor: { nome: 'George Orwell' },
+    editora: { nome: 'Companhia das Letras' },
+    ano: 2009,
+    valorVenda: 22.80,
+    categorias: [{ nome: 'Ficção' }, { nome: 'Distopia' }],
+    imagens: [{ url: 'https://m.media-amazon.com/images/I/51VXYaKO-sL._SY445_SX342_.jpg' }],
+    estoque: [{ quantidade: 50 }]
+  }
+];
 
 const ShopLivros = () => {
   const breadcrumbItems = [
@@ -14,7 +74,6 @@ const ShopLivros = () => {
   ];
 
   const [termoPesquisa, setTermoPesquisa] = useState('');
-
   const [filtros, setFiltros] = useState({
     autores: [],
     editoras: [],
@@ -31,39 +90,11 @@ const ShopLivros = () => {
     { label: 'R$100–R$150', min: 100, max: 150 },
   ];
 
-  const [livros, setLivros] = useState([]);
+  // Inicializa o estado com os dados mockados
+  const [livros, setLivros] = useState(mockLivros);
 
-  useEffect(() => {
-    const buscarLivros = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/livros');
-        const livrosData = await response.json();
+  // A lógica de busca foi removida, pois os dados são locais.
 
-        // Para cada livro, buscar as imagens
-        const livrosComImagens = await Promise.all(
-          livrosData.map(async (livro) => {
-            try {
-              const imagensResponse = await fetch(`http://localhost:3001/imagemlivro/por-livro/${livro.id}`);
-              const imagensData = await imagensResponse.json();
-              return { ...livro, imagens: imagensData };
-            } catch (error) {
-              console.error(`Erro ao buscar imagens do livro ID ${livro.id}`, error);
-              return { ...livro, imagens: [] };
-            }
-          })
-        );
-
-        setLivros(livrosComImagens);
-      } catch (error) {
-        console.error('Erro ao buscar livros', error);
-      }
-    };
-
-    buscarLivros();
-  }, []);
-
-
-  const termo = termoPesquisa.toLowerCase();
   const filtrarLivros = () => {
     let filtrados = livros.filter((livro) => {
       const termo = termoPesquisa.toLowerCase();
@@ -108,9 +139,7 @@ const ShopLivros = () => {
     return filtrados;
   };
   
-
   const livrosFiltrados = filtrarLivros();
-  
 
   return (
     <div>
@@ -135,7 +164,7 @@ const ShopLivros = () => {
               titulo={livro.titulo}
               autor={livro.autor?.nome ?? 'Autor desconhecido'}
               preco={livro.valorVenda}
-              estoque={livro.estoque.length}
+              estoque={livro.estoque?.reduce((total, item) => total + item.quantidade, 0) ?? 0}
               imagens={livro.imagens ?? []}
               editora={livro.editora?.nome ?? 'Editora desconhecida'}
               extra={null}
@@ -143,6 +172,7 @@ const ShopLivros = () => {
           ))}
         </div>
       </div>
+      <InfoSection />
     </div>
   );
 };

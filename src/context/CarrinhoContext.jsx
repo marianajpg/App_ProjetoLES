@@ -4,45 +4,43 @@ const CarrinhoContext = createContext();
 
 export const CarrinhoProvider = ({ children }) => {
   const [itens, setItens] = useState(() => {
-    const carrinhoSalvo = localStorage.getItem('carrinho');
-    return carrinhoSalvo ? JSON.parse(carrinhoSalvo) : [];
+    if (typeof window !== 'undefined') {
+      const carrinhoSalvo = localStorage.getItem('carrinho');
+      return carrinhoSalvo ? JSON.parse(carrinhoSalvo) : [];
+    }
+    return [];
   });
 
+  // Sincroniza localStorage sempre que itens mudam
   useEffect(() => {
     localStorage.setItem('carrinho', JSON.stringify(itens));
   }, [itens]);
 
-  
   const adicionarAoCarrinho = (livro) => {
-    // Validação dos dados obrigatórios
-    if (!livro.id || !livro.titulo || livro.preco === undefined) {
-      console.error("Dados incompletos para adicionar ao carrinho:", livro);
-      
-      return;
-    }
+    setItens(prevItens => {
+      const itemExistente = prevItens.find((item) => item.id === livro.id);
 
-    const itemExistente = itens.find((item) => item.id === livro.id);
-
-    if (itemExistente) {
-      const novosItens = itens.map((item) =>
-        item.id === livro.id
-          ? { ...item, quantidade: item.quantidade + (livro.quantidade || 1) }
-          : item
-      );
-      setItens(novosItens);
-    } else {
-      setItens([...itens, {
-        id: livro.id,
-        titulo: livro.titulo,
-        autor: livro.autor || 'Não informado',
-        capaUrl: livro.capaUrl || livro.imageUrl || '',
-        preco: livro.preco, // Garantimos que só usamos preco
-        quantidade: livro.quantidade || 1,
-        editora: livro.editora || 'Não informada'
-      }]);
-    }
+      if (itemExistente) {
+        return prevItens.map((item) =>
+          item.id === livro.id
+            ? { ...item, quantidade: item.quantidade + (livro.quantidade || 1) }
+            : item
+        );
+      } else {
+        return [...prevItens, {
+          id: livro.id,
+          titulo: livro.titulo,
+          autor: livro.autor || 'Não informado',
+          capaUrl: livro.capaUrl || livro.imageUrl || '',
+          valorVenda: livro.preco || livro.valorVenda,
+          quantidade: livro.quantidade || 1,
+          editora: livro.editora || 'Não informada'
+        }];
+      }
+    });
   };
 
+  
   const removerDoCarrinho = (id) => {
     const novosItens = itens.filter((item) => item.id !== id);
     setItens(novosItens);

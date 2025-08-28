@@ -1,4 +1,14 @@
-/* Campo de pesquisa unificado */
+:root {
+  --primary-color: #752512;
+  --secondary-color: #A73A21;
+  --tertiary-color: #C65338;
+  --quaternary-color: #FEAA80;
+  --quinary-color: #FDBC9B;
+  --senary-color: #FFEBE1;
+  --septenary-color-vibrant: #ee5e3a;
+}
+
+
 .campo-pesquisa {
     display: flex;
     justify-content: center;
@@ -25,17 +35,17 @@
   }
   
   .campo-pesquisa input:focus {
-    border-color: #007bff;
+    border-color: var(--primary-color);
   }
   
   /* Botões: lupa e filtro */
   .botao-lupa,
   .botao-filtro {
-    background: none;
+    background: none !important;
     border: none;
     cursor: pointer;
     padding: 6px;
-    border-radius: 50%;
+    border-radius: 40% !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,14 +54,15 @@
   
   .botao-lupa:hover,
   .botao-filtro:hover {
-    background-color: #f0f0f0;
+    background-color: #FFEBE1 !important;
   }
   
   /* Ícones */
   .lupa,
   .icone-filtro {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
   }
   .painel-filtros-popup {
     position: absolute;
@@ -95,3 +106,63 @@
     margin-right: 6px;
   }
   
+
+  /* Estilos para os checkboxes */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+}
+
+.checkbox-custom {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-right: 8px;
+  position: relative;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+  background-color: var(--tertiary-color);
+  border-color: var(--tertiary-color);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Estilo para o cabeçalho dos filtros */
+.filtro-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.botao-limpar {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 5px;
+}
+
+.botao-limpar:hover {
+  color: var(--tertiary-color);
+  text-decoration: underline;
+}

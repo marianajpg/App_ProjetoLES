@@ -1,6 +1,6 @@
 .meus-produtos-container {
   font-family: Arial, sans-serif;
-  max-width: 800px;
+  width: 800px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -9,9 +9,12 @@
 .status-filtros {
   display: flex;
   gap: 10px;
+  justify-content: center;
   margin-bottom: 30px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 15px;
+  flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+  position: relative; /* Para posicionar o indicador */
 }
 
 .status-filtros button {
@@ -29,118 +32,81 @@
   font-weight: bold;
 }
 
-.status-filtros button.ativo::after {
-  content: '';
+/* Indicador deslizante */
+.status-indicator {
   position: absolute;
-  bottom: -16px;
-  left: 0;
-  width: 100%;
+  bottom: -16px; /* Ajuste para alinhar com a linha */
   height: 2px;
   background-color: #A73A21;
+  transition: width 0.3s ease, left 0.3s ease; /* Transição suave */
 }
 
-/* Card de Produto */
-.produto-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
+/* Estilos para o container dos cards de produto */
+.produto-card-meus-produtos {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
-.produto-info h3 {
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-.produto-info .autor {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-.produto-info .quantidade {
-  font-size: 14px;
-  color: #333;
-}
-
-.produto-valores {
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
-  margin: 10px 0;
-}
-
-.produto-valores p {
-  display: flex;
-  justify-content: space-between;
-  margin: 5px 0;
-}
-
-.produto-valores .subtotal {
-  font-size: 14px;
-  color: #666;
-}
-
-.produto-valores .total {
-  font-weight: bold;
-  color: #333;
-}
-
-
+/* Estilo individual do Card */
 .produto-card-meus-produtos .card {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
-  width: 100%; /* Ajuste conforme necessário */
-  display: flex; /* Muda para flex container */
-  align-items: center; /* Alinha os itens verticalmente ao centro */
-  gap: 16px; /* Espaço entre a imagem e o conteúdo */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
 }
 
 .produto-card-meus-produtos .card-image {
-  width: 80px; /* Largura fixa para a imagem */
-  height: 120px; /* Altura fixa para manter proporção */
-  object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
   border-radius: 4px;
+  flex-shrink: 0; /* Impede que a imagem encolha */
 }
 
-.produto-card-meus-produtos .card-content {
-  flex: 1; /* Faz o conteúdo ocupar o espaço restante */
-  text-align: left; /* Alinha o texto à esquerda */
+.produto-card-meus-produtos .card-info {
+  flex: 1; /* Ocupa o espaço restante */
+  display: flex;
+  flex-direction: column; /* Empilha o conteúdo de texto e o rodapé */
+  justify-content: space-between; /* Espaça o conteúdo e o rodapé */
+  text-align: left;
 }
 
-.produto-card-meus-produtos .card-nome {
-  align-items:start;
-  justify-content:start;
-  font-size: 18px;
-  margin: 0 0 8px 0; /* Ajuste das margens */
+.produto-card-meus-produtos .card-text-content {
+  margin-bottom: 10px; /* Espaço entre o texto e o rodapé */
 }
 
-.produto-card-meus-produtos .card-preco {
+.produto-card-meus-produtos .card-title {
   font-size: 16px;
-  color: #888;
+  font-weight: bold;
+  margin: 0 0 4px 0;
+}
+
+.produto-card-meus-produtos .card-author {
+  font-size: 14px;
+  color: #666;
   margin: 0;
 }
 
-/* Ajuste para o container de cards */
-.produto-card-meus-produtos .cards-container {
-  margin-left: 10px;
-  padding: 20px;
-  flex: 1;
+.produto-card-meus-produtos .card-footer {
   display: flex;
-  flex-direction: column; /* Muda para coluna para empilhar os cards verticalmente */
-  gap: 20px;
-  height: auto; /* Remove altura fixa */
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; /* Empurra o rodapé para o fundo */
 }
 
+.produto-card-meus-produtos .card-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
 
 .detalhes-btn {
-  align-self: flex-end;
   padding: 8px 20px;
   background-color: #fff;
   border: 1px solid #A73A21;
@@ -158,11 +124,22 @@
 
 @media (max-width: 768px) {
   .status-filtros {
-    flex-wrap: wrap;
+    justify-content: center;
   }
+}
 
-  .status-filtros button {
-    padding: 6px 10px;
-    font-size: 13px;
-  }
+.no-pedidos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 50px 0;
+  color: #666;
+}
+
+.no-pedidos-img {
+  width: 330px;
+  height: auto;
+  margin-bottom: 20px;
 }

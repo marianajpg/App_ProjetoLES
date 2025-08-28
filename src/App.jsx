@@ -10,11 +10,13 @@ import CadastroCliente from './pages/CadastroCliente.jsx';
 import ConsultaClientes from './pages/colaborador/ConsultaClientes.jsx';
 import EditarCliente from './pages/colaborador/EditarCliente.jsx';
 import ConsultaLivros from './pages/colaborador/ConsultaLivros.jsx';
+import ConsultaPedidos from './pages/colaborador/ConsultaPedidos.jsx';
 import TelaProduto from './pages/TelaProduto.jsx';
 import Perfil from './pages/Perfil.jsx';
 import Carrinho from './pages/Carrinho.jsx';
 import Pagamento from './pages/Pagamento.jsx';
 import TransacoesCliente from './pages/colaborador/TransacoesCliente.jsx';
+import Unauthorized from './pages/Unauthorized.jsx';
 import './App.css';
 
 function App() {
@@ -29,7 +31,7 @@ function App() {
             <Route path="/ia-recomenda" element={<IaRecomenda />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro-cliente" element={<CadastroCliente />} />
-            <Route path="/unauthorized" element={<Navigate to="/login" replace />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Rotas protegidas */}
             <Route
@@ -53,6 +55,14 @@ function App() {
               element={
                 <RotaProtegida requiredUserType="colaborador">
                   <ConsultaLivros />
+                </RotaProtegida>
+              }
+            />
+            <Route
+              path="/consultar-pedidos"
+              element={
+                <RotaProtegida requiredUserType="colaborador">
+                  <ConsultaPedidos />
                 </RotaProtegida>
               }
             />

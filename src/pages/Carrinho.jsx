@@ -5,6 +5,7 @@ import { useCarrinho } from '../context/CarrinhoContext';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
+import InfoSection from '../components/InfoSection.jsx';
 
 import '../styles/Carrinho.css'
 
@@ -18,8 +19,8 @@ const Carrinho = () => {
   ];
 
   const subtotal = itens.reduce((total, item) => {
-    const preco = item.preco || 0;
-    return total + (preco * (item.quantidade || 1));
+    const valorVenda = item.valorVenda || 0;
+    return total + (valorVenda * (item.quantidade || 1));
   }, 0);
 
   return (
@@ -40,7 +41,7 @@ const Carrinho = () => {
         {/* Lista de itens */}
         {itens.length > 0 ? (
           itens.map((item) => {
-            const preco = item.preco || 0;
+            const valorVenda = item.valorVenda || 0;
             const quantidade = item.quantidade || 1;
             console.log("Itens no carrinho:", itens);
             return (
@@ -53,7 +54,7 @@ const Carrinho = () => {
                   />
                   <div className="carrinho-detalhes-produto">
                     <h3>{item.titulo || item.nome}</h3>
-                    <p>Autor: {item.autor || 'Não informado'}</p>
+                    <p>{item.autor || 'Não informado'}</p>
                     <button
                       onClick={() => removerDoCarrinho(item.id)}
                       className="carrinho-remover"
@@ -63,7 +64,7 @@ const Carrinho = () => {
                   </div>
                 </div>
                 <div className="carrinho-coluna-preco">
-                  <p>R${preco.toFixed(2)}</p>
+                  <p>R${typeof parseFloat(valorVenda) === 'number' ? parseFloat(valorVenda).toFixed(2) : '0,00'}</p>
                 </div>
                 <div className="carrinho-coluna-quantidade">
                   <input
@@ -75,7 +76,7 @@ const Carrinho = () => {
                   />
                 </div>
                 <div className="carrinho-coluna-total">
-                  <p>R${(preco * quantidade).toFixed(2)}</p>
+                  <p>R${(valorVenda * quantidade).toFixed(2)}</p>
                 </div>
               </div>
             );
@@ -100,6 +101,7 @@ const Carrinho = () => {
           </Link>
         </div>
       </div>
+    <InfoSection />
     </div>
   );
 };

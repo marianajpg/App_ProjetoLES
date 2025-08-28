@@ -1,92 +1,136 @@
-import React, { useState } from 'react';
-import ProdutoCard from './ProdutoCard'; // Importa o componente
+import React, { useState, useEffect, useRef } from 'react';
+import ProdutoCard from './ProdutoCard';
+import ModalPedido from './ModalPedido';
 import '../styles/MeusProdutos.css';
 
 const MeusProdutos = () => {
   const [statusAtivo, setStatusAtivo] = useState('Em processamento');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPedido, setSelectedPedido] = useState(null);
+  const [indicatorStyle, setIndicatorStyle] = useState({});
+  const buttonsRef = useRef({});
 
-  // Simulação de um produto (você pode futuramente usar uma lista de produtos)
-  const produtoExemplo = {
-    id: 1,
-    capaUrl: 'https://m.media-amazon.com/images/I/414U616yzqL._SY445_SX342_.jpg',
-    titulo: 'A Vida Secreta das Árvores',
-    autor: 'Peter Wohlleben',
-    preco: 48.99,
-    estoque: 10,
-    imagens: [
-      'https://m.media-amazon.com/images/I/414U616yzqL._SY445_SX342_.jpg',
-     
-    ],
-    editora: 'Editora Sextante',
+  const todosOsPedidos = [
+    {
+      id: '1',
+      status: 'Em processamento',
+      dataEntrega: '20/08/2024',
+      capaUrl: 'https://m.media-amazon.com/images/I/414U616yzqL._SY445_SX342_.jpg',
+      titulo: 'A Vida Secreta das Árvores',
+      autor: 'Peter Wohlleben',
+      preco: 48.99,
+      quantidade: 1,
+      subTotal: 48.99,
+      frete: 5.00,
+      total: 53.99,
+    },
+    {
+      id: '2',
+      status: 'Em trânsito',
+      dataEntrega: '22/08/2024',
+      capaUrl: 'https://m.media-amazon.com/images/I/41Xc4wyyMIL._SY445_SX342_.jpg',
+      titulo: 'O Homem Mais Rico da Babilônia',
+      autor: 'George S. Clason',
+      preco: 25.99,
+      quantidade: 1,
+      subTotal: 25.99,
+      frete: 5.00,
+      total: 30.99,
+    },
+    {
+      id: '3',
+      status: 'Entregue',
+      dataEntrega: '15/08/2024',
+      capaUrl: 'https://m.media-amazon.com/images/I/41897yAI4LL._SY445_SX342_.jpg',
+      titulo: 'Pai Rico, Pai Pobre',
+      autor: 'Robert T. Kiyosaki',
+      preco: 35.50,
+      quantidade: 1,
+      subTotal: 35.50,
+      frete: 5.00,
+      total: 40.50,
+    },
+     {
+      id: '4',
+      status: 'Devoluções/Trocas',
+      dataEntrega: '15/08/2024',
+      capaUrl: 'https://m.media-amazon.com/images/I/41897yAI4LL._SY445_SX342_.jpg',
+      titulo: 'Pai Rico, Pai Pobre',
+      autor: 'Robert T. Kiyosaki',
+      preco: 35.50,
+      quantidade: 1,
+      subTotal: 35.50,
+      frete: 0.00,
+      total: 35.50,
+    }
+  ];
+
+  useEffect(() => {
+    const activeBtn = buttonsRef.current[statusAtivo];
+    if (activeBtn) {
+      setIndicatorStyle({
+        width: activeBtn.offsetWidth,
+        left: activeBtn.offsetLeft,
+      });
+    }
+  }, [statusAtivo]);
+
+  const handleOpenModal = (pedido) => {
+    setSelectedPedido(pedido);
+    setIsModalOpen(true);
   };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPedido(null);
+  };
+
+  const pedidosFiltrados = todosOsPedidos.filter(p => p.status === statusAtivo);
+
+  const statusOptions = [
+    'Em processamento',
+    'Em trânsito',
+    'Entregue',
+    'Devoluções/Trocas',
+    'Cancelado',
+  ];
 
   return (
     <div className="meus-produtos-container">
-      {/* Filtros de Status */}
       <div className="status-filtros">
-        <button 
-          className={statusAtivo === 'Em processamento' ? 'ativo' : ''}
-          onClick={() => setStatusAtivo('Em processamento')}
-        >
-          Em processamento
-        </button>
-        <button 
-          className={statusAtivo === 'Em trânsito' ? 'ativo' : ''}
-          onClick={() => setStatusAtivo('Em trânsito')}
-        >
-          Em trânsito
-        </button>
-        <button 
-          className={statusAtivo === 'Entregue' ? 'ativo' : ''}
-          onClick={() => setStatusAtivo('Entregue')}
-        >
-          Entregue
-        </button>
-        <button 
-          className={statusAtivo === 'Devoluções/Trocas' ? 'ativo' : ''}
-          onClick={() => setStatusAtivo('Devoluções/Trocas')}
-        >
-          Devoluções/Trocas
-        </button>
+        {statusOptions.map((status) => (
+          <button
+            key={status}
+            ref={(el) => (buttonsRef.current[status] = el)}
+            className={statusAtivo === status ? 'ativo' : ''}
+            onClick={() => setStatusAtivo(status)}
+          >
+            {status}
+          </button>
+        ))}
+        <div className="status-indicator" style={indicatorStyle}></div>
       </div>
 
-      {/* ProdutoCard com props */}
       <div className='produto-card-meus-produtos'>
-      <ProdutoCard 
-        id={produtoExemplo.id}
-        capaUrl={produtoExemplo.capaUrl}
-        titulo={produtoExemplo.titulo}
-        autor={produtoExemplo.autor}
-        preco={produtoExemplo.preco}
-        estoque={produtoExemplo.estoque}
-        imagens={produtoExemplo.imagens}
-        editora={produtoExemplo.editora}
-        extra={
-          <button className="detalhes-btn" onClick={() => navigate('/tela-produto', {
-            state: { livro: produtoExemplo }
-          })}>
-            Ver detalhes
-          </button>
-        }
-      />
-      <ProdutoCard 
-        id={produtoExemplo.id}
-        capaUrl={produtoExemplo.capaUrl}
-        titulo={produtoExemplo.titulo}
-        autor={produtoExemplo.autor}
-        preco={produtoExemplo.preco}
-        estoque={produtoExemplo.estoque}
-        imagens={produtoExemplo.imagens}
-        editora={produtoExemplo.editora}
-        extra={
-          <button className="detalhes-btn" onClick={() => navigate('/tela-produto', {
-            state: { livro: produtoExemplo }
-          })}>
-            Ver detalhes
-          </button>
-        }
-      />
+        {pedidosFiltrados.length > 0 ? (
+          pedidosFiltrados.map(pedido => (
+            <ProdutoCard 
+              key={pedido.id}
+              {...pedido}
+              onVerDetalhes={() => handleOpenModal(pedido)}
+            />
+          ))
+        ) : (
+          <div className="no-pedidos">
+            <img src="/src/images/image-nenhumProduto.png" alt="Nenhum pedido encontrado" className="no-pedidos-img" />
+            <p>Nenhum pedido encontrado nesta categoria.</p>
+          </div>
+        )}
       </div>
+
+      {isModalOpen && (
+        <ModalPedido pedido={selectedPedido} onClose={handleCloseModal} />
+      )}
     </div>
   );
 };

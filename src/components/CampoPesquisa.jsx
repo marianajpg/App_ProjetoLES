@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import lupa from '../images/image10.png';
-import filtroIcone from '../images/filtro.png'; // ícone para o botão de filtros
-import '../styles/CampoPesquisa.css'; 
+import filtroIcone from '../images/image 18.png';
+import '../styles/CampoPesquisa.css';
 
 const CampoPesquisa = ({
   termoPesquisa,
   setTermoPesquisa,
-  filtros = [], // Array de filtros: { id, titulo, tipo, opcoes }
+  filtros = [],
   valoresFiltro = {},
   setValoresFiltro = () => {},
 }) => {
@@ -15,21 +15,34 @@ const CampoPesquisa = ({
 
   const toggleFiltros = () => setMostrarFiltros((prev) => !prev);
 
-  const handleFiltroChange = (filtroId, valor) => {
-    setValoresFiltro((prev) => ({
-      ...prev,
-      [filtroId]: valor,
-    }));
+  // Função para lidar com mudanças nos checkboxes
+  const handleCheckboxChange = (filtroId, valor) => {
+    setValoresFiltro((prev) => {
+      const currentValues = prev[filtroId] || [];
+      
+      // Se o valor já está selecionado, remove-o
+      if (currentValues.includes(valor)) {
+        return {
+          ...prev,
+          [filtroId]: currentValues.filter(v => v !== valor)
+        };
+      }
+      // Caso contrário, adiciona o valor
+      else {
+        return {
+          ...prev,
+          [filtroId]: [...currentValues, valor]
+        };
+      }
+    });
   };
 
-  const handleCheckboxChange = (filtroId, valor) => {
-    const atual = new Set(valoresFiltro[filtroId] || []);
-    if (atual.has(valor)) {
-      atual.delete(valor);
-    } else {
-      atual.add(valor);
-    }
-    handleFiltroChange(filtroId, Array.from(atual));
+  // Função para limpar todos os filtros de um grupo específico
+  const limparFiltros = (filtroId) => {
+    setValoresFiltro((prev) => ({
+      ...prev,
+      [filtroId]: []
+    }));
   };
 
   return (
@@ -40,11 +53,12 @@ const CampoPesquisa = ({
         value={termoPesquisa}
         onChange={(e) => setTermoPesquisa(e.target.value)}
       />
+      
       {filtros.length > 0 && (
-      <button className="botao-filtro" onClick={toggleFiltros}>
-        <img src={filtroIcone} alt="Filtros" className="icone-filtro" />
-      </button>
-)}
+        <button className="botao-filtro" onClick={toggleFiltros}>
+          <img src={filtroIcone} alt="Filtros" className="icone-filtro" />
+        </button>
+      )}
 
       <button className="botao-lupa">
         <img src={lupa} alt="Pesquisar" className="lupa" />
@@ -52,39 +66,34 @@ const CampoPesquisa = ({
 
       {mostrarFiltros && filtros.length > 0 && (
         <Draggable>
-        <div className="painel-filtros-popup draggable-box">
-          {filtros.map((filtro) => (
-            <div key={filtro.id} className="filtro-grupo">
-              <strong>{filtro.titulo}</strong>
-              {filtro.tipo === 'radio' &&
-                filtro.opcoes.map((op) => (
-                  <label key={op.id}>
-                    <input
-                      type="radio"
-                      name={filtro.id}
-                      value={op.id}
-                      checked={valoresFiltro[filtro.id] === op.id}
-                      onChange={() => handleFiltroChange(filtro.id, op.id)}
-                    />
-                    {op.label}
-                  </label>
-                ))}
-
-              {filtro.tipo === 'checkbox' &&
-                filtro.opcoes.map((op) => (
-                  <label key={op.id}>
+          <div className="painel-filtros-popup draggable-box">
+            {filtros.map((filtro) => (
+              <div key={filtro.id} className="filtro-grupo">
+                <div className="filtro-cabecalho">
+                  <strong>{filtro.titulo}</strong>
+                  <button 
+                    className="botao-limpar"
+                    onClick={() => limparFiltros(filtro.id)}
+                  >
+                    Limpar
+                  </button>
+                </div>
+                
+                {filtro.opcoes.map((op) => (
+                  <label key={op.id} className="checkbox-label">
                     <input
                       type="checkbox"
-                      value={op.id}
                       checked={(valoresFiltro[filtro.id] || []).includes(op.id)}
                       onChange={() => handleCheckboxChange(filtro.id, op.id)}
                     />
+                    <span className="checkbox-custom"></span>
                     {op.label}
                   </label>
                 ))}
-            </div>
-          ))}
-        </div></Draggable>
+              </div>
+            ))}
+          </div>
+        </Draggable>
       )}
     </div>
   );

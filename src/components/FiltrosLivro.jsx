@@ -51,7 +51,7 @@ const FiltrosLivro = ({ onFiltroChange }) => {
 
   return (
     <div className="filtros-container">
-      <h2 className="filtros-titulo">Filtros</h2>
+
 
       <fieldset className="filtro-fieldset">
         <legend className="filtro-legend">Autor</legend>

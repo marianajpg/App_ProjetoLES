@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
+import InfoSection from '../components/InfoSection.jsx';
 import '../styles/Pagamento.css';
-import visaImg from '../images/img-visa.png';
-import mastercardImg from '../images/img-mastercard.png';
-import eloImg from '../images/img-elo.png';
-import amexImg from '../images/img-amex.png';
 
 const Pagamento = () => {
   const location = useLocation();
@@ -50,6 +47,7 @@ const Pagamento = () => {
   const [pagamentoMultiplo, setPagamentoMultiplo] = useState(false);
   const [pagamentos, setPagamentos] = useState([]);
   const [cartaoSelecionado, setCartaoSelecionado] = useState(null);
+  const [valorPagar, setValorPagar] = useState({});
   const [salvarCartao, setSalvarCartao] = useState(false);
 
   const handleAdicionarEndereco = () => {
@@ -119,7 +117,7 @@ const Pagamento = () => {
       <Header />
       <Breadcrumb items={[{ label: 'Home', link: '/' }, { label: 'Carrinho', link: '/carrinho' }, { label: 'Pagamento', link: '' }]} />
       <div className="pagamento-container">
-        <h1>Pagamento</h1>
+        <h1>PAGAMENTO</h1>
 
         <div className="pagamento-layout">
           {/* Coluna da Esquerda: Formulário de Contato e Pagamento */}
@@ -270,7 +268,8 @@ const Pagamento = () => {
                         <input
                           type="number"
                           placeholder="Valor a pagar"
-                          onChange={(e) => handleAdicionarPagamento(Number(e.target.value), cartaoSalvo.id)}
+                          onChange={(e) => setValorPagar({ ...valorPagar, [cartaoSalvo.id]: e.target.value })}
+                          onBlur={(e) => handleAdicionarPagamento(Number(e.target.value), cartaoSalvo.id)}
                         />
                       )}
                     </div>
@@ -310,10 +309,10 @@ const Pagamento = () => {
               <h2>Resumo do Carrinho</h2>
               {itens.map((item, index) => (
                 <div key={index} className="resumo-item">
-                  <img src={item.imageUrl} alt={item.nome} className="resumo-imagem" />
+                  <img src={item.capaUrl} alt={item.nome} className="resumo-imagem" />
                   <div className="resumo-detalhes">
                     <p>{item.nome} (x{item.quantidade})</p>
-                    <p>R${(item.preco * item.quantidade).toFixed(2)}</p>
+                    <p>R${(item.valorVenda * item.quantidade).toFixed(2)}</p>
                   </div>
                 </div>
               ))}
@@ -345,6 +344,7 @@ const Pagamento = () => {
           </div>
         </div>
       </div>
+    <InfoSection />
     </div>
   );
 };

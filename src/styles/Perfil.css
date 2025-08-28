@@ -8,11 +8,7 @@
   --septenary-color-vibrant: #ee5e3a;
 }
 
-.perfil-container {
-  font-family: Arial, sans-serif;
 
-  min-height: 100vh;
-}
 
 .perfil-content {
   max-width: 800px;
@@ -49,14 +45,13 @@
 }
 
 /* Estilos das abas */
-.perfil-abas {
+.abas-filtro {
   display: flex;
   margin-bottom: 30px;
   justify-content:center;
-  display: flex
 }
 
-.perfil-abas button {
+.abas-filtro button {
   padding: 10px 20px;
   margin-right: 10px;
   border: none;
@@ -69,12 +64,12 @@
   width: 170px;
 }
 
-.perfil-abas button.ativo {
+.abas-filtro button.ativo {
   background-color: var(--secondary-color);
   color: white;
 }
 
-.perfil-abas button:hover {
+.abas-filtro button:hover {
   background-color: var(--quaternary-color);
 }
 

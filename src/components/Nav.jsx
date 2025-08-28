@@ -1,23 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Nav = ({ BotaoComponent, tipoUsuario, logout }) => (
+const Nav = ({ user, BotaoComponent, logout }) => (
   <nav className="nav">
     <ul>
-      {/* Links comuns para ambos os tipos de usuários */}
+      {/* Links comuns para todos os usuários */}
       <li><Link to="/ia-recomenda">IA RECOMENDA</Link></li>
 
-      {/* Links específicos para clientes */}
-      {tipoUsuario === 'cliente' && (
+      {/* Links para clientes ou usuários não logados */}
+      {user?.tipoUsuario !== 'colaborador' && (
         <li><Link to="/livros">LIVROS</Link></li>
       )}
 
       {/* Links específicos para colaboradores */}
-      {tipoUsuario === 'colaborador' && (
+      {user?.tipoUsuario === 'colaborador' && (
         <>
           <li><Link to="/consultar-cliente">CLIENTES</Link></li>
           <li><Link to="/relatorios">RELATÓRIOS</Link></li>
           <li><Link to="/pedidos">PEDIDOS</Link></li>
+          {/* O link de Livros para colaborador pode ser diferente */}
           <li><Link to="/consultar-livros">LIVROS</Link></li>
         </>
       )}

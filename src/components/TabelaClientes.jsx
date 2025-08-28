@@ -3,33 +3,17 @@ import { Link } from 'react-router-dom';
 import imageExcluir from '../images/image9.png';
 import imageEditar from '../images/image8.png';
 
-
 const TabelaClientes = ({ clientes, setClientes }) => {
-  const handleExcluirCliente = async (id) => {
+  const handleExcluirCliente = (id) => {
     const confirmar = window.confirm('Tem certeza que deseja excluir este cliente?');
     if (!confirmar) return;
 
-    try {
-      const response = await fetch(`http://localhost:3001/clientes/${id}`, {
-        method: 'DELETE',
-      });
+    setClientes((prevClientes) => {
+      const novosClientes = prevClientes.filter((cliente) => cliente.id !== id);
+      return novosClientes;
+    });
 
-      if (!response.ok) {
-        throw new Error(`Erro ${response.status}: ${response.statusText}`);
-      }
-
-      // Remove o cliente do estado local com animação
-      setClientes((prevClientes) => {
-        const novosClientes = prevClientes.filter((cliente) => cliente.id !== id);
-        return novosClientes;
-      });
-      
-      // Feedback visual
-      alert('Cliente excluído com sucesso!');
-    } catch (error) {
-      console.error('Erro ao excluir cliente:', error);
-      alert(`Erro ao excluir cliente: ${error.message}`);
-    }
+    alert('Cliente excluído com sucesso!');
   };
 
   // Função para formatar a data
