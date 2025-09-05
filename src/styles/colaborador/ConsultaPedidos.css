@@ -1,0 +1,137 @@
+:root{
+  --primary-color: #752512;
+  --secondary-color: #A73A21;
+  --tertiary-color: #C65338;
+  --quaternary-color: #FEAA80;
+  --quinary-color: #FDBC9B;
+  --senary-color: #FFCEB6;
+  --septenary-color-vibrant: #ee5e3a;
+}
+
+
+.consulta-pedidos {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.consulta-pedidos h1 {
+  font-size: 2rem !important;
+  font-weight: bold !important;
+  color: var(--primary-color) !important;
+  margin-bottom: 20px !important;
+  text-align: center;
+}
+
+.abas-filtro {
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+
+.abas-filtro button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #ffddcc;
+  color: var(--primary-color);
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  width: 170px;
+}
+
+.abas-filtro button.ativo {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.abas-filtro button:hover {
+  background-color: var(--quaternary-color);
+}
+
+.campo-pesquisa {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  margin-bottom: 40px;
+}
+
+.campo-pesquisa input {
+  width: 30%; 
+  padding: 10px;
+  border: 1px solid var(--senary-color);
+  border-radius: 18px;
+  font-size: 16px;
+  outline: none;
+  color: var(--primary-color);
+}
+
+.campo-pesquisa input::placeholder {
+  color: #555;
+}
+
+.tabela-pedidos {
+  width: 90%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: #fff2eb;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tabela-pedidos th,
+.tabela-pedidos td {
+  padding: 15px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--senary-color);
+}
+
+.tabela-pedidos th {
+  background-color: #FFCEB6;
+  color: #752512;
+  font-weight: bold;
+}
+
+.tabela-pedidos .status-header {
+  text-align: center;
+}
+
+.tabela-pedidos tbody tr:hover {
+  background-color: #ffddcc;
+}
+
+.tabela-pedidos tbody tr:last-child td {
+  border-bottom: none; 
+}
+
+.status-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: capitalize;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.status-processamento {
+  background-color: #752512; 
+}
+
+.status-em_transito {
+  background-color: #A73A21;
+}
+
+.status-entregue {
+  background-color: #C65338;
+}
+
+.status-troca {
+  background-color: #ee5e3a;
+}
