@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import InfoSection from '../components/InfoSection.jsx';
 import ProdutoCard from '../components/ProdutoCard.jsx';
 import Banner from '../components/Banner.jsx'; // Importar o novo componente
 import '../styles/Home.css';
+import { getBooks } from '../services/Home/books.js';
+
 
 const Home = () => {
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const data = await getBooks("claudio");
+      setBooks(data);
+    };
+
+    fetchBooks();
+  }, []);
+
   
 
   // Mock data for featured books
