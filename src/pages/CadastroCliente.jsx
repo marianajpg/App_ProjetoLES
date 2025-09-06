@@ -7,6 +7,7 @@ import Header from '../components/Header.jsx';
 import InfoSection from '../components/InfoSection.jsx';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { postCustomer } from '../services/customers .jsx';
 
 function CadastroCliente() {
   const { login } = useAuth();
@@ -24,7 +25,8 @@ function CadastroCliente() {
     dataNascimento: null,
     cpf: '',
     telefone: '',
-    genero: 'FEMININO',
+    genero: 'F',
+    streetTypeEntrega: 'RUA',
     enderecoEntrega: '',
     numeroEntrega: '',
     complementoEntrega: '',
@@ -35,6 +37,7 @@ function CadastroCliente() {
     observacoesEntrega: '',
     tipoEnderecoEntrega: 'RESIDENCIAL',
     enderecoCobrancaIgualEntrega: true,
+    streetTypeCobranca: '',
     enderecoCobranca: '',
     numeroCobranca: '',
     complementoCobranca: '',
@@ -57,9 +60,17 @@ function CadastroCliente() {
 
   // Opções para gênero
   const generos = [
-    { value: 'FEMININO', label: 'Feminino' },
-    { value: 'MASCULINO', label: 'Masculino' },
-    { value: 'OUTRO', label: 'Outro' }
+    { value: 'F', label: 'Feminino' },
+    { value: 'M', label: 'Masculino' }
+  ];
+
+  const streetTypes = [
+    { value: 'Rua', label: 'Rua' },
+    { value: 'Avenida', label: 'Avenida' },
+    { value: 'Alameda', label: 'Alameda' },
+    { value: 'Praça', label: 'Praça' },
+    { value: 'Viela', label: 'Viela' },
+    { value: 'Travessa', label: 'Travessa' }
   ];
 
   // Função para buscar dados do CEP
@@ -132,80 +143,76 @@ function CadastroCliente() {
     }
 
     const dadosParaEnvio = {
-      cliente: {
-        nome: formData.nomeCompleto,
+        name: formData.nomeCompleto,
         email: formData.email,
-        senha: formData.senha,
+        password: formData.senha,
+        passwordConfirmation: formData.confirmacaoSenha,
         cpf: formData.cpf,
-        telefone: formData.telefone,
-        dataNascimento: formData.dataNascimento ? formData.dataNascimento.toISOString() : null,
-        genero: formData.genero,
-      },
-      enderecoEntrega: {
-        tipo: formData.tipoEnderecoEntrega,
-        logradouro: formData.enderecoEntrega,
-        numero: formData.numeroEntrega,
-        bairro: formData.bairroEntrega,
-        cep: formData.cepEntrega,
-        cidade: formData.cidadeEntrega,
-        estado: formData.ufEntrega,
-        complemento: formData.complementoEntrega || null,
-        observacao: formData.observacoesEntrega || null,
-        pais: "Brasil"
-      },
-      enderecoCobranca: {}, // Inicializa como objeto vazio
-      cartaoCredito: {
-        numero: formData.numeroCartao,
-        nomeTitular: formData.nomeImpresso,
-        validade: formData.validadeCartao,
-        codigoSeguranca: formData.cvv,
-        bandeira: formData.bandeiraCartao,
-        preferencial: formData.preferencialCartao
-      }
-    };
+        phone: formData.telefone,
+        birthdaydate: formData.dataNascimento ? formData.dataNascimento.toISOString().split('T')[0] : null,
+        gender: formData.genero,
+        deliveryAddress: [{
+          residenceType: formData.tipoEnderecoEntrega,
+          streetType: formData.streetTypeEntrega,
+          street: formData.enderecoEntrega,
+          number: formData.numeroEntrega,
+          complement: formData.complementoEntrega,
+          neighborhood: formData.bairroEntrega,
+          city: formData.cidadeEntrega,
+          state: formData.ufEntrega,
+          zipCode: formData.cepEntrega,
+          observations: formData.observacoesEntrega
+        }],
+        card:[{
+            cardNumber: formData.numeroCartao,
+            cardHolderName: formData.nomeImpresso,
+            cardExpirationDate: formData.validadeCartao,
+            cardCVV: formData.cvv,
+            cardBrand: formData.bandeiraCartao,
+            preferredCard: formData.preferencialCartao
+        }]
+      };
+
+    if (formData.enderecoCobrancaIgualEntrega) {
+      dadosParaEnvio.billingAddress = dadosParaEnvio.deliveryAddress;
+    } else {
+        dadosParaEnvio.billingAddress = [{
+            residenceType: formData.tipoEnderecoCobranca,
+            streetType: formData.streetTypeCobranca,
+            street: formData.enderecoCobranca,
+            number: formData.numeroCobranca,
+            complement: formData.complementoCobranca,
+            neighborhood: formData.bairroCobranca,
+            city: formData.cidadeCobranca,
+            state: formData.ufCobranca,
+            zipCode: formData.cepCobranca,
+            observations: formData.observacoesCobranca
+        }]
+    }
 
     console.log('Dados enviados:', JSON.stringify(dadosParaEnvio, null, 2));
 
-    if (formData.enderecoCobrancaIgualEntrega) {
-      // Se o endereço de cobrança for igual ao de entrega, copia os dados do endereço de entrega
-      dadosParaEnvio.enderecoCobranca = { ...dadosParaEnvio.enderecoEntrega };
-    } else {
-      // Caso contrário, usa os dados do formulário para o endereço de cobrança
-      dadosParaEnvio.enderecoCobranca = {
-        tipo: formData.tipoEnderecoCobranca,
-        logradouro: formData.enderecoCobranca,
-        numero: formData.numeroCobranca,
-        bairro: formData.bairroCobranca,
-        cep: formData.cepCobranca,
-        cidade: formData.cidadeCobranca,
-        estado: formData.ufCobranca,
-        complemento: formData.complementoCobranca || null,
-        observacao: formData.observacoesCobranca || null,
-        pais: "Brasil"
-      };
-    }
-
     try {
-      const response = await axios.post('http://localhost:3001/clientes', dadosParaEnvio);
+      const response = await postCustomer(dadosParaEnvio);
       
       console.log('Resposta do servidor:', response.data);
+      console.log('Status da resposta:', response.status);
       
       if (response.status === 201) {
         alert('Usuário e cartão cadastrados com sucesso!');
         
-        // Autentica o usuário após o cadastro
         login({ tipoUsuario: 'cliente', email: formData.email });
+        console.log('Usuário logado:', { tipoUsuario: 'cliente', email: formData.email });
         
-        // Redireciona o usuário para a página inicial
         navigate('/');
         
-        // Limpa o formulário
         setFormData({
           nomeCompleto: '',
           dataNascimento: null,
           cpf: '',
           telefone: '',
           genero: 'FEMININO',
+          streetTypeEntrega: '',
           enderecoEntrega: '',
           numeroEntrega: '',
           complementoEntrega: '',
@@ -216,6 +223,7 @@ function CadastroCliente() {
           observacoesEntrega: '',
           tipoEnderecoEntrega: 'RESIDENCIAL',
           enderecoCobrancaIgualEntrega: true,
+          streetTypeCobranca: '',
           enderecoCobranca: '',
           numeroCobranca: '',
           complementoCobranca: '',
@@ -234,7 +242,7 @@ function CadastroCliente() {
           cvv: ''
         });
       } else {
-        alert('Cadastro realizado, mas a resposta do servidor foi inesperada.');
+        alert('Cadastro realizado com sucesso!');
       }
     } catch (error) {
       console.error('Erro completo:', error);
@@ -242,7 +250,7 @@ function CadastroCliente() {
       if (axios.isAxiosError(error)) {
         if (error.response) {
           console.error('Detalhes do erro:', error.response.data);
-          alert(`Erro ao cadastrar usuário: ${error.response.status} - ${error.response.data.message || 'Ocorreu um erro inesperado.'}`);
+          alert(`Erro ao cadastrar usuário: ${JSON.stringify(error.response.data)}`);
         } else if (error.request) {
           console.error('Sem resposta do servidor:', error.request);
           alert('Não foi possível conectar ao servidor');
@@ -253,6 +261,34 @@ function CadastroCliente() {
       } 
     }
   };
+
+  const validatePersonalData = () => {
+    const { nomeCompleto, cpf, telefone, cepEntrega, numeroEntrega, enderecoEntrega, bairroEntrega, cidadeEntrega, ufEntrega } = formData;
+    const missingFields = [];
+
+    if (!nomeCompleto) missingFields.push("Nome Completo");
+    if (!cpf) missingFields.push("CPF");
+    if (!telefone) missingFields.push("Telefone");
+    if (!cepEntrega) missingFields.push("CEP de Entrega");
+    if (!numeroEntrega) missingFields.push("Número de Entrega");
+    if (!enderecoEntrega) missingFields.push("Endereço de Entrega");
+    if (!bairroEntrega) missingFields.push("Bairro de Entrega");
+    if (!cidadeEntrega) missingFields.push("Cidade de Entrega");
+    if (!ufEntrega) missingFields.push("UF de Entrega");
+
+    if (missingFields.length > 0) {
+      alert(`Por favor, preencha os seguintes campos obrigatórios:\n\n- ${missingFields.join('\n- ')}`);
+      return false;
+    }
+
+    return true;
+  }
+
+  const handleNextTab = () => {
+    if (validatePersonalData()) {
+      setActiveTab('dadosCartao');
+    }
+  }
 
   return (
     <div>
@@ -274,9 +310,9 @@ function CadastroCliente() {
             Cartão Preferencial
           </button>
         </div>
-
+        <form onSubmit={handleSubmit}>
         {activeTab === 'dadosPessoais' && (
-          <form onSubmit={handleSubmit}>
+          <>
             {/* Grupo: Informações Pessoais */}
             <fieldset>
               <legend>Informações Pessoais</legend>
@@ -354,6 +390,20 @@ function CadastroCliente() {
                 {cepError && <span className="error">{cepError}</span>}
                 
                   </div>
+                <div className='form-row'>
+                <select
+                  className='cadastro-select'
+                  name="streetTypeEntrega"
+                  value={formData.streetTypeEntrega}
+                  onChange={handleChange}
+                  required
+                >
+                  {streetTypes.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
                 <input
                   type="text"
                   name="enderecoEntrega"
@@ -362,6 +412,7 @@ function CadastroCliente() {
                   onChange={handleChange}
                   required
                 />
+                </div>
               
                 <input
                   type="text"
@@ -425,7 +476,7 @@ function CadastroCliente() {
                       placeholder="CEP"
                       value={formData.cepCobranca}
                       onChange={(e) => handleCEPChange(e, 'Cobranca')}
-                      required
+                      required={!formData.enderecoCobrancaIgualEntrega}
                     />
                       <input
                       type="text"
@@ -433,17 +484,32 @@ function CadastroCliente() {
                       placeholder="Número"
                       value={formData.numeroCobranca}
                       onChange={handleChange}
-                      required
+                      required={!formData.enderecoCobrancaIgualEntrega}
                     />
                     </div>
+                    <div className='form-row'>
+                    <select
+                      className='cadastro-select'
+                      name="streetTypeCobranca"
+                      value={formData.streetTypeCobranca}
+                      onChange={handleChange}
+                      required={!formData.enderecoCobrancaIgualEntrega}
+                    >
+                      {streetTypes.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
                     <input
                       type="text"
                       name="enderecoCobranca"
                       placeholder="Endereço"
                       value={formData.enderecoCobranca}
                       onChange={handleChange}
-                      required
+                      required={!formData.enderecoCobrancaIgualEntrega}
                     />
+                    </div>
                     
                     <input
                       type="text"
@@ -461,7 +527,7 @@ function CadastroCliente() {
                       placeholder="Bairro"
                       value={formData.bairroCobranca}
                       onChange={handleChange}
-                      required
+                      required={!formData.enderecoCobrancaIgualEntrega}
                     />
                     
                     <input
@@ -470,7 +536,7 @@ function CadastroCliente() {
                       placeholder="Cidade"
                       value={formData.cidadeCobranca}
                       onChange={handleChange}
-                      required
+                      required={!formData.enderecoCobrancaIgualEntrega}
                     />
                     
                     <input
@@ -479,7 +545,7 @@ function CadastroCliente() {
                       placeholder="UF"
                       value={formData.ufCobranca}
                       onChange={handleChange}
-                      required
+                      required={!formData.enderecoCobrancaIgualEntrega}
                       maxLength="2"
                     />
                     </div>
@@ -519,13 +585,14 @@ function CadastroCliente() {
               </div>
             </fieldset>
 
-            <button className="buttom-form" type="submit">
-              CADASTRAR
+            <button className="buttom-form" type="button" onClick={handleNextTab}>
+              Próximo
             </button>
-          </form>
+            </>
         )}
 
         {activeTab === 'dadosCartao' && (
+            <>
           <fieldset>
             <legend>Cartão Preferencial</legend>
             <div className="form-group">
@@ -585,7 +652,12 @@ function CadastroCliente() {
               </label>
             </div>
           </fieldset>
+            <button className="buttom-form" type="submit">
+              CADASTRAR
+            </button>
+            </>
         )}
+        </form>
       </div>
       <InfoSection />
     </div>

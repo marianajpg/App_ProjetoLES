@@ -3,7 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import Header from '../../components/Header.jsx';
 import AbasFiltro from '../../components/AbasFiltro.jsx';
 import Breadcrumb from '../../components/Breadcrumb.jsx';
-import axios from 'axios';
+import { putCustomer } from '../../services/customers .jsx';
 import TransacoesCliente from './TransacoesCliente';
 import '../../styles/colaborador/EditarCliente.css';
 import DatePicker from "react-datepicker";
@@ -44,36 +44,26 @@ const EditarCliente = () => {
     { label: 'Editar', link: '' },
   ];
 
+  const billingAddress = cliente?.addresses.find(address => address.type === 'BILLING');
+
   // Estados para os campos editáveis
   const [formData, setFormData] = useState({
-    nomeCompleto: cliente?.nome || '',
+    nomeCompleto: cliente?.name || '',
     cpf: cliente?.cpf || '',
-    dataNascimento: cliente?.dataNascimento ? new Date(cliente.dataNascimento) : null,
-    telefone: cliente?.telefone || '',
-    genero: cliente?.genero || 'FEMININO',
+    dataNascimento: cliente?.birthdaydate ? new Date(cliente.birthdaydate) : null,
+    telefone: cliente?.phone || '',
+    genero: cliente?.gender || 'FEMININO',
     email: cliente?.email || '',
-    enderecoEntrega: {
-      tipo: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.tipo || 'RESIDENCIAL',
-      logradouro: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.logradouro || '',
-      numero: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.numero || '',
-      complemento: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.complemento || '',
-      bairro: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.bairro || '',
-      cep: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.cep || '',
-      cidade: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.cidade || '',
-      uf: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.estado || '',
-      observacoes: cliente?.enderecos?.find(e => e.tipoEndereco === 'ENTREGA')?.observacoes || '',
-    },
     enderecoCobranca: {
-      mesmoEndereco: !cliente?.enderecos?.some(e => e.tipoEndereco === 'COBRANCA'),
-      tipo: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.tipo || 'RESIDENCIAL',
-      logradouro: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.logradouro || '',
-      numero: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.numero || '',
-      complemento: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.complemento || '',
-      bairro: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.bairro || '',
-      cep: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.cep || '',
-      cidade: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.cidade || '',
-      uf: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.estado || '',
-      observacoes: cliente?.enderecos?.find(e => e.tipoEndereco === 'COBRANCA')?.observacoes || '',
+      tipo: billingAddress?.residenceType || 'RESIDENCIAL',
+      logradouro: billingAddress?.street || '',
+      numero: billingAddress?.number || '',
+      complemento: billingAddress?.complement || '',
+      bairro: billingAddress?.neighborhood || '',
+      cep: billingAddress?.zipCode || '',
+      cidade: billingAddress?.city || '',
+      uf: billingAddress?.state || '',
+      observacoes: billingAddress?.observations || '',
     }
   });
 
@@ -216,53 +206,36 @@ const EditarCliente = () => {
     }));
   };
 
-  // Função para lidar com o envio do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     const dadosParaEnvio = {
-      nome: formData.nomeCompleto,
+      name: formData.nomeCompleto,
       email: formData.email,
       cpf: formData.cpf,
-      telefone: formData.telefone,
-      dataNascimento: formData.dataNascimento,
-      genero: formData.genero,
+      phone: formData.telefone,
+      birthdaydate: formData.dataNascimento,
+      gender: formData.genero,
       status: status,
-      enderecos: [
+      addresses: [
         {
-          tipo: formData.enderecoEntrega.tipo,
-          tipoEndereco: "ENTREGA",
-          logradouro: formData.enderecoEntrega.logradouro,
-          numero: formData.enderecoEntrega.numero,
-          bairro: formData.enderecoEntrega.bairro,
-          cep: formData.enderecoEntrega.cep,
-          cidade: formData.enderecoEntrega.cidade,
-          estado: formData.enderecoEntrega.uf,
-          complemento: formData.enderecoEntrega.complemento || null,
-          observacoes: formData.enderecoEntrega.observacoes || null,
-          pais: "Brasil"
+          type: "BILLING",
+          residenceType: formData.enderecoCobranca.tipo,
+          street: formData.enderecoCobranca.logradouro,
+          number: formData.enderecoCobranca.numero,
+          neighborhood: formData.enderecoCobranca.bairro,
+          zipCode: formData.enderecoCobranca.cep,
+          city: formData.enderecoCobranca.cidade,
+          state: formData.enderecoCobranca.uf,
+          complement: formData.enderecoCobranca.complemento || null,
+          observations: formData.enderecoCobranca.observacoes || null,
+          country: "Brasil"
         }
       ]
     };
 
-    if (!formData.enderecoCobranca.mesmoEndereco) {
-      dadosParaEnvio.enderecos.push({
-        tipo: formData.enderecoCobranca.tipo,
-        tipoEndereco: "COBRANCA",
-        logradouro: formData.enderecoCobranca.logradouro,
-        numero: formData.enderecoCobranca.numero,
-        bairro: formData.enderecoCobranca.bairro,
-        cep: formData.enderecoCobranca.cep,
-        cidade: formData.enderecoCobranca.cidade,
-        estado: formData.enderecoCobranca.uf,
-        complemento: formData.enderecoCobranca.complemento || null,
-        observacoes: formData.enderecoCobranca.observacoes || null,
-        pais: "Brasil"
-      });
-    }
-
     try {
-      const response = await axios.put(`http://localhost:3001/clientes/${cliente.id}`, dadosParaEnvio);
+      const response = await putCustomer(cliente.id, dadosParaEnvio);
       console.log('Cliente atualizado:', response.data);
       alert('Cliente atualizado com sucesso!');
     } catch (error) {
@@ -363,16 +336,16 @@ const EditarCliente = () => {
               </div>
             </fieldset>
 
-            {/* Grupo: Endereço de Entrega */}
+            {/* Grupo: Endereço de Cobrança */}
             <fieldset className="editar-cliente-fieldset">
-              <legend className="editar-cliente-legend">Endereço de Entrega</legend>
+              <legend className="editar-cliente-legend">Endereço de Cobrança</legend>
               <div className="editar-cliente-form-group">
                 <div className="form-group-with-label">
                   <label>Tipo de Endereço</label>
                   <select
                     name="tipo"
-                    value={formData.enderecoEntrega.tipo}
-                    onChange={handleEnderecoEntregaChange}
+                    value={formData.enderecoCobranca.tipo}
+                    onChange={handleEnderecoCobrancaChange}
                     required
                   >
                     {tiposEndereco.map((tipo) => (
@@ -388,12 +361,12 @@ const EditarCliente = () => {
                   <input
                     type="text"
                     name="cep"
-                    value={formData.enderecoEntrega.cep}
-                    onChange={(e) => handleCEPChange(e, 'Entrega')}
+                    value={formData.enderecoCobranca.cep}
+                    onChange={(e) => handleCEPChange(e, 'Cobranca')}
                     required
                   />
-                  {loadingCEPEntrega && <span>Buscando CEP...</span>}
-                  {cepErrorEntrega && <span className="error">{cepErrorEntrega}</span>}
+                  {loadingCEPCobranca && <span>Buscando CEP...</span>}
+                  {cepErrorCobranca && <span className="error">{cepErrorCobranca}</span>}
                 </div>
 
                 <div className="form-group-with-label">
@@ -401,8 +374,8 @@ const EditarCliente = () => {
                   <input
                     type="text"
                     name="logradouro"
-                    value={formData.enderecoEntrega.logradouro}
-                    onChange={handleEnderecoEntregaChange}
+                    value={formData.enderecoCobranca.logradouro}
+                    onChange={handleEnderecoCobrancaChange}
                     required
                   />
                 </div>
@@ -412,8 +385,8 @@ const EditarCliente = () => {
                   <input
                     type="text"
                     name="numero"
-                    value={formData.enderecoEntrega.numero}
-                    onChange={handleEnderecoEntregaChange}
+                    value={formData.enderecoCobranca.numero}
+                    onChange={handleEnderecoCobrancaChange}
                     required
                   />
                 </div>
@@ -423,8 +396,8 @@ const EditarCliente = () => {
                   <input
                     type="text"
                     name="complemento"
-                    value={formData.enderecoEntrega.complemento}
-                    onChange={handleEnderecoEntregaChange}
+                    value={formData.enderecoCobranca.complemento}
+                    onChange={handleEnderecoCobrancaChange}
                   />
                 </div>
 
@@ -433,8 +406,8 @@ const EditarCliente = () => {
                   <input
                     type="text"
                     name="bairro"
-                    value={formData.enderecoEntrega.bairro}
-                    onChange={handleEnderecoEntregaChange}
+                    value={formData.enderecoCobranca.bairro}
+                    onChange={handleEnderecoCobrancaChange}
                     required
                   />
                 </div>
@@ -444,8 +417,8 @@ const EditarCliente = () => {
                   <input
                     type="text"
                     name="cidade"
-                    value={formData.enderecoEntrega.cidade}
-                    onChange={handleEnderecoEntregaChange}
+                    value={formData.enderecoCobranca.cidade}
+                    onChange={handleEnderecoCobrancaChange}
                     required
                   />
                 </div>
@@ -455,8 +428,8 @@ const EditarCliente = () => {
                   <input
                     type="text"
                     name="uf"
-                    value={formData.enderecoEntrega.uf}
-                    onChange={handleEnderecoEntregaChange}
+                    value={formData.enderecoCobranca.uf}
+                    onChange={handleEnderecoCobrancaChange}
                     maxLength="2"
                     required
                   />
@@ -467,136 +440,10 @@ const EditarCliente = () => {
                   <input
                     type="text"
                     name="observacoes"
-                    value={formData.enderecoEntrega.observacoes}
-                    onChange={handleEnderecoEntregaChange}
+                    value={formData.enderecoCobranca.observacoes}
+                    onChange={handleEnderecoCobrancaChange}
                   />
                 </div>
-              </div>
-            </fieldset>
-
-            {/* Grupo: Endereço de Cobrança */}
-            <fieldset className="editar-cliente-fieldset">
-              <legend className="editar-cliente-legend">Endereço de Cobrança</legend>
-              <div className="editar-cliente-form-group">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={formData.enderecoCobranca.mesmoEndereco}
-                    onChange={handleMesmoEnderecoChange}
-                    className="editar-cliente-checkbox"
-                  />
-                  <span className="editar-cliente-checkbox-custom"></span>
-                  Mesmo endereço de entrega
-                </label>
-
-                {!formData.enderecoCobranca.mesmoEndereco && (
-                  <>
-                    <div className="form-group-with-label">
-                      <label>Tipo de Endereço</label>
-                      <select
-                        name="tipo"
-                        value={formData.enderecoCobranca.tipo}
-                        onChange={handleEnderecoCobrancaChange}
-                        required
-                      >
-                        {tiposEndereco.map((tipo) => (
-                          <option key={tipo.value} value={tipo.value}>
-                            {tipo.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="form-group-with-label">
-                      <label>CEP</label>
-                      <input
-                        type="text"
-                        name="cep"
-                        value={formData.enderecoCobranca.cep}
-                        onChange={(e) => handleCEPChange(e, 'Cobranca')}
-                        required
-                      />
-                      {loadingCEPCobranca && <span>Buscando CEP...</span>}
-                      {cepErrorCobranca && <span className="error">{cepErrorCobranca}</span>}
-                    </div>
-
-                    <div className="form-group-with-label">
-                      <label>Logradouro</label>
-                      <input
-                        type="text"
-                        name="logradouro"
-                        value={formData.enderecoCobranca.logradouro}
-                        onChange={handleEnderecoCobrancaChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group-with-label">
-                      <label>Número</label>
-                      <input
-                        type="text"
-                        name="numero"
-                        value={formData.enderecoCobranca.numero}
-                        onChange={handleEnderecoCobrancaChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group-with-label">
-                      <label>Complemento</label>
-                      <input
-                        type="text"
-                        name="complemento"
-                        value={formData.enderecoCobranca.complemento}
-                        onChange={handleEnderecoCobrancaChange}
-                      />
-                    </div>
-
-                    <div className="form-group-with-label">
-                      <label>Bairro</label>
-                      <input
-                        type="text"
-                        name="bairro"
-                        value={formData.enderecoCobranca.bairro}
-                        onChange={handleEnderecoCobrancaChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group-with-label">
-                      <label>Cidade</label>
-                      <input
-                        type="text"
-                        name="cidade"
-                        value={formData.enderecoCobranca.cidade}
-                        onChange={handleEnderecoCobrancaChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group-with-label">
-                      <label>Estado (UF)</label>
-                      <input
-                        type="text"
-                        name="uf"
-                        value={formData.enderecoCobranca.uf}
-                        onChange={handleEnderecoCobrancaChange}
-                        maxLength="2"
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group-with-label">
-                      <label>Observações</label>
-                      <input
-                        type="text"
-                        name="observacoes"
-                        value={formData.enderecoCobranca.observacoes}
-                        onChange={handleEnderecoCobrancaChange}
-                      />
-                    </div>
-                  </>
-                )}
               </div>
             </fieldset>
 

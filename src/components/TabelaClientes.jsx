@@ -2,18 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import imageExcluir from '../images/image9.png';
 import imageEditar from '../images/image8.png';
+import { deleteCustomer } from '../services/customers .jsx';
 
 const TabelaClientes = ({ clientes, setClientes }) => {
-  const handleExcluirCliente = (id) => {
+  const handleExcluirCliente = async (id) => {
     const confirmar = window.confirm('Tem certeza que deseja excluir este cliente?');
     if (!confirmar) return;
 
-    setClientes((prevClientes) => {
-      const novosClientes = prevClientes.filter((cliente) => cliente.id !== id);
-      return novosClientes;
-    });
-
-    alert('Cliente excluído com sucesso!');
+    try {
+      await deleteCustomer(id);
+      setClientes((prevClientes) => prevClientes.filter((cliente) => cliente.id !== id));
+      alert('Cliente excluído com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir cliente:', error);
+      alert('Erro ao excluir cliente. Tente novamente.');
+    }
   };
 
   // Função para formatar a data
@@ -44,6 +47,7 @@ const TabelaClientes = ({ clientes, setClientes }) => {
           <thead>
             <tr>
               <th>NOME COMPLETO</th>
+              <th>CPF</th>
               <th>DATA DE NASCIMENTO</th>
               <th>TELEFONE</th>
               <th>E-MAIL</th>
@@ -53,9 +57,10 @@ const TabelaClientes = ({ clientes, setClientes }) => {
           <tbody>
             {clientes.map((cliente) => (
               <tr key={cliente.id} className="linha-cliente">
-                <td data-label="Nome Completo">{cliente.nome || '-'}</td>
-                <td data-label="Data Nasc.">{formatarData(cliente.dataNascimento)}</td>
-                <td data-label="Telefone">{formatarTelefone(cliente.telefone)}</td>
+                <td data-label="Nome Completo">{cliente.name || '-'}</td>
+                <td data-label="CPF">{cliente.cpf || '-'}</td>
+                <td data-label="Data Nasc.">{formatarData(cliente.birthdaydate)}</td>
+                <td data-label="Telefone">{formatarTelefone(cliente.phone)}</td>
                 <td data-label="E-mail">{cliente.email || '-'}</td>
                 <td data-label="Ações" className="celula-acoes">
                   <Link 
