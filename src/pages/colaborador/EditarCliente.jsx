@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import axios from 'axios';
 import Header from '../../components/Header.jsx';
 import AbasFiltro from '../../components/AbasFiltro.jsx';
 import Breadcrumb from '../../components/Breadcrumb.jsx';
@@ -39,13 +40,24 @@ const EditarCliente = () => {
     { value: 'OUTRO', label: 'Outro' }
   ];
 
+  const tiposLogradouro = [
+    { value: 'RUA', label: 'Rua' },
+    { value: 'AVENIDA', label: 'Avenida' },
+    { value: 'ALAMEDA', label: 'Alameda' },
+    { value: 'PRACA', label: 'Praça' },
+    { value: 'TRAVESSA', label: 'Travessa' },
+    { value: 'RODOVIA', label: 'Rodovia' },
+    { value: 'ESTRADA', label: 'Estrada' },
+    { value: 'OUTRO', label: 'Outro' },
+  ];
+
   const breadcrumbItems = [
     { label: 'Clientes', link: '/consultar-cliente' },
     { label: 'Editar', link: '' },
   ];
 
   const billingAddress = cliente?.addresses.find(address => address.type === 'BILLING');
-
+  console.log("END", cliente)
   // Estados para os campos editáveis
   const [formData, setFormData] = useState({
     nomeCompleto: cliente?.name || '',
@@ -56,6 +68,7 @@ const EditarCliente = () => {
     email: cliente?.email || '',
     enderecoCobranca: {
       tipo: billingAddress?.residenceType || 'RESIDENCIAL',
+      streetType: billingAddress?.streetType || 'RUA', // Adicionado streetType
       logradouro: billingAddress?.street || '',
       numero: billingAddress?.number || '',
       complemento: billingAddress?.complement || '',
@@ -210,6 +223,7 @@ const EditarCliente = () => {
     e.preventDefault();
     
     const dadosParaEnvio = {
+
       name: formData.nomeCompleto,
       email: formData.email,
       cpf: formData.cpf,
@@ -217,18 +231,20 @@ const EditarCliente = () => {
       birthdaydate: formData.dataNascimento,
       gender: formData.genero,
       status: status,
-      addresses: [
+      billingAddress: [
         {
+          id: billingAddress.id,
           type: "BILLING",
           residenceType: formData.enderecoCobranca.tipo,
+          streetType: formData.enderecoCobranca.streetType, 
           street: formData.enderecoCobranca.logradouro,
           number: formData.enderecoCobranca.numero,
           neighborhood: formData.enderecoCobranca.bairro,
           zipCode: formData.enderecoCobranca.cep,
           city: formData.enderecoCobranca.cidade,
           state: formData.enderecoCobranca.uf,
-          complement: formData.enderecoCobranca.complemento || null,
-          observations: formData.enderecoCobranca.observacoes || null,
+          complement: formData.enderecoCobranca.complemento || '',
+          observations: formData.enderecoCobranca.observacoes || '',
           country: "Brasil"
         }
       ]
@@ -356,6 +372,23 @@ const EditarCliente = () => {
                   </select>
                 </div>
 
+                {/* NOVO: Select de Logradouro */}
+                <div className="form-group-with-label">
+                  <label>Tipo de Logradouro</label>
+                  <select
+                    name="streetType" // Nome do campo no formData
+                    value={formData.enderecoCobranca.streetType}
+                    onChange={handleEnderecoCobrancaChange}
+                    required
+                  >
+                    {tiposLogradouro.map((tipo) => (
+                      <option key={tipo.value} value={tipo.value}>
+                        {tipo.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 <div className="form-group-with-label">
                   <label>CEP</label>
                   <input
@@ -471,43 +504,7 @@ const EditarCliente = () => {
               <Link to="/consultar-cliente">
                 <button type="button">CANCELAR</button>
               </Link>
-              <button type="button" onClick={() => {
-                if (window.confirm('Deseja realmente limpar todos os campos?')) {
-                  setFormData({
-                    nomeCompleto: '',
-                    cpf: '',
-                    dataNascimento: null,
-                    telefone: '',
-                    genero: 'FEMININO',
-                    email: '',
-                    enderecoEntrega: {
-                      tipo: 'RESIDENCIAL',
-                      logradouro: '',
-                      numero: '',
-                      complemento: '',
-                      bairro: '',
-                      cep: '',
-                      cidade: '',
-                      uf: '',
-                      observacoes: ''
-                    },
-                    enderecoCobranca: {
-                      mesmoEndereco: true,
-                      tipo: 'RESIDENCIAL',
-                      logradouro: '',
-                      numero: '',
-                      complemento: '',
-                      bairro: '',
-                      cep: '',
-                      cidade: '',
-                      uf: '',
-                      observacoes: ''
-                    }
-                  });
-                }
-              }}>
-                LIMPAR CAMPOS
-              </button>
+              
             </div>
           </form>
         ) : (

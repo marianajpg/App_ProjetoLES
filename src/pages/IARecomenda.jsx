@@ -49,33 +49,13 @@ async function callGeminiAPI(promptText, apiKey) {
 }
 
 const IARecomenda = () => {
+  console.log("Componente IARecomenda montado."); // Adicionado para depuração
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
 
-  const [allLivros, setAllLivros] = useState([]);
-  const [loadingLivros, setLoadingLivros] = useState(true);
-  const [errorLivros, setErrorLivros] = useState(null);
-
-  useEffect(() => {
-    const fetchLivros = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/livros');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setAllLivros(data);
-      } catch (error) {
-        console.error("Erro ao buscar livros:", error);
-        setErrorLivros("Não foi possível carregar os livros.");
-      } finally {
-        setLoadingLivros(false);
-      }
-    };
-    fetchLivros();
-  }, []);
+  const allLivros = []; // Inicializa allLivros como um array vazio
 
   const processarMensagem = (mensagem) => {
     const texto = mensagem.toLowerCase();
@@ -237,14 +217,6 @@ const IARecomenda = () => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, [messages]);
-
-  if (loadingLivros) {
-    return <div>Carregando recomendações...</div>;
-  }
-
-  if (errorLivros) {
-    return <div>Erro: {errorLivros}</div>;
-  }
 
   return (
     <div>

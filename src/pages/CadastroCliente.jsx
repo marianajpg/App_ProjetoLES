@@ -37,7 +37,7 @@ function CadastroCliente() {
     observacoesEntrega: '',
     tipoEnderecoEntrega: 'RESIDENCIAL',
     enderecoCobrancaIgualEntrega: true,
-    streetTypeCobranca: '',
+    streetTypeCobranca: 'RUA',
     enderecoCobranca: '',
     numeroCobranca: '',
     complementoCobranca: '',

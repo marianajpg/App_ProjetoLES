@@ -36,26 +36,31 @@ function Perfil() {
 
   useEffect(() => {
     if (user) {
+      const billingAddress = user.addresses?.find(address => address.type === 'BILLING');
+
       setFormData({
-        nomeCompleto: user.nome || 'Usuário de Teste',
-        nomeSocial: user.nome || 'Usuário de Teste',
-        email: user.email || 'teste@teste.com',
-        dataNascimento: '2000-01-01',
-        cpf: '123.456.789-00',
-        telefone: '(11) 99999-9999',
-        genero: 'MASCULINO',
-        tipoResidencia: 'RESIDENCIAL',
-        tipoLogradouro: 'Avenida',
-        logradouro: 'Avenida Faria Lima',
-        numero: '1234',
-        cep: '12345-678',
-        cidade: 'São Paulo',
-        uf: 'SP',
-        bairro: 'Itaim Bibi',
-        complemento: 'Apto 101',
-        observacoes: 'Nenhuma',
-        senha: '',
-        confirmacaoSenha: ''
+        nomeCompleto: user.nome || '',
+        nomeSocial: '', // Não temos nome social no cliente, manter vazio
+        dataNascimento: user.birthdaydate ? new Date(user.birthdaydate).toISOString().split('T')[0] : '', // Formato YYYY-MM-DD
+        cpf: user.cpf || '',
+        telefone: user.phone || '',
+        genero: user.gender || '',
+        
+        // Dados do endereço de cobrança
+        tipoResidencia: billingAddress?.residenceType || '',
+        tipoLogradouro: billingAddress?.streetType || '',
+        logradouro: billingAddress?.street || '',
+        numero: billingAddress?.number || '',
+        cep: billingAddress?.zipCode || '',
+        cidade: billingAddress?.city || '',
+        uf: billingAddress?.state || '',
+        bairro: billingAddress?.neighborhood || '',
+        complemento: billingAddress?.complement || '',
+        observacoes: billingAddress?.observations || '',
+        
+        email: user.email || '',
+        senha: '', // Senha não deve ser preenchida
+        confirmacaoSenha: '' // Senha não deve ser preenchida
       });
     }
   }, [user]);
