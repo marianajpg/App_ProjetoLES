@@ -7,7 +7,8 @@ import InfoSection from '../components/InfoSection.jsx';
 
 function Login() {
   const [userType, setUserType] = useState('cliente');
-  const { login } = useAuth();
+  const [email, setEmail] = useState(''); // Novo estado para o e-mail
+  const { login, identifyUserByEmail } = useAuth(); // Adicionado identifyUserByEmail
   const navigate = useNavigate();
 
   const handleSimpleLogin = () => {
@@ -20,6 +21,23 @@ function Login() {
 
     login(userData);
     navigate(userType === 'colaborador' ? '/consultar-cliente' : '/');
+  };
+
+  // Nova função para identificar por e-mail
+  const handleIdentifyByEmail = async () => {
+    if (!email) {
+      alert('Por favor, insira um e-mail.');
+      return;
+    }
+    try {
+      // identifyUserByEmail vai lidar com o login e redirecionamento
+      await identifyUserByEmail(email); 
+      // O redirecionamento será feito dentro de identifyUserByEmail no AuthLogin.jsx
+      // ou você pode adicionar uma lógica aqui se preferir redirecionar de forma diferente
+      // Por exemplo: navigate('/');
+    } catch (error) {
+      alert(error.message); // Exibe a mensagem de erro do AuthLogin
+    }
   };
 
   return (
@@ -53,6 +71,14 @@ function Login() {
           </div>
 
           <div className="login-form">
+            {/* Campo de e-mail */}
+            <input
+              type="email"
+              placeholder="E-mail para identificação"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="email-input" // Adicionar uma classe para estilização se necessário
+            />
             <button onClick={handleSimpleLogin}>
               ENTRAR
             </button>
