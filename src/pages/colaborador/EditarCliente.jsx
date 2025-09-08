@@ -4,7 +4,7 @@ import axios from 'axios';
 import Header from '../../components/Header.jsx';
 import AbasFiltro from '../../components/AbasFiltro.jsx';
 import Breadcrumb from '../../components/Breadcrumb.jsx';
-import { putCustomer } from '../../services/customers .jsx';
+import { putCustomer } from '../../services/customers.jsx';
 import TransacoesCliente from './TransacoesCliente';
 import '../../styles/colaborador/EditarCliente.css';
 import DatePicker from "react-datepicker";
@@ -468,15 +468,7 @@ const EditarCliente = () => {
                   />
                 </div>
 
-                <div className="form-group-with-label">
-                  <label>Observações</label>
-                  <input
-                    type="text"
-                    name="observacoes"
-                    value={formData.enderecoCobranca.observacoes}
-                    onChange={handleEnderecoCobrancaChange}
-                  />
-                </div>
+               
               </div>
             </fieldset>
 

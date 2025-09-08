@@ -4,16 +4,16 @@ import CampoPesquisa from '../../components/CampoPesquisa.jsx';
 import TabelaClientes from '../../components/TabelaClientes.jsx';
 import Header from '../../components/Header.jsx';
 import '../../styles/colaborador/ConsultaClientes.css';
-import { getCustomer } from '../../services/customers .jsx';
+import { getCustomer } from '../../services/customers.jsx';
 
 function ConsultaClientes() {
   const [abaAtiva, setAbaAtiva] = useState('geral');
   const [termoPesquisa, setTermoPesquisa] = useState('');
   const [valoresFiltro, setValoresFiltro] = useState({
     status: [],
-    genero: [], // Novo
-    anoNascimento: [], // Novo
-    dataCriacao: [], // Novo
+    genero: [],
+    anoNascimento: [],
+    dataCriacao: [],
   });
 
   const [clientes, setClientes] = useState([]);
@@ -35,7 +35,7 @@ function ConsultaClientes() {
   const abas = [
     { id: 'geral', label: 'Geral' },
     { id: 'ativo', label: 'Ativos' },
-    { id: 'desativado', label: 'Desativados' },
+    { id: 'inativo', label: 'Inativos' },
   ];
 
   const filtros = [
@@ -45,7 +45,7 @@ function ConsultaClientes() {
       tipo: 'checkbox',
       opcoes: [
         { id: 'ativo', label: 'Ativo' },
-        { id: 'desativado', label: 'Desativado' },
+        { id: 'inativo', label: 'Inativo' },
       ],
     },
     { // Novo filtro: Gênero
@@ -53,10 +53,8 @@ function ConsultaClientes() {
       titulo: 'Gênero',
       tipo: 'checkbox',
       opcoes: [
-        { id: 'FEMININO', label: 'Feminino' },
-        { id: 'MASCULINO', label: 'Masculino' },
-        { id: 'OUTRO', label: 'Outro' },
-        { id: 'PREFIRO_NAO_DIZER', label: 'Prefiro não dizer' }
+        { id: 'F', label: 'Feminino' },
+        { id: 'M', label: 'Masculino' }
       ],
     },
     { // Novo filtro: Ano de Nascimento
@@ -87,28 +85,23 @@ function ConsultaClientes() {
     },
   ];
 
-  // Filtra os clientes com base nos critérios selecionados
   const filtrarClientes = (clientes) => {
     return clientes.filter((cliente) => {
-      const ativoTexto = cliente.ativo ? 'ativo' : 'desativado';
+      const ativoTexto = cliente.ativo ? 'ativo' : 'inativo';
   
-      // 1. Filtro por aba ativa
       const correspondeAba = abaAtiva === 'geral' || abaAtiva === ativoTexto;
   
-      // 2. Filtro por termo de pesquisa (agora suporta múltiplos termos)
-      const termos = termoPesquisa.toLowerCase().split(' ').filter(t => t.length > 0); // Divide por espaço e remove termos vazios
+      const termos = termoPesquisa.toLowerCase().split(' ').filter(t => t.length > 0);
   
       const correspondePesquisa = termos.every(termo => {
-        // Campos de informações pessoais
         const camposPessoais = [
           cliente.name,
           cliente.cpf,
           cliente.phone,
-          cliente.gender, // Gênero
+          cliente.gender,
           cliente.email,
-        ].filter(Boolean).map(field => String(field).toLowerCase()); // Converte para string e minúsculas
+        ].filter(Boolean).map(field => String(field).toLowerCase());
   
-        // Campos de endereço
         const camposEndereco = cliente.addresses ? cliente.addresses.flatMap(address => [
           address.residenceType,
           address.streetType,
@@ -128,17 +121,14 @@ function ConsultaClientes() {
         return todosCampos.some(campo => campo.includes(termo));
       });
   
-      // 3. Filtro por status (agora suporta múltiplas seleções)
       const filtroStatus = 
-        valoresFiltro.status.length === 0 || // Se nenhum status selecionado, mostra todos
-        valoresFiltro.status.includes(ativoTexto); // Ou se o status do cliente está nos selecionados
+        valoresFiltro.status.length === 0 ||
+        valoresFiltro.status.includes(ativoTexto);
   
-      // 4. Novo filtro: Gênero
       const filtroGenero = 
         valoresFiltro.genero.length === 0 ||
         (cliente.gender && valoresFiltro.genero.includes(cliente.gender));
   
-      // 5. Novo filtro: Ano de Nascimento
       const filtroAnoNascimento = 
         valoresFiltro.anoNascimento.length === 0 ||
         (cliente.birthdaydate && valoresFiltro.anoNascimento.some(filtro => {
@@ -150,12 +140,11 @@ function ConsultaClientes() {
           if (filtro === '2020ouDepois') return anoNascimento >= 2020;
           return false;
         }));
-  
-      // 6. Novo filtro: Data de Criação (assumindo que cliente.createdAt existe e é uma string de data)
+
       const filtroDataCriacao = 
         valoresFiltro.dataCriacao.length === 0 ||
-        (cliente.createdAt && valoresFiltro.dataCriacao.some(filtro => {
-          const anoCriacao = new Date(cliente.createdAt).getFullYear();
+        (cliente.created_at && valoresFiltro.dataCriacao.some(filtro => {
+          const anoCriacao = new Date(cliente.created_at).getFullYear();
           if (filtro === 'antes2020') return anoCriacao < 2020;
           if (filtro === '2020') return anoCriacao === 2020;
           if (filtro === '2021') return anoCriacao === 2021;
@@ -165,8 +154,16 @@ function ConsultaClientes() {
           if (filtro === '2025ouDepois') return anoCriacao >= 2025;
           return false;
         }));
-  
-      return correspondeAba && correspondePesquisa && filtroStatus && filtroGenero && filtroAnoNascimento && filtroDataCriacao;
+
+      let corresponde = correspondePesquisa && filtroGenero && filtroAnoNascimento && filtroDataCriacao;
+
+      if (valoresFiltro.status.length > 0) {
+        corresponde = corresponde && filtroStatus;
+      } else {
+        corresponde = corresponde && correspondeAba;
+      }
+
+      return corresponde;
     });
   };
 

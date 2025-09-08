@@ -192,6 +192,10 @@ function Perfil() {
                 <label>Complemento</label>
                 <input type="text" name="complemento" value={formData.complemento} onChange={handleChange} />
               </div>
+              <div className="perfil-input-group">
+                <label>Apelido</label>
+                <input type="text" name="observacoes" value={formData.observacoes} onChange={handleChange} />
+              </div>
             </div>
 
             <div className="perfil-login">

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import imageExcluir from '../images/image9.png';
 import imageEditar from '../images/image8.png';
-import { deleteCustomer } from '../services/customers .jsx';
+import { deleteCustomer } from '../services/customers.jsx';
 
 const TabelaClientes = ({ clientes, setClientes }) => {
   const handleExcluirCliente = async (id) => {
