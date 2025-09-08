@@ -7,21 +7,35 @@ import InfoSection from '../components/InfoSection.jsx';
 
 function Login() {
   const [userType, setUserType] = useState('cliente');
-  const [email, setEmail] = useState(''); // Novo estado para o e-mail
-  const { login, identifyUserByEmail } = useAuth(); // Adicionado identifyUserByEmail
+  const [email, setEmail] = useState(''); 
+  const { login, identifyUserByEmail } = useAuth(); //
   const navigate = useNavigate();
 
-  const handleSimpleLogin = () => {
-    const userData = {
-      tipoUsuario: userType,
-      token: 'mock-token', // Token simulado para que isAuthenticated seja verdadeiro
-      nome: userType === 'colaborador' ? 'Colaborador' : 'Cliente',
-      id: 'mock-id'
-    };
+  const handleSimpleLogin = async (e) => {
+  if (e && e.preventDefault) e.preventDefault();
 
-    login(userData);
-    navigate(userType === 'colaborador' ? '/consultar-cliente' : '/');
-  };
+  // garante que tipoUsuario esteja em 'cliente' (conforme seu requisito)
+  if (userType !== 'cliente') {
+    alert('Selecione "cliente" para realizar login por e-mail.');
+    return;
+  }
+
+  const trimmed = (email || '').trim();
+  if (!trimmed) {
+    alert('Por favor, insira um e-mail.');
+    return;
+  }
+
+  try {
+    await identifyUserByEmail(trimmed, 'cliente'); // faz a requisição ao backend e seta o usuário
+    // após setar o usuário no contexto, redireciona para perfil
+    navigate('/perfil');
+  } catch (err) {
+    // err pode ser Error ou resposta do axios
+    const msg = err?.message || (err?.response && err.response.data && err.response.data.message) || 'Erro ao efetuar login';
+    alert(msg);
+  }
+};
 
   // Nova função para identificar por e-mail
   const handleIdentifyByEmail = async () => {
@@ -33,8 +47,6 @@ function Login() {
       // identifyUserByEmail vai lidar com o login e redirecionamento
       await identifyUserByEmail(email); 
       // O redirecionamento será feito dentro de identifyUserByEmail no AuthLogin.jsx
-      // ou você pode adicionar uma lógica aqui se preferir redirecionar de forma diferente
-      // Por exemplo: navigate('/');
     } catch (error) {
       alert(error.message); // Exibe a mensagem de erro do AuthLogin
     }
@@ -79,9 +91,8 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="email-input" // Adicionar uma classe para estilização se necessário
             />
-            <button onClick={handleSimpleLogin}>
-              ENTRAR
-            </button>
+            <button type="button" onClick={handleSimpleLogin}>ENTRAR</button>
+
           </div>
 		  <p>Ainda não possui uma conta? <Link to="/cadastro-cliente">Cadastre-se</Link></p>
         </section>

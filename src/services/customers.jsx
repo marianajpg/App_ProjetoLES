@@ -36,21 +36,12 @@ export const putCustomer = async (id, customerData) => {
     }
 };
 
+// Busca um cliente por e-mail (usa a rota backend /costumers/email/:email)
+// Retorna o objeto do cliente ou null.
 export const getCustomerByEmail = async (email) => {
-    try {
-        // Assumindo que a API tem um endpoint para buscar cliente por e-mail
-        // Ex: GET /costumers?email=teste@example.com
-        const response = await api.get(`/costumers?email=${email}`);
-        // A API pode retornar um array de clientes, então pegamos o primeiro
-        if (response.data && response.data.length > 0) {
-            return response.data[0];
-        } else {
-            return null; // Cliente não encontrado
-        }
-    } catch (error) {
-        console.error('Erro ao buscar cliente por e-mail:', error);
-        throw new Error('Não foi possível buscar o cliente por e-mail.');
-    }
+  if (!email) return null;
+  const response = await api.get(`/costumers/email/${encodeURIComponent(email)}`);
+  return response.data;
 };
 
 

@@ -37,6 +37,28 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
+  
+
+  // identifyUserByEmail: busca no backend e seta o user no contexto (login somente por email)
+  const identifyUserByEmail = async (email, tipoUsuario = 'cliente') => {
+    if (!email) throw new Error('E-mail é obrigatório para login');
+    // chama o serviço que usamos acima
+    const costumer = await getCustomerByEmail(email);
+    if (!costumer) {
+      throw new Error('E-mail não cadastrado');
+    }
+    // Anexa o tipoUsuario para compatibilidade com RotaProtegida
+    const userObj = { ...costumer, tipoUsuario };
+    // cria um token simples (apenas para isAuthenticated) — você pode substituir por JWT real no futuro
+    const newToken = btoa(email);
+    // salva no localStorage
+    localStorage.setItem('user', JSON.stringify(userObj));
+    localStorage.setItem('token', newToken);
+    setUser(userObj);
+    setToken(newToken);
+    return userObj;
+  };
+
   const login = (userData) => {
     console.log("AuthLogin: User data received for login:", userData);
     setUser(userData);
@@ -44,39 +66,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     setUser(null);
     setToken(null);
-  };
-
-  // Nova função para identificar usuário por e-mail
-  const identifyUserByEmail = async (email) => {
-    try {
-      const customer = await getCustomerByEmail(email);
-      if (customer) {
-        // Assumindo que o cliente encontrado é do tipo 'cliente'
-        // Se houver lógica para determinar 'colaborador' vs 'cliente' baseada nos dados do cliente,
-        // ela precisaria ser adicionada aqui.
-        const userData = {
-          id: customer.id,
-          email: customer.email,
-          nome: customer.name,
-          cpf: customer.cpf,
-          birthdaydate: customer.birthdaydate,
-          phone: customer.phone,
-          gender: customer.gender,
-          addresses: customer.addresses, // Incluir os endereços
-          tipoUsuario: 'cliente', // Ou determinar com base em 'customer'
-          token: 'email-identified-token', // Token simulado para autenticação
-        };
-        login(userData);
-        navigate('/'); // Redireciona para a página inicial após o login
-      } else {
-        throw new Error('Cliente não encontrado com este e-mail.');
-      }
-    } catch (error) {
-      console.error("Erro ao identificar usuário por e-mail:", error);
-      throw error; // Propaga o erro para o componente de login
-    }
+    navigate('/login');
   };
 
   const isAuthenticated = !!token;
@@ -88,6 +82,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
