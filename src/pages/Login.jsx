@@ -14,30 +14,57 @@ function Login() {
   const handleSimpleLogin = async (e) => {
   if (e && e.preventDefault) e.preventDefault();
 
-  // garante que tipoUsuario esteja em 'cliente' (conforme seu requisito)
-  if (userType !== 'cliente') {
-    alert('Selecione "cliente" para realizar login por e-mail.');
+  if (userType === 'cliente') {
+    // CLIENTE -> login por e-mail
+    const trimmed = (email || '').trim();
+    if (!trimmed) {
+      alert('Por favor, insira um e-mail.');
+      return;
+    }
+
+    try {
+      // salva para que o perfil consiga recuperar mesmo sem user no contexto
+      localStorage.setItem('lastLoginEmail', trimmed);
+
+      // identifyUserByEmail deve buscar o cliente, setar user no contexto e possibilitar o redirect
+      await identifyUserByEmail(trimmed, 'cliente');
+      // redireciona para perfil
+      navigate('/perfil');
+    } catch (err) {
+      const msg = err?.message || err?.response?.data?.message || 'Erro ao efetuar login';
+      alert(msg);
+    }
     return;
   }
 
-  const trimmed = (email || '').trim();
-  if (!trimmed) {
-    alert('Por favor, insira um e-mail.');
+  if (userType === 'colaborador') {
+    // COLABORADOR -> login direto (sem e-mail) e redireciona para a tela de consulta de clientes
+    try {
+      // Cria userData conforme o que seu AuthLogin espera (token e campos básicos)
+      const userData = {
+        tipoUsuario: 'colaborador',
+        token: 'mock-token-colaborador',
+        nome: 'Colaborador',
+        id: 'colaborador-mock-id'
+      };
+
+      // seta o user no contexto
+      await login(userData);
+
+      // redireciona para a tela de consulta de clientes — substitua a rota se necessário
+      navigate('/consultar-cliente'); 
+    } catch (err) {
+      alert(err?.message || 'Erro ao efetuar login como colaborador');
+    }
     return;
   }
 
-  try {
-    await identifyUserByEmail(trimmed, 'cliente'); // faz a requisição ao backend e seta o usuário
-    // após setar o usuário no contexto, redireciona para perfil
-    navigate('/perfil');
-  } catch (err) {
-    // err pode ser Error ou resposta do axios
-    const msg = err?.message || (err?.response && err.response.data && err.response.data.message) || 'Erro ao efetuar login';
-    alert(msg);
-  }
+  // fallback (não deveria chegar aqui)
+  alert('Selecione um tipo de usuário.');
 };
 
-  // Nova função para identificar por e-mail
+
+  // função para identificar por e-mail
   const handleIdentifyByEmail = async () => {
     if (!email) {
       alert('Por favor, insira um e-mail.');
@@ -89,7 +116,7 @@ function Login() {
               placeholder="E-mail para identificação"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="email-input" // Adicionar uma classe para estilização se necessário
+              className="email-input" 
             />
             <button type="button" onClick={handleSimpleLogin}>ENTRAR</button>
 
