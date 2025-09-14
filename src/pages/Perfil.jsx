@@ -272,7 +272,7 @@ function Perfil() {
 
               {/* Campos de cobrança — usam os campos cobranca_* do formData */}
               <div className="perfil-input-group">
-                <label>Logradouro (Cobrança)</label>
+                <label>Logradouro </label>
                 <input
                   type="text"
                   name="cobranca_logradouro"
@@ -283,7 +283,7 @@ function Perfil() {
 
               <div className="perfil-input-row">
                 <div className="perfil-input-group">
-                  <label>Número (Cobrança)</label>
+                  <label>Número </label>
                   <input
                     type="text"
                     name="cobranca_numero"
@@ -292,7 +292,7 @@ function Perfil() {
                   />
                 </div>
                 <div className="perfil-input-group">
-                  <label>CEP (Cobrança)</label>
+                  <label>CEP </label>
                   <input
                     type="text"
                     name="cobranca_cep"
@@ -304,7 +304,7 @@ function Perfil() {
 
               <div className="perfil-input-row">
                 <div className="perfil-input-group">
-                  <label>Cidade (Cobrança)</label>
+                  <label>Cidade </label>
                   <input
                     type="text"
                     name="cobranca_cidade"
@@ -313,7 +313,7 @@ function Perfil() {
                   />
                 </div>
                 <div className="perfil-input-group">
-                  <label>UF (Cobrança)</label>
+                  <label>UF </label>
                   <input
                     type="text"
                     name="cobranca_uf"
@@ -324,7 +324,7 @@ function Perfil() {
               </div>
 
               <div className="perfil-input-group">
-                <label>Bairro (Cobrança)</label>
+                <label>Bairro </label>
                 <input
                   type="text"
                   name="cobranca_bairro"
@@ -334,7 +334,7 @@ function Perfil() {
               </div>
 
               <div className="perfil-input-group">
-                <label>Complemento (Cobrança)</label>
+                <label>Complemento </label>
                 <input
                   type="text"
                   name="cobranca_complemento"
