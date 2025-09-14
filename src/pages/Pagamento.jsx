@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import InfoSection from '../components/InfoSection.jsx';
+import { useAuth } from '../context/AuthLogin.jsx';
 import '../styles/Pagamento.css';
 
 const Pagamento = () => {
   const location = useLocation();
   const { itens, subtotal } = location.state || { itens: [], subtotal: 0 };
+  const { user } = useAuth();
 
   const [cupom, setCupom] = useState('');
   const [cuponsAplicados, setCuponsAplicados] = useState([]);
@@ -24,17 +26,9 @@ const Pagamento = () => {
     nome: '',
     bandeira: 'visa',
   });
-  const [cartoesSalvos, setCartoesSalvos] = useState([
-    { id: 1, numero: '**** **** **** 1234', bandeira: 'visa' },
-    { id: 2, numero: '**** **** **** 5678', bandeira: 'mastercard' },
-  ]);
-
-  const [enderecos, setEnderecos] = useState([
-    { id: 1, rua: 'Rua A', numero: '123', cidade: 'São Paulo', estado: 'SP', cep: '01234-567' },
-    { id: 2, rua: 'Rua B', numero: '456', cidade: 'Rio de Janeiro', estado: 'RJ', cep: '04567-890' },
-  ]);
-
-  const [enderecoSelecionado, setEnderecoSelecionado] = useState(enderecos[0].id);
+  const [cartoesSalvos, setCartoesSalvos] = useState([]);
+  const [enderecos, setEnderecos] = useState([]);
+  const [enderecoSelecionado, setEnderecoSelecionado] = useState('');
   const [novoEndereco, setNovoEndereco] = useState({
     rua: '',
     numero: '',
@@ -43,12 +37,32 @@ const Pagamento = () => {
     cep: '',
   });
   const [mostrarNovoEndereco, setMostrarNovoEndereco] = useState(false);
-
-  const [pagamentoMultiplo, setPagamentoMultiplo] = useState(false);
-  const [pagamentos, setPagamentos] = useState([]);
-  const [cartaoSelecionado, setCartaoSelecionado] = useState(null);
+  const [cartoesSelecionados, setCartoesSelecionados] = useState([]);
   const [valorPagar, setValorPagar] = useState({});
   const [salvarCartao, setSalvarCartao] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setContato({
+        nome: user.name || '',
+        email: user.email || '',
+        telefone: user.phone || '',
+      });
+
+      const deliveryAddresses = user.deliveryAddress || [];
+      setEnderecos(deliveryAddresses);
+      if (deliveryAddresses.length > 0) {
+        setEnderecoSelecionado(deliveryAddresses[0].id);
+      }
+
+      const savedCards = user.creditCards?.map(card => ({
+        id: card.id,
+        numero: card.number, 
+        bandeira: card.flag 
+      })) || [];
+      setCartoesSalvos(savedCards);
+    }
+  }, [user]);
 
   const handleAdicionarEndereco = () => {
     const novoId = enderecos.length + 1;
@@ -67,19 +81,25 @@ const Pagamento = () => {
     setCartao({ numero: '', validade: '', nome: '', bandeira: 'visa' });
   };
 
-  const handleAdicionarPagamento = (valor, cartaoId) => {
-    if (valor < 10) {
-      alert('O valor mínimo por cartão é R$ 10,00.');
-      return;
-    }
-
-    const novoPagamento = { cartaoId, valor };
-    setPagamentos([...pagamentos, novoPagamento]);
+  const handleSelecaoCartao = (cardId) => {
+    setCartoesSelecionados(prev =>
+      prev.includes(cardId)
+        ? prev.filter(id => id !== cardId)
+        : [...prev, cardId]
+    );
   };
 
   const handleFinalizarCompra = () => {
-    const totalPago = pagamentos.reduce((acc, pagamento) => acc + pagamento.valor, 0);
-    if (totalPago !== total) {
+    const totalPago = cartoesSelecionados.reduce((acc, cardId) => {
+      return acc + (Number(valorPagar[cardId]) || 0);
+    }, 0);
+
+    if (cartoesSelecionados.length === 0) {
+        alert('Selecione ao menos um cartão.');
+        return;
+    }
+
+    if (totalPago !== totalComDesconto) {
       alert('O valor total dos pagamentos não corresponde ao valor da compra.');
       return;
     }
@@ -257,34 +277,22 @@ const Pagamento = () => {
                     <div key={cartaoSalvo.id} className="cartao-salvo">
                       <label className="cartao-label">
                         <input
-                          type="radio"
+                          type="checkbox"
                           name="cartaoSelecionado"
-                          value={cartaoSalvo.id}
-                          onChange={() => setCartaoSelecionado(cartaoSalvo.id)}
+                          checked={cartoesSelecionados.includes(cartaoSalvo.id)}
+                          onChange={() => handleSelecaoCartao(cartaoSalvo.id)}
                         />
                         <span className="cartao-info">{cartaoSalvo.numero} ({cartaoSalvo.bandeira})</span>
                       </label>
-                      {pagamentoMultiplo && (
+                      {cartoesSelecionados.includes(cartaoSalvo.id) && (
                         <input
                           type="number"
                           placeholder="Valor a pagar"
                           onChange={(e) => setValorPagar({ ...valorPagar, [cartaoSalvo.id]: e.target.value })}
-                          onBlur={(e) => handleAdicionarPagamento(Number(e.target.value), cartaoSalvo.id)}
                         />
                       )}
                     </div>
                   ))}
-
-
-                  <div className="checkbox-pagamento-multiplo">
-                    <label> <input
-                      type="checkbox"
-                      id="pagamento-multiplo"
-                      checked={pagamentoMultiplo}
-                      onChange={(e) => setPagamentoMultiplo(e.target.checked)}
-                    /> <span htmlFor="pagamento-multiplo"></span>
-                    Pagar com múltiplos cartões </label>
-                  </div>
                 </div>
               )}
             </div>

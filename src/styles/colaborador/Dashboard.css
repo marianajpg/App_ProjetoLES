@@ -35,9 +35,7 @@
   grid-column: 1 / -1; /* Ocupa a largura total da primeira linha */
 }
 
-.side-chart {
-  /* Os gráficos laterais se ajustarão automaticamente */
-}
+
 
 /* Para telas menores, os gráficos ficam um abaixo do outro */
 @media (max-width: 768px) {

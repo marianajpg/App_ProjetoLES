@@ -83,11 +83,25 @@
 
 }
 
+.form-group-with-label input,
+.form-group-with-label select,
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text-color);
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: var(--white);
+  box-sizing: border-box; /* Adicionado para consistência de tamanho */
+}
+
 .react-datepicker-wrapper {
-  width: 96% !important;
+  width: 100% !important;
   padding: 0 !important;
-  justify-content: start;
-  border-color: #ffffff !important;
+  border: none !important; /* Removido para evitar borda dupla */
 }
 
 .form-group-with-label label {
@@ -97,22 +111,9 @@
   font-weight: 500;
 }
 
-.form-group-with-label input,
-.form-group-with-label select,
-.react-datepicker-wrapper {
-  width: 96%;
-  padding: 12px 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 14px;
-  color: var(--text-color);
-  outline: none;
-  transition: all 0.3s ease;
-  background-color: var(--white);
-}
-
 .form-group-with-label input:focus,
-.form-group-with-label select:focus {
+.form-group-with-label select:focus,
+.react-datepicker__input-container input:focus {
   border-color: var(--tertiary-color);
   box-shadow: 0 0 0 2px rgba(198, 83, 56, 0.2);
 }

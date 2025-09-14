@@ -1,23 +1,24 @@
-// ... (imports permanecem os mesmos)
-// src/pages/Carrinho.jsx
+
 import React from 'react';
 import { useCarrinho } from '../context/CarrinhoContext'; 
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import InfoSection from '../components/InfoSection.jsx';
-
 import '../styles/Carrinho.css'
 
 const Carrinho = () => {
+  // Utiliza o hook `useCarrinho` para acessar o estado global do carrinho.
+  // `itens`: array de produtos no carrinho.
+  // `removerDoCarrinho`, `atualizarQuantidade`: funções para modificar o carrinho.
   const { itens, removerDoCarrinho, atualizarQuantidade } = useCarrinho();
-
 
   const breadcrumbItems = [
     { label: 'Home', link: '/' },
     { label: 'Carrinho', link: '' },
   ];
 
+  // Calcula o subtotal dos itens no carrinho, somando o preço de cada item multiplicado por sua quantidade.
   const subtotal = itens.reduce((total, item) => {
     const valorVenda = item.valorVenda || 0;
     return total + (valorVenda * (item.quantidade || 1));
@@ -30,7 +31,6 @@ const Carrinho = () => {
       <div className="carrinho-container">
         <h1>Meu Carrinho</h1>
 
-        {/* Cabeçalho da tabela */}
         <div className="carrinho-cabecalho">
           <div className="carrinho-coluna-produto">Livro</div>
           <div className="carrinho-coluna-preco">Preço</div>
@@ -38,12 +38,11 @@ const Carrinho = () => {
           <div className="carrinho-coluna-total">Total</div>
         </div>
 
-        {/* Lista de itens */}
+        {/* Renderiza a lista de itens do carrinho ou uma mensagem se estiver vazio. */}
         {itens.length > 0 ? (
           itens.map((item) => {
             const valorVenda = item.valorVenda || 0;
             const quantidade = item.quantidade || 1;
-            console.log("Itens no carrinho:", itens);
             return (
               <div key={item.id} className="carrinho-item">
                 <div className="carrinho-coluna-produto">
@@ -85,7 +84,6 @@ const Carrinho = () => {
           <p>Seu carrinho está vazio</p>
         )}
 
-
         <div className="carrinho-finalizar">
           <div className="carrinho-subtotal">
             <div className="carrinho-subtotal-label">Subtotal</div>
@@ -93,7 +91,7 @@ const Carrinho = () => {
           </div>
           <Link
             to="/pagamento"
-            state={{ itens, subtotal }}
+            state={{ itens, subtotal }} // Passa os dados do carrinho para a página de pagamento.
             className="carrinho-botao"
             disabled={itens.length === 0}
           >

@@ -9,6 +9,8 @@ import TransacoesCliente from './TransacoesCliente';
 import '../../styles/colaborador/EditarCliente.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Accordion from '../../components/Accordion.jsx';
+
 
 const EditarCliente = () => {
   const location = useLocation();
@@ -57,6 +59,22 @@ const EditarCliente = () => {
   ];
 
   const billingAddress = cliente?.addresses.find(address => address.type === 'BILLING');
+  const deliveryAddresses = cliente?.addresses.filter(address => address.type === 'DELIVERY') || [];
+
+  const [enderecosEntrega, setEnderecosEntrega] = useState(deliveryAddresses.map(addr => ({
+    id: addr.id,
+    apelido: addr.observations || `Endereço ${deliveryAddresses.indexOf(addr) + 1}`,
+    tipo: addr.residenceType || 'RESIDENCIAL',
+    streetType: addr.streetType || 'RUA',
+    logradouro: addr.street || '',
+    numero: addr.number || '',
+    complemento: addr.complement || '',
+    bairro: addr.neighborhood || '',
+    cep: addr.zipCode || '',
+    cidade: addr.city || '',
+    uf: addr.state || '',
+    observacoes: addr.observations || '',
+  })));
   console.log("END", cliente)
   // Estados para os campos editáveis
   const [formData, setFormData] = useState({
@@ -81,7 +99,7 @@ const EditarCliente = () => {
   });
 
   // Função para buscar dados do CEP
-  const buscarCEP = async (cep, tipoEndereco) => {
+  const buscarCEP = async (cep, tipoEndereco, index = null) => {
     const cepNumerico = cep.replace(/\D/g, '');
     
     if (cepNumerico.length !== 8) return;
@@ -103,18 +121,32 @@ const EditarCliente = () => {
       
       const { logradouro, complemento, bairro, localidade, uf } = response.data;
       
-      setFormData(prev => ({
-        ...prev,
-        [`endereco${tipoEndereco}`]: {
-          ...prev[`endereco${tipoEndereco}`],
+      if (tipoEndereco === 'Entrega' && index !== null) {
+        const novosEnderecos = [...enderecosEntrega];
+        novosEnderecos[index] = {
+          ...novosEnderecos[index],
           cep: cep,
           logradouro: logradouro || '',
-          complemento: complemento || prev[`endereco${tipoEndereco}`].complemento,
+          complemento: complemento || novosEnderecos[index].complemento,
           bairro: bairro || '',
           cidade: localidade || '',
           uf: uf || ''
-        }
-      }));
+        };
+        setEnderecosEntrega(novosEnderecos);
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          enderecoCobranca: {
+            ...prev.enderecoCobranca,
+            cep: cep,
+            logradouro: logradouro || '',
+            complemento: complemento || prev.enderecoCobranca.complemento,
+            bairro: bairro || '',
+            cidade: localidade || '',
+            uf: uf || ''
+          }
+        }));
+      }
       
     } catch (error) {
       const errorMsg = 'CEP não encontrado ou erro na consulta';
@@ -134,21 +166,26 @@ const EditarCliente = () => {
   };
 
   // Função para lidar com mudanças no CEP
-  const handleCEPChange = (e, tipoEndereco) => {
+  const handleCEPChange = (e, tipoEndereco, index = null) => {
     const { value } = e.target;
     const cepFormatado = value.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2');
     
-    setFormData(prev => ({
-      ...prev,
-      [`endereco${tipoEndereco}`]: {
-        ...prev[`endereco${tipoEndereco}`],
-        cep: cepFormatado
-      }
-    }));
+    if (tipoEndereco === 'Entrega' && index !== null) {
+      const novosEnderecos = [...enderecosEntrega];
+      novosEnderecos[index].cep = cepFormatado;
+      setEnderecosEntrega(novosEnderecos);
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        enderecoCobranca: {
+          ...prev.enderecoCobranca,
+          cep: cepFormatado
+        }
+      }));
+    }
     
-    // Busca automática quando o CEP está completo
     if (value.replace(/\D/g, '').length === 8) {
-      buscarCEP(value, tipoEndereco);
+      buscarCEP(value, tipoEndereco, index);
     }
   };
 
@@ -162,15 +199,11 @@ const EditarCliente = () => {
   };
 
   // Função para lidar com mudanças no endereço de entrega
-  const handleEnderecoEntregaChange = (e) => {
+  const handleEnderecoEntregaChange = (e, index) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      enderecoEntrega: {
-        ...prevState.enderecoEntrega,
-        [name]: value,
-      },
-    }));
+    const novosEnderecos = [...enderecosEntrega];
+    novosEnderecos[index][name] = value;
+    setEnderecosEntrega(novosEnderecos);
   };
 
   // Função para lidar com mudanças no endereço de cobrança
@@ -247,12 +280,27 @@ const EditarCliente = () => {
           observations: formData.enderecoCobranca.observacoes || '',
           country: "Brasil"
         }
-      ]
+      ],
+      deliveryAddress: enderecosEntrega.map(addr => ({
+        id: addr.id,
+        type: "DELIVERY",
+        residenceType: addr.tipo,
+        streetType: addr.streetType,
+        street: addr.logradouro,
+        number: addr.numero,
+        neighborhood: addr.bairro,
+        zipCode: addr.cep,
+        city: addr.cidade,
+        state: addr.uf,
+        complement: addr.complemento || '',
+        observations: addr.observacoes || '',
+        country: "Brasil"
+      }))
     };
 
     try {
       const response = await putCustomer(cliente.id, dadosParaEnvio);
-      console.log('Cliente atualizado:', response.data);
+      console.log('Cliente atualizado:', response);
       alert('Cliente atualizado com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar cliente:', error);
@@ -263,6 +311,121 @@ const EditarCliente = () => {
   if (!cliente) {
     return <div>Cliente não encontrado.</div>;
   }
+
+  const accordionItems = enderecosEntrega.map((endereco, index) => ({
+    title: endereco.apelido || `Endereço de Entrega ${index + 1}`,
+    content: (
+      <div className="editar-cliente-form-group">
+        <div className="form-group-with-label">
+          <label>Apelido do Endereço</label>
+          <input
+            type="text"
+            name="apelido"
+            value={endereco.observations}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+          />
+        </div>
+        <div className="form-group-with-label">
+          <label>Tipo de Endereço</label>
+          <select
+            name="tipo"
+            value={endereco.tipo}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+            required
+          >
+            {tiposEndereco.map((tipo) => (
+              <option key={tipo.value} value={tipo.value}>{tipo.label}</option>
+            ))}
+          </select>
+        </div>
+        <div className="form-group-with-label">
+          <label>Tipo de Logradouro</label>
+          <select
+            name="streetType"
+            value={endereco.streetType}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+            required
+          >
+            {tiposLogradouro.map((tipo) => (
+              <option key={tipo.value} value={tipo.value}>{tipo.label}</option>
+            ))}
+          </select>
+        </div>
+        <div className="form-group-with-label">
+          <label>CEP</label>
+          <input
+            type="text"
+            name="cep"
+            value={endereco.cep}
+            onChange={(e) => handleCEPChange(e, 'Entrega', index)}
+            required
+          />
+          {loadingCEPEntrega && <span>Buscando CEP...</span>}
+          {cepErrorEntrega && <span className="error">{cepErrorEntrega}</span>}
+        </div>
+        <div className="form-group-with-label">
+          <label>Logradouro</label>
+          <input
+            type="text"
+            name="logradouro"
+            value={endereco.logradouro}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+            required
+          />
+        </div>
+        <div className="form-group-with-label">
+          <label>Número</label>
+          <input
+            type="text"
+            name="numero"
+            value={endereco.numero}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+            required
+          />
+        </div>
+        <div className="form-group-with-label">
+          <label>Complemento</label>
+          <input
+            type="text"
+            name="complemento"
+            value={endereco.complemento}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+          />
+        </div>
+        <div className="form-group-with-label">
+          <label>Bairro</label>
+          <input
+            type="text"
+            name="bairro"
+            value={endereco.bairro}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+            required
+          />
+        </div>
+        <div className="form-group-with-label">
+          <label>Cidade</label>
+          <input
+            type="text"
+            name="cidade"
+            value={endereco.cidade}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+            required
+          />
+        </div>
+        <div className="form-group-with-label">
+          <label>Estado (UF)</label>
+          <input
+            type="text"
+            name="uf"
+            value={endereco.uf}
+            onChange={(e) => handleEnderecoEntregaChange(e, index)}
+            maxLength="2"
+            required
+          />
+        </div>
+      </div>
+    )
+  }));
 
   return (
     <div>
@@ -350,6 +513,12 @@ const EditarCliente = () => {
                   />
                 </div>
               </div>
+            </fieldset>
+
+            {/* Grupo: Endereços de Entrega */}
+            <fieldset className="editar-cliente-fieldset">
+              <legend className="editar-cliente-legend">Endereços de Entrega</legend>
+              <Accordion items={accordionItems} />
             </fieldset>
 
             {/* Grupo: Endereço de Cobrança */}

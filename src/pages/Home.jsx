@@ -1,51 +1,24 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import InfoSection from '../components/InfoSection.jsx';
 import ProdutoCard from '../components/ProdutoCard.jsx';
-import Banner from '../components/Banner.jsx'; // Importar o novo componente
+import Banner from '../components/Banner.jsx';
 import '../styles/Home.css';
 
-
+// Página principal da aplicação, exibe livros em destaque e categorias.
 const Home = () => {
 
-  // Mock data for featured books
+  // Dados mockados para a seção de livros em destaque.
   const featuredBooks = [
-    {
-      id: 1,
-      titulo: 'O Senhor dos Anéis',
-      autor: 'J.R.R. Tolkien',
-      preco: '59.90',
-      capaUrl: 'https://m.media-amazon.com/images/I/81hCVEC0ExL._SY466_.jpg',
-      estoque: 10,
-    },
-    {
-      id: 2,
-      titulo: 'Duna',
-      autor: 'Frank Herbert',
-      preco: '49.90',
-      capaUrl: 'https://m.media-amazon.com/images/I/81zN7udGRUL._SY425_.jpg',
-      estoque: 5,
-    },
-    {
-      id: 3,
-      titulo: 'O Guia do Mochileiro das Galáxias',
-      autor: 'Douglas Adams',
-      preco: '39.90',
-      capaUrl: 'https://m.media-amazon.com/images/I/51B7vacPfEL._SY445_SX342_.jpg',
-      estoque: 0, // Out of stock example
-    },
-    {
-      id: 4,
-      titulo: 'A Fundação',
-      autor: 'Isaac Asimov',
-      preco: '45.00',
-      capaUrl: 'https://m.media-amazon.com/images/I/51wraeKdcxL._SY445_SX342_.jpg',
-      estoque: 20,
-    },
+    { id: 1, titulo: 'O Senhor dos Anéis', autor: 'J.R.R. Tolkien', preco: '59.90', capaUrl: 'https://m.media-amazon.com/images/I/81hCVEC0ExL._SY466_.jpg', estoque: 10 },
+    { id: 2, titulo: 'Duna', autor: 'Frank Herbert', preco: '49.90', capaUrl: 'https://m.media-amazon.com/images/I/81zN7udGRUL._SY425_.jpg', estoque: 5 },
+    { id: 3, titulo: 'O Guia do Mochileiro das Galáxias', autor: 'Douglas Adams', preco: '39.90', capaUrl: 'https://m.media-amazon.com/images/I/51B7vacPfEL._SY445_SX342_.jpg', estoque: 0 },
+    { id: 4, titulo: 'A Fundação', autor: 'Isaac Asimov', preco: '45.00', capaUrl: 'https://m.media-amazon.com/images/I/51wraeKdcxL._SY445_SX342_.jpg', estoque: 20 },
   ];
 
-  // Updated mock data for categories with colors
+  // Dados mockados para a seção de categorias.
   const categories = [
     { id: 1, name: 'Ficção Científica', color: 'var(--primary-color)' },
     { id: 2, name: 'Fantasia', color: 'var(--secondary-color)' },
@@ -68,7 +41,6 @@ const Home = () => {
         buttonTextColor='#fff'
       />
 
-      {/* Featured Books Section */}
       <section className="home-section">
         <h2 className="home-section-title">Livros em Destaque</h2>
         <div className="produtos-grid">
@@ -81,7 +53,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Categories Section */}
       <section className="home-section categories-section">
         <h2 className="home-section-title">Navegue por Categorias</h2>
         <div className="categories-grid">

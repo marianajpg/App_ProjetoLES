@@ -1,0 +1,388 @@
+{
+  "customersToCreate": [
+    {
+      "id": 0,
+      "name": "Marcelo Ferreira Lima",
+      "birthDate": "1995-03-22T03:00:00.000Z",
+      "cpf": "92301160092",
+      "email": "marcelo.lima@testemail.com",
+      "gender": "MASCULINO",
+      "password": "Bb23456@",
+      "confPassword": "Bb23456@",
+      "ranking": 2,
+      "status": true,
+      "phone": {
+        "ddd": "11",
+        "number": "987654321",
+        "phoneType": "CELULAR"
+      },
+      "addresses": [
+        {
+          "nickname": "Endereço de cobrança",
+          "street": "Rua das Palmeiras",
+          "number": 120,
+          "neighborhood": "Centro",
+          "cep": "08790551",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "Casa 2",
+          "addressType": "COBRANCA",
+          "residenceType": "CASA",
+          "streetType": "RUA"
+        },
+        {
+          "nickname": "Endereço de entrega",
+          "street": "Rua das Palmeiras",
+          "number": 120,
+          "neighborhood": "Centro",
+          "cep": "08790551",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "",
+          "addressType": "ENTREGA",
+          "residenceType": "APARTAMENTO",
+          "streetType": "AVENIDA"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "name": "Fernanda Oliveira Souza",
+      "birthDate": "1988-07-14T03:00:00.000Z",
+      "cpf": "20568368070",
+      "email": "fernanda.souza@testemail.com",
+      "gender": "FEMININO",
+      "password": "Cc34567@",
+      "confPassword": "Cc34567@",
+      "ranking": 3,
+      "status": true,
+      "phone": {
+        "ddd": "11",
+        "number": "912345678",
+        "phoneType": "CELULAR"
+      },
+      "addresses": [
+        {
+          "nickname": "Endereço de cobrança",
+          "street": "Rua dos Lírios",
+          "number": 45,
+          "neighborhood": "Jardim das Flores",
+          "cep": "08790552",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "Bloco A",
+          "addressType": "COBRANCA",
+          "residenceType": "CASA",
+          "streetType": "RUA"
+        },
+        {
+          "nickname": "Endereço de entrega",
+          "street": "Rua dos Lírios",
+          "number": 45,
+          "neighborhood": "Jardim das Flores",
+          "cep": "08790552",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "",
+          "addressType": "ENTREGA",
+          "residenceType": "APARTAMENTO",
+          "streetType": "AVENIDA"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "name": "Rodrigo Silva Santos",
+      "birthDate": "1990-05-05T03:00:00.000Z",
+      "cpf": "32059760020",
+      "email": "rodrigo.santos@testemail.com",
+      "gender": "MASCULINO",
+      "password": "Dd45678@",
+      "confPassword": "Dd45678@",
+      "ranking": 1,
+      "status": true,
+      "phone": {
+        "ddd": "11",
+        "number": "923456789",
+        "phoneType": "CELULAR"
+      },
+      "addresses": [
+        {
+          "nickname": "Endereço de cobrança",
+          "street": "Avenida Paulista",
+          "number": 200,
+          "neighborhood": "Bela Vista",
+          "cep": "08790553",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "Apto 501",
+          "addressType": "COBRANCA",
+          "residenceType": "CASA",
+          "streetType": "RUA"
+        },
+        {
+          "nickname": "Endereço de entrega",
+          "street": "Avenida Paulista",
+          "number": 200,
+          "neighborhood": "Bela Vista",
+          "cep": "08790553",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "",
+          "addressType": "ENTREGA",
+          "residenceType": "APARTAMENTO",
+          "streetType": "AVENIDA"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "name": "Carolina Vieira Gomes",
+      "birthDate": "1985-01-28T03:00:00.000Z",
+      "cpf": "01767922019",
+      "email": "carolina.gomes@testemail.com",
+      "gender": "FEMININO",
+      "password": "Ee56789@",
+      "confPassword": "Ee56789@",
+      "ranking": 2,
+      "status": true,
+      "phone": {
+        "ddd": "11",
+        "number": "934567890",
+        "phoneType": "CELULAR"
+      },
+      "addresses": [
+        {
+          "nickname": "Endereço de cobrança",
+          "street": "Rua das Margaridas",
+          "number": 400,
+          "neighborhood": "Jardim das Acácias",
+          "cep": "08790554",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "Bloco B",
+          "addressType": "COBRANCA",
+          "residenceType": "CASA",
+          "streetType": "RUA"
+        },
+        {
+          "nickname": "Endereço de entrega",
+          "street": "Rua das Margaridas",
+          "number": 400,
+          "neighborhood": "Jardim das Acácias",
+          "cep": "08790554",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "",
+          "addressType": "ENTREGA",
+          "residenceType": "APARTAMENTO",
+          "streetType": "AVENIDA"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "name": "Bruno Pereira Lopes",
+      "birthDate": "1993-09-19T03:00:00.000Z",
+      "cpf": "58450177006",
+      "email": "bruno.lopes@testemail.com",
+      "gender": "MASCULINO",
+      "password": "Ff67890@",
+      "confPassword": "Ff67890@",
+      "ranking": 3,
+      "status": true,
+      "phone": {
+        "ddd": "11",
+        "number": "945678901",
+        "phoneType": "CELULAR"
+      },
+      "addresses": [
+        {
+          "nickname": "Endereço de cobrança",
+          "street": "Rua dos Jacarandás",
+          "number": 500,
+          "neighborhood": "Parque dos Pássaros",
+          "cep": "08790555",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "Casa 3",
+          "addressType": "COBRANCA",
+          "residenceType": "CASA",
+          "streetType": "RUA"
+        },
+        {
+          "nickname": "Endereço de entrega",
+          "street": "Rua dos Jacarandás",
+          "number": 500,
+          "neighborhood": "Parque dos Pássaros",
+          "cep": "08790555",
+          "city": {
+            "id": 34,
+            "state": {
+              "id": 17,
+              "country": {
+                "id": 6
+              }
+            }
+          },
+          "complement": "",
+          "addressType": "ENTREGA",
+          "residenceType": "APARTAMENTO",
+          "streetType": "AVENIDA"
+        }
+      ]
+    }
+  ],
+  "customersToUpdate": {
+    "id": 0,
+    "name": "Carlos Eduardo Martins",
+    "birthDate": "1988-05-23T02:00:00.000Z",
+    "cpf": "53285968036",
+    "email": "carlos.martins88@example.com",
+    "gender": "MASCULINO",
+    "password": "Bb54321@",
+    "confPassword": "Bb54321@",
+    "ranking": 2,
+    "status": true,
+    "phone": {
+      "ddd": "11",
+      "number": "900000000",
+      "phoneType": "CELULAR"
+    },
+    "addresses": [
+      {
+        "nickname": "Endereço de cobrança",
+        "street": "Avenida Paulista",
+        "number": 1000,
+        "neighborhood": "Bela Vista",
+        "cep": "01311000",
+        "city": {
+          "id": 34,
+          "state": {
+            "id": 17,
+            "country": {
+              "id": 6
+            }
+          }
+        },
+        "complement": "Apto 101",
+        "addressType": "COBRANCA",
+        "residenceType": "APARTAMENTO",
+        "streetType": "AVENIDA"
+      },
+      {
+        "nickname": "Endereço de entrega",
+        "street": "Avenida Paulista",
+        "number": 1000,
+        "neighborhood": "Bela Vista",
+        "cep": "01311000",
+        "city": {
+          "id": 34,
+          "state": {
+            "id": 17,
+            "country": {
+              "id": 6
+            }
+          }
+        },
+        "complement": "",
+        "addressType": "ENTREGA",
+        "residenceType": "APARTAMENTO",
+        "streetType": "AVENIDA"
+      }
+    ]
+  },
+  "addressToUpdate": {
+    "nickname": "Endereço de cobrança",
+    "street": "Rua das Palmeiras",
+    "number": 120,
+    "neighborhood": "Centro",
+    "cep": "08790551",
+    "city": {
+      "id": 34,
+      "state": {
+        "id": 17,
+        "country": {
+          "id": 6
+        }
+      }
+    },
+    "complement": "Casa 2",
+    "customer": { "id": 1 },
+    "addressType": "COBRANCA",
+    "residenceType": "CASA",
+    "streetType": "RUA"
+  },
+  "cardToCreate": {
+    "number": "1234567890123456",
+    "expirationDate": "0325",
+    "cardHolder": "Marcelo Ferreira Lima",
+    "customer": { "id": 1 },
+    "cvv": "123",
+    "cardBrand": "VISA",
+    "preferential": false
+  }
+}

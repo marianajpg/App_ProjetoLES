@@ -38,10 +38,8 @@ const TabelaClientes = ({ clientes, setClientes }) => {
     <div className="tabela-container">
       {clientes.length === 0 ? (
         <div className="sem-clientes">
-          <p>Nenhum cliente encontrado.</p>
-          <Link to="/cadastrar-cliente" className="botao-cadastrar">
-            Cadastrar Novo Cliente
-          </Link>
+          <img src="/src/images/image-nenhumProduto.png" alt="Nenhum cliente encontrado" className="no-pedidos-img" />
+            <p>Nenhum cliente encontrado nesta categoria.</p>
         </div>
       ) : (
         <table className="tabela-clientes">

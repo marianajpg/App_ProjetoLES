@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
@@ -7,11 +6,9 @@ import '../styles/IARecomenda.css';
 import iconIA from '../images/img_icon_ia.png';
 import iconUser from '../images/img_icon_user.png';
 import bannerFundoIA from '../images/img-bannerfundoIA.png';
-
-// Importando nossos dados mockados
 import { mockBooks, mockUser, mockPurchaseHistory } from '../services/mockData.js';
 
-// A função da API Gemini permanece a mesma
+// Função wrapper para a chamada da API Generativa do Google.
 async function callGeminiAPI(promptText, apiKey) {
   const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
   const requestBody = { contents: [{ parts: [{ text: promptText }] }] };
@@ -34,39 +31,43 @@ async function callGeminiAPI(promptText, apiKey) {
 }
 
 const IARecomenda = () => {
+  // Tenta carregar o histórico do chat do sessionStorage ao iniciar.
+  // Isso permite que a conversa persista ao navegar entre páginas.
   const [messages, setMessages] = useState(() => {
     try {
       const savedMessages = sessionStorage.getItem('chatHistory');
       return savedMessages ? JSON.parse(savedMessages) : [];
     } catch (error) {
-      console.error("Failed to parse chat history:", error);
+      console.error("Falha ao carregar o histórico do chat:", error);
       return [];
     }
   });
+
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
 
-  // Simula o carregamento dos dados do usuário e do catálogo
+  // Simula o carregamento de dados do usuário e do catálogo de livros.
+  // Em uma aplicação real, estes dados viriam de uma API autenticada.
   const [currentUser, setCurrentUser] = useState(null);
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [allBooks, setAllBooks] = useState([]);
 
-  // Salva o histórico do chat no sessionStorage sempre que ele muda
+  // Salva o histórico do chat no sessionStorage sempre que a lista de mensagens é atualizada.
   useEffect(() => {
     if (messages.length > 0) {
       sessionStorage.setItem('chatHistory', JSON.stringify(messages));
     }
   }, [messages]);
 
+  // Efeito para carregar os dados mockados e definir a mensagem de boas-vindas.
   useEffect(() => {
-    // Em um app real, isso seria uma chamada de API
     setCurrentUser(mockUser);
     setPurchaseHistory(mockPurchaseHistory);
     setAllBooks(mockBooks);
 
-    // Se não houver mensagens carregadas, envia a mensagem inicial da IA
+    // Se não houver mensagens no histórico, envia a mensagem inicial da IA.
     if (messages.length === 0) {
       setMessages([
         {
@@ -86,7 +87,8 @@ const IARecomenda = () => {
     setInputValue('');
     setIsLoading(true);
 
-    // --- A MÁGICA ACONTECE AQUI: CONSTRUÇÃO DO PROMPT INTELIGENTE ---
+    // Constrói um prompt detalhado para a IA, fornecendo contexto sobre o usuário e o catálogo.
+    // Esta é a parte principal que permite a personalização da resposta.
     const historyText = purchaseHistory.map(p => `- ${p.titulo}`).join('\n');
     const catalogText = allBooks.map(b => `- Título: ${b.titulo}, Autor: ${b.autor}, Categoria: ${b.categoria}`).join('\n');
 
@@ -104,7 +106,7 @@ const IARecomenda = () => {
 
       **Instruções IMPORTANTES:**
       1. Use o histórico e as preferências do cliente para fazer recomendações ALTAMENTE PERSONALIZADAS.
-      2. Responda de forma calorosa e pessoal, chamando o cliente pelo nome (${currentUser.nome}).
+      2. Responda de forma calorosa e pessoal.
       3. Se o cliente pedir algo vago como "um livro bom", sugira algo baseado nas compras passadas dele. Por exemplo, se ele comprou "Duna", sugira "Fundação".
       4. Se o cliente perguntar sobre um livro que não está no catálogo, informe educadamente que não o temos e sugira uma alternativa SIMILAR do catálogo.
       5. Ao recomendar um livro do catálogo, coloque o título EXATO em negrito, usando asteriscos duplos. Exemplo: **O Nome do Vento**. Isso é crucial.
@@ -120,9 +122,10 @@ const IARecomenda = () => {
     try {
       const respostaIA = await callGeminiAPI(promptParaIA, API_KEY);
 
-      // Processar a resposta para encontrar livros recomendados
+      // Processa a resposta da IA para extrair títulos de livros (marcados com **).
+      // Isso transforma o texto da IA em componentes de UI interativos (cards de produto).
       const recommendedBooks = [];
-      const regex = /\*\*(.*?)\*\*/g; // Alterado para encontrar texto em negrito (Markdown)
+      const regex = /\*\*(.*?)\*\*/g; 
       let match;
       while ((match = regex.exec(respostaIA)) !== null) {
         const bookTitle = match[1];
@@ -145,6 +148,7 @@ const IARecomenda = () => {
   };
 
   const handleKeyPress = (e) => { if (e.key === 'Enter') handleSendMessage(); };
+
 
   // useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 

@@ -7,17 +7,22 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test:selenium": "mocha test/client_crud.test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.17",
+    "@types/mocha": "^10.0.10",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.2.0",
+    "chromedriver": "^140.0.2",
+    "cypress": "^15.2.0",
     "json-server": "^1.0.0-beta.3",
+    "mocha": "^11.7.1",
     "msw": "^2.7.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,7 +37,8 @@
     "react-chartjs-2": "^5.3.0",
     "react-datepicker": "^8.3.0",
     "react-draggable": "^4.4.6",
-    "react-router-dom": "^7.1.3"
+    "react-router-dom": "^7.1.3",
+    "selenium-webdriver": "^4.35.0"
   },
   "main": "server.js"
 }
