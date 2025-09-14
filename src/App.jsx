@@ -16,6 +16,7 @@ import Perfil from './pages/Perfil.jsx';
 import Carrinho from './pages/Carrinho.jsx';
 import Pagamento from './pages/Pagamento.jsx';
 import TransacoesCliente from './pages/colaborador/TransacoesCliente.jsx';
+import Dashboard from './pages/colaborador/Dashboard.jsx';
 import Unauthorized from './pages/Unauthorized.jsx';
 import './App.css';
 
@@ -71,6 +72,14 @@ function App() {
               element={
                 <RotaProtegida requiredUserType="colaborador">
                   <TransacoesCliente />
+                </RotaProtegida>
+              }
+            />
+            <Route
+              path="/colaborador/dashboard"
+              element={
+                <RotaProtegida requiredUserType="colaborador">
+                  <Dashboard />
                 </RotaProtegida>
               }
             />

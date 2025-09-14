@@ -1,0 +1,47 @@
+.dashboard-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+
+  font-family: Arial, sans-serif;
+  border-radius: 8px;
+
+}
+
+.dashboard-container h1 {
+  font-size: 2rem !important;
+  font-weight: bold !important;
+  color: var(--primary-color) !important;
+  margin-bottom: 20px !important;
+  text-align: center;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.chart-wrapper {
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.main-chart {
+  grid-column: 1 / -1; /* Ocupa a largura total da primeira linha */
+}
+
+.side-chart {
+  /* Os gráficos laterais se ajustarão automaticamente */
+}
+
+/* Para telas menores, os gráficos ficam um abaixo do outro */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}

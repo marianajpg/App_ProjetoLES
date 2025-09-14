@@ -16,7 +16,7 @@ const Nav = ({ user, BotaoComponent, logout }) => (
       {user?.tipoUsuario === 'colaborador' && (
         <>
           <li><Link to="/consultar-cliente">CLIENTES</Link></li>
-          <li><Link to="/relatorios">RELATÓRIOS</Link></li>
+          <li><Link to="/colaborador/dashboard">RELATÓRIOS</Link></li>
           <li><Link to="/consultar-pedidos">PEDIDOS</Link></li>
           {/* O link de Livros para colaborador pode ser diferente */}
           <li><Link to="/consultar-livros">LIVROS</Link></li>
