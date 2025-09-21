@@ -1,26 +1,40 @@
 export const PersonalDataEdit = {
   nomeCompleto: 'input[name="nomeCompleto"]',
-  dataNascimento: 'input[name="dataNascimento"]',
+  dataNascimento: '.react-datepicker-wrapper input',
   cpf: 'input[name="cpf"]',
   telefone: 'input[name="telefone"]',
   genero: 'select[name="genero"]',
   email: 'input[name="email"]',
-  senha: 'input[name="senha"]',
-  confirmacaoSenha: 'input[name="confirmacaoSenha"]',
-  // Botão de salvar dentro do formulário de edição
-  salvarButton: 'button[type="submit"]',
 };
 
-export const EnderecoEdit = {
-  // Seletores para campos de endereço na edição, se houver um formulário separado
-  // Por enquanto, vamos focar nos dados pessoais, mas você pode adicionar aqui
-  // cep: 'input[name="cepEntrega"]',
-  // ...
+export const EnderecoEntregaEdit = {
+  // Selectors for the delivery address accordion
+  accordion: '.accordion-content',
+  apelido: 'input[name="observacoes"]',
+  tipo: 'select[name="tipo"]',
+  streetType: 'select[name="streetType"]',
+  cep: 'input[name="cep"]',
+  logradouro: 'input[name="logradouro"]',
+  numero: 'input[name="numero"]',
+  complemento: 'input[name="complemento"]',
+  bairro: 'input[name="bairro"]',
+  cidade: 'input[name="cidade"]',
+  uf: 'input[name="uf"]',
 };
 
-export const BotoesGerais = {
-  // Botão para abrir o modal de edição (se houver um)
-  editButton: '.index-styles__StyledActionButton-sc-38363f88-0', // Manter este seletor se ele abre o modal de edição
-  // Botão de fechar modal, se aplicável
-  // closeButton: '.modal-styles__StyledModalFooterButton-sc-30a424b-1',
+export const EnderecoCobrancaEdit = {
+  // Selectors for the billing address
+  tipo: 'fieldset.editar-cliente-fieldset:nth-of-type(3) select[name="tipo"]',
+  streetType: 'fieldset.editar-cliente-fieldset:nth-of-type(3) select[name="streetType"]',
+  cep: 'fieldset.editar-cliente-fieldset:nth-of-type(3) input[name="cep"]',
+  logradouro: 'fieldset.editar-cliente-fieldset:nth-of-type(3) input[name="logradouro"]',
+  numero: 'fieldset.editar-cliente-fieldset:nth-of-type(3) input[name="numero"]',
+  complemento: 'fieldset.editar-cliente-fieldset:nth-of-type(3) input[name="complemento"]',
+  bairro: 'fieldset.editar-cliente-fieldset:nth-of-type(3) input[name="bairro"]',
+  cidade: 'fieldset.editar-cliente-fieldset:nth-of-type(3) input[name="cidade"]',
+  uf: 'fieldset.editar-cliente-fieldset:nth-of-type(3) input[name="uf"]',
+};
+
+export const BotoesEdit = {
+  salvar: 'button[type="submit"]',
 };

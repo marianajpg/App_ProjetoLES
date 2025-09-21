@@ -61,9 +61,8 @@ const EditarCliente = () => {
   const billingAddress = cliente?.addresses.find(address => address.type === 'BILLING');
   const deliveryAddresses = cliente?.addresses.filter(address => address.type === 'DELIVERY') || [];
 
-  const [enderecosEntrega, setEnderecosEntrega] = useState(deliveryAddresses.map(addr => ({
+  const [enderecosEntrega, setEnderecosEntrega] = useState(deliveryAddresses.map((addr, index) => ({
     id: addr.id,
-    apelido: addr.observations || `Endereço ${deliveryAddresses.indexOf(addr) + 1}`,
     tipo: addr.residenceType || 'RESIDENCIAL',
     streetType: addr.streetType || 'RUA',
     logradouro: addr.street || '',
@@ -73,7 +72,7 @@ const EditarCliente = () => {
     cep: addr.zipCode || '',
     cidade: addr.city || '',
     uf: addr.state || '',
-    observacoes: addr.observations || '',
+    observacoes: addr.observations || `Endereço de Entrega ${index + 1}`,
   })));
   console.log("END", cliente)
   // Estados para os campos editáveis
@@ -313,15 +312,16 @@ const EditarCliente = () => {
   }
 
   const accordionItems = enderecosEntrega.map((endereco, index) => ({
-    title: endereco.apelido || `Endereço de Entrega ${index + 1}`,
+    id: endereco.id, // Pass the ID for data-cy attribute
+    title: endereco.observacoes || `Endereço de Entrega ${index + 1}`,
     content: (
       <div className="editar-cliente-form-group">
         <div className="form-group-with-label">
           <label>Apelido do Endereço</label>
           <input
             type="text"
-            name="apelido"
-            value={endereco.observations}
+            name="observacoes"
+            value={endereco.observacoes}
             onChange={(e) => handleEnderecoEntregaChange(e, index)}
           />
         </div>

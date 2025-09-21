@@ -1,0 +1,207 @@
+{
+  "customersToEdit":[
+     {
+    "id": 6,
+    "deliveryAddress": [{
+      "id": 42,
+      "residenceType": "RESIDENCIAL",
+      "streetType": "RUA",
+      "street": "Rua do Rosário",
+      "number": "300",
+      "complement": "Bloco A",
+      "neighborhood": "Vila São Paulo",
+      "city": "Mogi das Cruzes",
+      "state": "SP",
+      "zipCode": "08840-260",
+      "observations": "Portão azul"
+    }]
+  },
+    {
+      "id": 17,
+      "name": "Cliente 17 Nome Alterado",
+      "deliveryAddress": [{
+        "id": 64,
+        "observations": "Apelido do Endereço Alterado",
+        "street": "Rua dos Testes Alterada"
+      }]
+    },
+     {
+    "id": 6,
+    "deliveryAddress": [{
+      "id": 42,
+      "residenceType": "RESIDENCIAL",
+      "streetType": "RUA",
+      "street": "Rua do Rosário",
+      "number": "300",
+      "complement": "Bloco A",
+      "neighborhood": "Vila São Paulo",
+      "city": "Mogi das Cruzes",
+      "state": "SP",
+      "zipCode": "08840-260",
+      "observations": "Portão azul"
+    }]
+  }
+  ],
+  "customersToDelete": [{
+    "id": 20
+  }],
+  "customersToCreate":[
+  {
+    "name": "Thiago Andrade",
+    "email": "thiago.andrade@clientmail.com",
+    "password": "Thi@2025",
+    "passwordConfirmation": "Thi@2025",
+    "cpf": "852.963.741-00",
+    "phone": "71998887766",
+    "birthdaydate": "02/02/1988",
+    "gender": "M",
+    "deliveryAddress": [{
+      "residenceType": "RESIDENCIAL",
+      "streetType": "TRAVESSA",
+      "street": "Boa Esperança",
+      "number": "12",
+      "complement": "Fundos",
+      "neighborhood": "Cabula",
+      "city": "Salvador",
+      "state": "BA",
+      "zipCode": "41200-000",
+      "observations": "Portão verde"
+    }],
+    "card": {
+      "cardNumber": "6011111111111117",
+      "cardHolderName": "THIAGO ANDRADE",
+      "cardExpirationDate": "08/29",
+      "cardCVV": "654",
+      "cardBrand": "ELO"
+    }
+  },
+  {
+    "name": "Patrícia Lima",
+    "email": "patricia.lima@contato.net",
+    "password": "Paty@2025",
+    "passwordConfirmation": "Paty@2025",
+    "cpf": "741.258.963-11",
+    "phone": "61977775544",
+    "birthdaydate": "19/05/1992",
+    "gender": "F",
+    "deliveryAddress": [{
+      "residenceType": "COMERCIAL",
+      "streetType": "AVENIDA",
+      "street": "das Palmeiras",
+      "number": "890",
+      "complement": "Sala 9",
+      "neighborhood": "Asa Norte",
+      "city": "Brasília",
+      "state": "DF",
+      "zipCode": "70700-010",
+      "observations": "Prédio azul, ao lado do shopping"
+    }],
+    "card": {
+      "cardNumber": "5105105105105100",
+      "cardHolderName": "PATRICIA LIMA",
+      "cardExpirationDate": "03/28",
+      "cardCVV": "852",
+      "cardBrand": "MASTERCARD"
+    }
+  },
+  {
+    "name": "Rafael Menezes",
+    "email": "rafael.menezes@dominio.com",
+    "password": "Raf@2025",
+    "passwordConfirmation": "Raf@2025",
+    "cpf": "369.258.147-77",
+    "phone": "81966667788",
+    "birthdaydate": "14/09/1986",
+    "gender": "M",
+    "deliveryAddress": [{
+      "residenceType": "RESIDENCIAL",
+      "streetType": "VIELA",
+      "street": "dos Pescadores",
+      "number": "7",
+      "complement": "Casa simples",
+      "neighborhood": "Boa Viagem",
+      "city": "Recife",
+      "state": "PE",
+      "zipCode": "51020-010",
+      "observations": "Próximo à feira"
+    }],
+    "card": {
+      "cardNumber": "378734493671000",
+      "cardHolderName": "RAFAEL MENEZES",
+      "cardExpirationDate": "10/30",
+      "cardCVV": "963",
+      "cardBrand": "AMEX"
+    },
+    "billingAddress": [{
+      "residenceType": "COMERCIAL",
+      "streetType": "RUA",
+      "street": "da Aurora",
+      "number": "145",
+      "complement": "Sala 302",
+      "neighborhood": "Centro",
+      "city": "Recife",
+      "state": "PE",
+      "zipCode": "50050-000",
+      "observations": "Prédio antigo, sem elevador"
+    }]
+  },
+  {
+    "name": "Juliana Cardoso",
+    "email": "juliana.cardoso@exemplo.org",
+    "password": "Juli@2025",
+    "passwordConfirmation": "Juli@2025",
+    "cpf": "159.357.258-66",
+    "phone": "62995556644",
+    "birthdaydate": "08/11/1993",
+    "gender": "F",
+    "deliveryAddress": [{
+      "residenceType": "RESIDENCIAL",
+      "streetType": "PRAÇA",
+      "street": "das Andorinhas",
+      "number": "45",
+      "complement": "Bloco C",
+      "neighborhood": "Setor Oeste",
+      "city": "Goiânia",
+      "state": "GO",
+      "zipCode": "74120-010",
+      "observations": "Portaria 24h"
+    }],
+    "card": {
+      "cardNumber": "3530111333300000",
+      "cardHolderName": "JULIANA CARDOSO",
+      "cardExpirationDate": "12/27",
+      "cardCVV": "147",
+      "cardBrand": "VISA"
+    }
+  },
+  {
+    "name": "Eduardo Ferreira",
+    "email": "eduardo.ferreira@portalmail.com",
+    "password": "Edu@2025",
+    "passwordConfirmation": "Edu@2025",
+    "cpf": "951.753.852-44",
+    "phone": "48991234567",
+    "birthdaydate": "23/06/1982",
+    "gender": "M",
+    "deliveryAddress": [{
+      "residenceType": "COMERCIAL",
+      "streetType": "RODOVIA",
+      "street": "BR-101",
+      "number": "KM 210",
+      "complement": "Galpão 4",
+      "neighborhood": "Distrito Industrial",
+      "city": "Florianópolis",
+      "state": "SC",
+      "zipCode": "88032-000",
+      "observations": "Perto do posto de gasolina"
+    }],
+    "card": {
+      "cardNumber": "6011000990139424",
+      "cardHolderName": "EDUARDO FERREIRA",
+      "cardExpirationDate": "06/26",
+      "cardCVV": "258",
+      "cardBrand": "ELO"
+    }
+  }
+]
+}

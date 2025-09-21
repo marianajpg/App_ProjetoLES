@@ -1,37 +1,63 @@
-import { PersonalDataEdit, BotoesGerais } from './elements';
+import { PersonalDataEdit, EnderecoEntregaEdit, EnderecoCobrancaEdit, BotoesEdit } from './elements';
 
 class EditCustomer {
-  fillPersonalData(customerPersonalData: any) {
-    cy.get(PersonalDataEdit.nomeCompleto).clear().type(customerPersonalData.name);
-    // Para DatePicker, pode ser necessário um tratamento específico se o .type() não funcionar
-    // Por enquanto, assumimos que o .type() funciona para o input subjacente
-    cy.get(PersonalDataEdit.dataNascimento).clear().type(customerPersonalData.birthDate.slice(0, 10));
-    cy.get(PersonalDataEdit.cpf).clear().type(customerPersonalData.cpf);
-    cy.get(PersonalDataEdit.telefone).clear().type(customerPersonalData.phone.number); // Assumindo que phone.number é o telefone completo
-    cy.get(PersonalDataEdit.genero).select(customerPersonalData.gender);
-    cy.get(PersonalDataEdit.email).clear().type(customerPersonalData.email);
-    cy.get(PersonalDataEdit.senha).clear().type(customerPersonalData.password);
-    cy.get(PersonalDataEdit.confirmacaoSenha).clear().type(customerPersonalData.confPassword);
+  fillPersonalData(customerData: any) {
+    if (customerData.name) cy.get(PersonalDataEdit.nomeCompleto).clear().type(customerData.name);
+    if (customerData.birthdaydate) cy.get(PersonalDataEdit.dataNascimento).clear().type(customerData.birthdaydate);
+    if (customerData.cpf) cy.get(PersonalDataEdit.cpf).clear().type(customerData.cpf);
+    if (customerData.phone) cy.get(PersonalDataEdit.telefone).clear().type(customerData.phone);
+    if (customerData.gender) cy.get(PersonalDataEdit.genero).select(customerData.gender);
+    if (customerData.email) cy.get(PersonalDataEdit.email).clear().type(customerData.email);
   }
 
-  submitPersonalData() {
-    cy.get(PersonalDataEdit.salvarButton).click();
+fillDeliveryAddress(deliveryAddress: any) {
+  if (!deliveryAddress || !deliveryAddress.id) {
+    throw new Error('deliveryAddress with id must be provided');
   }
 
-  // Se houver um botão para abrir o formulário de edição, ele pode ser adicionado aqui
-  clickEditButton() {
-    cy.get(BotoesGerais.editButton).click();
+  // Click the accordion header to expand it
+  const accordionHeader = cy.get(`[data-cy=delivery-address-accordion-${deliveryAddress.id}] .accordion-header`);
+  accordionHeader.click();
+  
+  // Wait for the accordion content to be visible
+  cy.get(`[data-cy=delivery-address-accordion-${deliveryAddress.id}] .accordion-content`, { timeout: 5000 })
+    .should('be.visible');
+  
+  // Use within to scope all subsequent commands to the accordion
+  cy.get(`[data-cy=delivery-address-accordion-${deliveryAddress.id}]`).within(() => {
+    if (deliveryAddress.observations) {
+      cy.get('input[name="observacoes"]', { timeout: 5000 })
+        .should('be.visible')
+        .clear()
+        .type(deliveryAddress.observations);
+    }
+
+    if (deliveryAddress.residenceType) cy.get(EnderecoEntregaEdit.tipo).select(deliveryAddress.residenceType);
+    if (deliveryAddress.streetType) cy.get(EnderecoEntregaEdit.streetType).select(deliveryAddress.streetType);
+    if (deliveryAddress.zipCode) cy.get(EnderecoEntregaEdit.cep).clear().type(deliveryAddress.zipCode);
+    if (deliveryAddress.street) cy.get(EnderecoEntregaEdit.logradouro).clear().type(deliveryAddress.street);
+    if (deliveryAddress.number) cy.get(EnderecoEntregaEdit.numero).clear().type(deliveryAddress.number);
+    if (deliveryAddress.complement) cy.get(EnderecoEntregaEdit.complemento).clear().type(deliveryAddress.complement);
+    if (deliveryAddress.neighborhood) cy.get(EnderecoEntregaEdit.bairro).clear().type(deliveryAddress.neighborhood);
+    if (deliveryAddress.city) cy.get(EnderecoEntregaEdit.cidade).clear().type(deliveryAddress.city);
+    if (deliveryAddress.state) cy.get(EnderecoEntregaEdit.uf).clear().type(deliveryAddress.state);
+  });
+}
+
+  fillBillingAddress(billingAddress: any) {
+    if (billingAddress.residenceType) cy.get(EnderecoCobrancaEdit.tipo).select(billingAddress.residenceType);
+    if (billingAddress.streetType) cy.get(EnderecoCobrancaEdit.streetType).select(billingAddress.streetType);
+    if (billingAddress.zipCode) cy.get(EnderecoCobrancaEdit.cep).clear().type(billingAddress.zipCode);
+    if (billingAddress.street) cy.get(EnderecoCobrancaEdit.logradouro).clear().type(billingAddress.street);
+    if (billingAddress.number) cy.get(EnderecoCobrancaEdit.numero).clear().type(billingAddress.number);
+    if (billingAddress.complement) cy.get(EnderecoCobrancaEdit.complemento).clear().type(billingAddress.complement);
+    if (billingAddress.neighborhood) cy.get(EnderecoCobrancaEdit.bairro).clear().type(billingAddress.neighborhood);
+    if (billingAddress.city) cy.get(EnderecoCobrancaEdit.cidade).clear().type(billingAddress.city);
+    if (billingAddress.state) cy.get(EnderecoCobrancaEdit.uf).clear().type(billingAddress.state);
   }
 
-  // Funções de verificação podem ser adaptadas para verificar os valores atuais dos campos
-  verifyPersonalData(customer: any) {
-    cy.get(PersonalDataEdit.nomeCompleto).should('have.value', customer.name);
-    // Para data, pode ser necessário formatar o valor para corresponder ao que o input exibe
-    cy.get(PersonalDataEdit.dataNascimento).should('have.value', customer.birthDate.slice(0, 10));
-    cy.get(PersonalDataEdit.cpf).should('have.value', customer.cpf);
-    cy.get(PersonalDataEdit.telefone).should('have.value', customer.phone.number);
-    cy.get(PersonalDataEdit.genero).should('have.value', customer.gender);
-    cy.get(PersonalDataEdit.email).should('have.value', customer.email);
+  submitForm() {
+    cy.get(BotoesEdit.salvar).click();
   }
 }
 

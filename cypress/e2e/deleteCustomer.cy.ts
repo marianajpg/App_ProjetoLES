@@ -1,53 +1,25 @@
+import { customersToDelete } from '../fixtures/happyCustomers.json';
+
 describe('Delete customer', () => {
-  it('Deve deletar um cliente com sucesso', () => {
-    cy.visit('/admin/customers');
+  customersToDelete.forEach((customer) => {
+    it(`Deve deletar o cliente com ID ${customer.id} com sucesso`, () => {
+      cy.loginAsColaborador();
+      cy.visit('/consultar-cliente');
 
-    cy.intercept('GET', 'http://localhost:8000/customers', req => {
-      delete req.headers['if-none-match'];
-    }).as('getCustomers');
+      cy.intercept('GET', '**/costumers').as('getCustomers');
+      cy.intercept('DELETE', `**/costumers/${customer.id}`).as('deleteCustomer');
 
-    cy.intercept('DELETE', 'http://localhost:8000/customers/*').as('deleteCustomerAPI');
+      cy.wait('@getCustomers');
 
-    let initialCustomerCount: number;
+      cy.get(`[data-cy=edit-customer-${customer.id}]`).closest('tr').find('button[title="Excluir cliente"]').click();
 
-    cy.wait('@getCustomers').then(({ response }) => {
-      initialCustomerCount = response?.body.length;
+      cy.on('window:confirm', () => true);
 
-      // Verifica se há clientes para deletar
-      if (initialCustomerCount === 0) {
-        cy.log('Nenhum cliente encontrado para deletar. O teste será ignorado.');
-        return; // Sai do teste se não houver clientes
-      }
+      cy.wait('@deleteCustomer').its('response.statusCode').should('be.oneOf', [200, 204]);
 
-      // Clica no botão de deletar do primeiro cliente da lista
-      // ATENÇÃO: Ajuste este seletor para o botão de deletar real na sua UI
-      cy.get('.index-styles__StyledTable-sc-843dcd6c-0 tbody tr').first().find('button').contains('Excluir').click();
-
-      // Verifica se o modal de confirmação apareceu
-      cy.contains('Tem certeza?').should('be.visible');
-
-      // Clica no botão de confirmação no modal
-      // ATENÇÃO: Ajuste este seletor para o botão de confirmação real na sua UI
-      cy.get('button').contains('Sim').click(); // Ou 'Confirmar', dependendo do texto do seu botão
-
-      // Espera a chamada da API de DELETE
-      cy.wait('@deleteCustomerAPI').then((interception) => {
-        console.log('Interception delete:', interception);
-        if (interception && interception.response) {
-          expect(interception.response.statusCode).to.be.oneOf([200, 204]); // 200 OK ou 204 No Content
-        } else {
-          throw new Error('cy.wait("@deleteCustomerAPI") não recebeu uma resposta do servidor.');
-        }
+      cy.on('window:alert', (text) => {
+        expect(text).to.equal('Cliente excluído com sucesso!');
       });
-
-      // Espera a lista de clientes ser atualizada após a exclusão
-      cy.wait('@getCustomers').then(({ response }) => {
-        const newCustomerCount = response?.body.length;
-        expect(newCustomerCount).to.be.lessThan(initialCustomerCount);
-      });
-
-      // Opcional: Verificar mensagem de sucesso
-      cy.contains('Cliente deletado com sucesso!').should('be.visible');
     });
   });
 });

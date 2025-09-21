@@ -1,54 +1,54 @@
 import EditCustomer from '../support/details/editCustomer';
+import { customersToEdit } from '../fixtures/happyCustomers.json';
+
 describe('Edit personal data', () => {
-  let customersToUpdate;
+  customersToEdit.forEach((customerData) => {
+    const targetCustomerId = customerData.id;
 
-  beforeEach(() => {
-    // Carrega os dados do arquivo de fixture
-    cy.fixture('customers').then((customers) => {
-      customersToUpdate = customers.customersToUpdate;
+    beforeEach(() => {
+      cy.loginAsColaborador();
+      cy.intercept('GET', '**/costumers').as('getCustomers');
+      cy.intercept('PUT', `**/costumers/${targetCustomerId}`).as('putCustomer');
+      cy.visit('/consultar-cliente');
+      cy.wait('@getCustomers');
     });
 
-    // Visita a página de listagem de clientes (assumindo que é onde o botão de edição está)
-    cy.visit('/admin/customers');
+    it(`Deve editar o endereço de entrega do cliente com ID ${targetCustomerId}`, () => {
+      // Click the edit button for the specific customer
+      cy.get(`[data-cy=edit-customer-${targetCustomerId}]`).click();
 
-    // Intercepta a requisição GET para obter os clientes
-    cy.intercept('GET', 'http://localhost:8000/customers', req => {
-      delete req.headers['if-none-match'];
-    }).as('getCustomers');
+      // Check if the URL is correct
+      cy.url().should('include', `/consultar-cliente/editar-cliente/${targetCustomerId}`);
 
-    // Intercepta a requisição PUT para atualizar o cliente
-    cy.intercept('PUT', 'http://localhost:8000/customers/*').as('putCustomer');
+      // Fill the form with only the delivery address fields that need to be updated
+      EditCustomer.fillDeliveryAddress(customerData.deliveryAddress[0]);
 
-    // Espera pelos clientes serem carregados
-    cy.wait('@getCustomers');
+      // Set up alert listener
+      cy.on('window:alert', (text) => {
+        expect(text).to.equal('Cliente atualizado com sucesso!');
+      });
 
-    // Clica no botão de editar do primeiro cliente da lista (ajuste o seletor conforme necessário)
-    // Este seletor é um exemplo e pode precisar ser ajustado para o seu HTML real
-    cy.get('.index-styles__StyledTable-sc-843dcd6c-0 tbody tr').first().find('a[href*="/admin/customers/"]').click();
+      // Submit the form
+      EditCustomer.submitForm();
 
-    // Intercepta a requisição GET para obter os detalhes do cliente específico
-    cy.intercept('GET', 'http://localhost:8000/customers/*', req => {
-      delete req.headers['if-none-match'];
-    }).as('getCustomerDetails');
-
-    cy.wait('@getCustomerDetails');
-  });
-
-  it('Deve editar os dados pessoais de um cliente com sucesso', () => {
-    // Preenche o formulário de edição com os novos dados
-    EditCustomer.fillPersonalData(customersToUpdate);
-
-    // Submete o formulário
-    EditCustomer.submitPersonalData();
-
-    // Verifica se a requisição PUT foi feita com sucesso
-    cy.wait('@putCustomer').then(({ request, response }) => {
-      expect(response.statusCode).to.equal(200); // Ou 204, dependendo da sua API
-      expect(request.body.name).to.equal(customersToUpdate.name);
-      // Adicione mais asserções para verificar outros campos atualizados
+      // Assertions
+      cy.wait('@putCustomer').then(({ request, response }) => {
+        if (response) {
+          cy.log('API Response:', JSON.stringify(response));
+          expect(response.statusCode).to.be.oneOf([200, 204]);
+          
+          // Find the updated address in the request body
+          interface Address {
+            id: number;
+          }
+          const updatedAddress = request.body.deliveryAddress.find((addr: Address) => addr.id === customerData.deliveryAddress[0].id);
+          expect(updatedAddress).to.not.be.undefined;
+          expect(updatedAddress.observations).to.equal(customerData.deliveryAddress[0].observations);
+          expect(updatedAddress.street).to.equal(customerData.deliveryAddress[0].street);
+        } else {
+          throw new Error('A requisição PUT não recebeu uma resposta do servidor.');
+        }
+      });
     });
-
-    // Verifica se uma mensagem de sucesso é exibida (se aplicável)
-    cy.contains('Cliente atualizado com sucesso!').should('be.visible');
   });
 });

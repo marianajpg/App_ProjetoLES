@@ -11,7 +11,7 @@ const Accordion = ({ items }) => {
   return (
     <div className="accordion">
       {items.map((item, index) => (
-        <div key={index} className="accordion-item">
+        <div key={index} className="accordion-item" data-cy={`delivery-address-accordion-${item.id}`}>
           <div className="accordion-header" onClick={() => handleItemClick(index)}>
             {item.title}
             <span className={`accordion-icon ${activeIndex === index ? 'open' : ''}`}>&#9660;</span>
