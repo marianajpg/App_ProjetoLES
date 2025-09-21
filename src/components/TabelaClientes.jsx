@@ -4,12 +4,8 @@ import axios from 'axios';
 import imageExcluir from '../images/image9.png';
 import imageEditar from '../images/image8.png';
 import { deleteCustomer } from '../services/customers.jsx';
-import Paginacao from './Paginacao.jsx';
-import '../styles/Paginacao.css';
 
 const TabelaClientes = ({ clientes, setClientes }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const handleExcluirCliente = async (id) => {
     const confirmar = window.confirm('Tem certeza que deseja excluir este cliente?');
@@ -39,31 +35,8 @@ const TabelaClientes = ({ clientes, setClientes }) => {
     return telefone.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
   };
 
-  // Lógica de Paginação
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentClientes = clientes.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(clientes.length / itemsPerPage);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Resetar para a primeira página ao mudar o número de itens por página
-  };
-
   return (
     <div className="tabela-container">
-      <div className="paginacao-opcoes-top">
-        <label htmlFor="itemsPerPage">Clientes por página:</label>
-        <select id="itemsPerPage" value={itemsPerPage} onChange={handleItemsPerPageChange}>
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={30}>30</option>
-        </select>
-      </div>
       {clientes.length === 0 ? (
         <div className="sem-clientes">
           <img src="/src/images/image-nenhumProduto.png" alt="Nenhum cliente encontrado" className="no-pedidos-img" />
@@ -82,7 +55,7 @@ const TabelaClientes = ({ clientes, setClientes }) => {
             </tr>
           </thead>
           <tbody>
-            {currentClientes.map((cliente) => (
+            {clientes.map((cliente) => (
               <tr key={cliente.id} className="linha-cliente">
                 <td data-label="Nome Completo">{cliente.name || '-'}</td>
                 <td data-label="CPF">{cliente.cpf || '-'}</td>
@@ -120,11 +93,6 @@ const TabelaClientes = ({ clientes, setClientes }) => {
           </tbody>
         </table>
       )}
-      <Paginacao
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
     </div>
   );
 };

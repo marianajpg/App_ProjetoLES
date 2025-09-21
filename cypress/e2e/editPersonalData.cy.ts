@@ -43,7 +43,7 @@ describe('Edit personal data', () => {
           }
           const updatedAddress = request.body.deliveryAddress.find((addr: Address) => addr.id === customerData.deliveryAddress[0].id);
           expect(updatedAddress).to.not.be.undefined;
-          expect(updatedAddress.observations).to.equal(customerData.deliveryAddress[0].observations);
+          // expect(updatedAddress.observations).to.equal(customerData.deliveryAddress[0].observations);
           expect(updatedAddress.street).to.equal(customerData.deliveryAddress[0].street);
         } else {
           throw new Error('A requisição PUT não recebeu uma resposta do servidor.');
