@@ -1,9 +1,10 @@
-import { PersonalData, EnderecoEntrega, Cartao, Botoes } from './elements';
+import { PersonalData, EnderecoEntrega, EnderecoCobranca, Cartao, Botoes } from './elements';
 
 class CreateCustomer {
   fillDadosPessoaisEEndereco(customerData: any) {
     cy.get(PersonalData.nomeCompleto).clear().type(customerData.name);
     cy.get(PersonalData.dataNascimento).clear().type(customerData.birthdaydate.slice(0, 10));
+    cy.get('body').click(0,0);
     cy.get(PersonalData.cpf).clear().type(customerData.cpf);
     cy.get(PersonalData.telefone).clear().type(customerData.phone);
     cy.get(PersonalData.genero).select(customerData.gender);
@@ -23,6 +24,24 @@ class CreateCustomer {
     cy.get(PersonalData.email).clear().type(customerData.email);
     cy.get(PersonalData.senha).clear().type(customerData.password);
     cy.get(PersonalData.confirmacaoSenha).clear().type(customerData.passwordConfirmation);
+  }
+
+  uncheckEnderecoCobrancaIgualEntrega() {
+    cy.get(PersonalData.enderecoCobrancaIgualEntrega).parent('label').click();
+  }
+
+  fillEnderecoCobranca(billingAddress: any) {
+    const address = billingAddress[0];
+    cy.get(EnderecoCobranca.cep).clear().type(address.zipCode);
+    cy.get(EnderecoCobranca.numero).clear().type(address.number);
+    cy.get(EnderecoCobranca.tipoEndereco).select(address.residenceType);
+    cy.get(EnderecoCobranca.tipoLogradouro).select(address.streetType);
+    cy.get(EnderecoCobranca.logradouro).clear().type(address.street);
+    cy.get(EnderecoCobranca.complemento).clear().type(address.complement);
+    cy.get(EnderecoCobranca.apelido).clear().type(address.observations);
+    cy.get(EnderecoCobranca.bairro).clear().type(address.neighborhood);
+    cy.get(EnderecoCobranca.cidade).clear().type(address.city);
+    cy.get(EnderecoCobranca.uf).clear().type(address.state);
   }
 
   fillCartao(cardData: any) {

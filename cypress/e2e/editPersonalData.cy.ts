@@ -1,8 +1,13 @@
 import EditCustomer from '../support/details/editCustomer';
-import { customersToUpdate } from '../fixtures/customers.json';
-
 describe('Edit personal data', () => {
+  let customersToUpdate;
+
   beforeEach(() => {
+    // Carrega os dados do arquivo de fixture
+    cy.fixture('customers').then((customers) => {
+      customersToUpdate = customers.customersToUpdate;
+    });
+
     // Visita a página de listagem de clientes (assumindo que é onde o botão de edição está)
     cy.visit('/admin/customers');
 

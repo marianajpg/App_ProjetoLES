@@ -7,6 +7,7 @@ export const PersonalData = {
   email: 'input[name="email"]',
   senha: 'input[name="senha"]',
   confirmacaoSenha: 'input[name="confirmacaoSenha"]',
+  enderecoCobrancaIgualEntrega: 'input[name="enderecoCobrancaIgualEntrega"]',
 };
 
 export const EnderecoEntrega = {
@@ -20,6 +21,19 @@ export const EnderecoEntrega = {
   bairro: 'input[name="bairroEntrega"]',
   cidade: 'input[name="cidadeEntrega"]',
   uf: 'input[name="ufEntrega"]',
+};
+
+export const EnderecoCobranca = {
+    cep: 'input[name="cepCobranca"]',
+    numero: 'input[name="numeroCobranca"]',
+    tipoEndereco: 'select[name="tipoEnderecoCobranca"]',
+    tipoLogradouro: 'select[name="streetTypeCobranca"]',
+    logradouro: 'input[name="enderecoCobranca"]',
+    complemento: 'input[name="complementoCobranca"]',
+    apelido: 'input[name="observacoesCobranca"]',
+    bairro: 'input[name="bairroCobranca"]',
+    cidade: 'input[name="cidadeCobranca"]',
+    uf: 'input[name="ufCobranca"]',
 };
 
 export const Cartao = {

@@ -31,8 +31,13 @@ describe('Delete customer', () => {
       cy.get('button').contains('Sim').click(); // Ou 'Confirmar', dependendo do texto do seu botão
 
       // Espera a chamada da API de DELETE
-      cy.wait('@deleteCustomerAPI').then(({ response }) => {
-        expect(response.statusCode).to.be.oneOf([200, 204]); // 200 OK ou 204 No Content
+      cy.wait('@deleteCustomerAPI').then((interception) => {
+        console.log('Interception delete:', interception);
+        if (interception && interception.response) {
+          expect(interception.response.statusCode).to.be.oneOf([200, 204]); // 200 OK ou 204 No Content
+        } else {
+          throw new Error('cy.wait("@deleteCustomerAPI") não recebeu uma resposta do servidor.');
+        }
       });
 
       // Espera a lista de clientes ser atualizada após a exclusão

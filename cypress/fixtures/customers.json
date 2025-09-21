@@ -1,388 +1,173 @@
 {
-  "customersToCreate": [
-    {
-      "id": 0,
-      "name": "Marcelo Ferreira Lima",
-      "birthDate": "1995-03-22T03:00:00.000Z",
-      "cpf": "92301160092",
-      "email": "marcelo.lima@testemail.com",
-      "gender": "MASCULINO",
-      "password": "Bb23456@",
-      "confPassword": "Bb23456@",
-      "ranking": 2,
-      "status": true,
-      "phone": {
-        "ddd": "11",
-        "number": "987654321",
-        "phoneType": "CELULAR"
-      },
-      "addresses": [
-        {
-          "nickname": "Endereço de cobrança",
-          "street": "Rua das Palmeiras",
-          "number": 120,
-          "neighborhood": "Centro",
-          "cep": "08790551",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "Casa 2",
-          "addressType": "COBRANCA",
-          "residenceType": "CASA",
-          "streetType": "RUA"
-        },
-        {
-          "nickname": "Endereço de entrega",
-          "street": "Rua das Palmeiras",
-          "number": 120,
-          "neighborhood": "Centro",
-          "cep": "08790551",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "",
-          "addressType": "ENTREGA",
-          "residenceType": "APARTAMENTO",
-          "streetType": "AVENIDA"
-        }
-      ]
-    },
-    {
-      "id": 0,
-      "name": "Fernanda Oliveira Souza",
-      "birthDate": "1988-07-14T03:00:00.000Z",
-      "cpf": "20568368070",
-      "email": "fernanda.souza@testemail.com",
-      "gender": "FEMININO",
-      "password": "Cc34567@",
-      "confPassword": "Cc34567@",
-      "ranking": 3,
-      "status": true,
-      "phone": {
-        "ddd": "11",
-        "number": "912345678",
-        "phoneType": "CELULAR"
-      },
-      "addresses": [
-        {
-          "nickname": "Endereço de cobrança",
-          "street": "Rua dos Lírios",
-          "number": 45,
-          "neighborhood": "Jardim das Flores",
-          "cep": "08790552",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "Bloco A",
-          "addressType": "COBRANCA",
-          "residenceType": "CASA",
-          "streetType": "RUA"
-        },
-        {
-          "nickname": "Endereço de entrega",
-          "street": "Rua dos Lírios",
-          "number": 45,
-          "neighborhood": "Jardim das Flores",
-          "cep": "08790552",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "",
-          "addressType": "ENTREGA",
-          "residenceType": "APARTAMENTO",
-          "streetType": "AVENIDA"
-        }
-      ]
-    },
-    {
-      "id": 0,
-      "name": "Rodrigo Silva Santos",
-      "birthDate": "1990-05-05T03:00:00.000Z",
-      "cpf": "32059760020",
-      "email": "rodrigo.santos@testemail.com",
-      "gender": "MASCULINO",
-      "password": "Dd45678@",
-      "confPassword": "Dd45678@",
-      "ranking": 1,
-      "status": true,
-      "phone": {
-        "ddd": "11",
-        "number": "923456789",
-        "phoneType": "CELULAR"
-      },
-      "addresses": [
-        {
-          "nickname": "Endereço de cobrança",
-          "street": "Avenida Paulista",
-          "number": 200,
-          "neighborhood": "Bela Vista",
-          "cep": "08790553",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "Apto 501",
-          "addressType": "COBRANCA",
-          "residenceType": "CASA",
-          "streetType": "RUA"
-        },
-        {
-          "nickname": "Endereço de entrega",
-          "street": "Avenida Paulista",
-          "number": 200,
-          "neighborhood": "Bela Vista",
-          "cep": "08790553",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "",
-          "addressType": "ENTREGA",
-          "residenceType": "APARTAMENTO",
-          "streetType": "AVENIDA"
-        }
-      ]
-    },
-    {
-      "id": 0,
-      "name": "Carolina Vieira Gomes",
-      "birthDate": "1985-01-28T03:00:00.000Z",
-      "cpf": "01767922019",
-      "email": "carolina.gomes@testemail.com",
-      "gender": "FEMININO",
-      "password": "Ee56789@",
-      "confPassword": "Ee56789@",
-      "ranking": 2,
-      "status": true,
-      "phone": {
-        "ddd": "11",
-        "number": "934567890",
-        "phoneType": "CELULAR"
-      },
-      "addresses": [
-        {
-          "nickname": "Endereço de cobrança",
-          "street": "Rua das Margaridas",
-          "number": 400,
-          "neighborhood": "Jardim das Acácias",
-          "cep": "08790554",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "Bloco B",
-          "addressType": "COBRANCA",
-          "residenceType": "CASA",
-          "streetType": "RUA"
-        },
-        {
-          "nickname": "Endereço de entrega",
-          "street": "Rua das Margaridas",
-          "number": 400,
-          "neighborhood": "Jardim das Acácias",
-          "cep": "08790554",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "",
-          "addressType": "ENTREGA",
-          "residenceType": "APARTAMENTO",
-          "streetType": "AVENIDA"
-        }
-      ]
-    },
-    {
-      "id": 0,
-      "name": "Bruno Pereira Lopes",
-      "birthDate": "1993-09-19T03:00:00.000Z",
-      "cpf": "58450177006",
-      "email": "bruno.lopes@testemail.com",
-      "gender": "MASCULINO",
-      "password": "Ff67890@",
-      "confPassword": "Ff67890@",
-      "ranking": 3,
-      "status": true,
-      "phone": {
-        "ddd": "11",
-        "number": "945678901",
-        "phoneType": "CELULAR"
-      },
-      "addresses": [
-        {
-          "nickname": "Endereço de cobrança",
-          "street": "Rua dos Jacarandás",
-          "number": 500,
-          "neighborhood": "Parque dos Pássaros",
-          "cep": "08790555",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "Casa 3",
-          "addressType": "COBRANCA",
-          "residenceType": "CASA",
-          "streetType": "RUA"
-        },
-        {
-          "nickname": "Endereço de entrega",
-          "street": "Rua dos Jacarandás",
-          "number": 500,
-          "neighborhood": "Parque dos Pássaros",
-          "cep": "08790555",
-          "city": {
-            "id": 34,
-            "state": {
-              "id": 17,
-              "country": {
-                "id": 6
-              }
-            }
-          },
-          "complement": "",
-          "addressType": "ENTREGA",
-          "residenceType": "APARTAMENTO",
-          "streetType": "AVENIDA"
-        }
-      ]
+  "customersToCreate":  [
+  {
+    "name": "João Pedro Silva",
+    "email": "joao.pedro@email.com",
+    "password": "Joao@2025",
+    "passwordConfirmation": "Joao@2025",
+    "cpf": "741.852.963-11",
+    "phone": "11922223333",
+    "birthdaydate": "09/01/1985",
+    "gender": "M",
+    "deliveryAddress": [{
+      "residenceType": "RESIDENCIAL",
+      "streetType": "VIELA",
+      "street": "São José",
+      "number": "99",
+      "complement": " ",
+      "neighborhood": "Ipiranga",
+      "city": "Curitiba",
+      "state": "PR",
+      "zipCode": "80050-200",
+      "observations": "Campainha quebrada"
+    }],
+    "card": {
+      "cardNumber": "6362970000457013",
+      "cardHolderName": "JOAO PEDRO SILVA",
+      "cardExpirationDate": "12/30",
+      "cardCVV": "321",
+      "cardBrand": "ELO"
     }
-  ],
-  "customersToUpdate": {
-    "id": 0,
-    "name": "Carlos Eduardo Martins",
-    "birthDate": "1988-05-23T02:00:00.000Z",
-    "cpf": "53285968036",
-    "email": "carlos.martins88@example.com",
-    "gender": "MASCULINO",
-    "password": "Bb54321@",
-    "confPassword": "Bb54321@",
-    "ranking": 2,
-    "status": true,
-    "phone": {
-      "ddd": "11",
-      "number": "900000000",
-      "phoneType": "CELULAR"
-    },
-    "addresses": [
-      {
-        "nickname": "Endereço de cobrança",
-        "street": "Avenida Paulista",
-        "number": 1000,
-        "neighborhood": "Bela Vista",
-        "cep": "01311000",
-        "city": {
-          "id": 34,
-          "state": {
-            "id": 17,
-            "country": {
-              "id": 6
-            }
-          }
-        },
-        "complement": "Apto 101",
-        "addressType": "COBRANCA",
-        "residenceType": "APARTAMENTO",
-        "streetType": "AVENIDA"
-      },
-      {
-        "nickname": "Endereço de entrega",
-        "street": "Avenida Paulista",
-        "number": 1000,
-        "neighborhood": "Bela Vista",
-        "cep": "01311000",
-        "city": {
-          "id": 34,
-          "state": {
-            "id": 17,
-            "country": {
-              "id": 6
-            }
-          }
-        },
-        "complement": "",
-        "addressType": "ENTREGA",
-        "residenceType": "APARTAMENTO",
-        "streetType": "AVENIDA"
-      }
-    ]
   },
-  "addressToUpdate": {
-    "nickname": "Endereço de cobrança",
-    "street": "Rua das Palmeiras",
-    "number": 120,
-    "neighborhood": "Centro",
-    "cep": "08790551",
-    "city": {
-      "id": 34,
-      "state": {
-        "id": 17,
-        "country": {
-          "id": 6
-        }
-      }
-    },
-    "complement": "Casa 2",
-    "customer": { "id": 1 },
-    "addressType": "COBRANCA",
-    "residenceType": "CASA",
-    "streetType": "RUA"
+  {
+    "name": "Beatriz Ramos",
+    "email": "bia.ramos@teste.com",
+    "password": "Bea@2025",
+    "passwordConfirmation": "Bea@2025",
+    "cpf": "555.666.777-88",
+    "phone": "11944445555",
+    "birthdaydate": "14/02/1998",
+    "gender": "F",
+    "deliveryAddress": [{
+      "residenceType": "RESIDENCIAL",
+      "streetType": "RUA",
+      "street": "Ipiranga",
+      "number": "250",
+      "complement": "Casa",
+      "neighborhood": "Centro Histórico",
+      "city": "Porto Alegre",
+      "state": "RS",
+      "zipCode": "90010-000",
+      "observations": "Portão de madeira"
+    }],
+    "card": {
+      "cardNumber": "6011000990139424",
+      "cardHolderName": "BEATRIZ RAMOS",
+      "cardExpirationDate": "03/28",
+      "cardCVV": "987",
+      "cardBrand": "VISA"
+    }
   },
-  "cardToCreate": {
-    "number": "1234567890123456",
-    "expirationDate": "0325",
-    "cardHolder": "Marcelo Ferreira Lima",
-    "customer": { "id": 1 },
-    "cvv": "123",
-    "cardBrand": "VISA",
-    "preferential": false
+  {
+    "name": "Diego Matos",
+    "email": "diego.matos@empresa.com",
+    "password": "Dmatos@2025",
+    "passwordConfirmation": "Dmatos@2025",
+    "cpf": "123.987.456-00",
+    "phone": "21911114444",
+    "birthdaydate": "30/09/1991",
+    "gender": "M",
+    "deliveryAddress": [{
+      "residenceType": "COMERCIAL",
+      "streetType": "AVENIDA",
+      "street": "Getúlio Vargas",
+      "number": "950",
+      "complement": "Sala 707",
+      "neighborhood": "Funcionários",
+      "city": "Belo Horizonte",
+      "state": "MG",
+      "zipCode": "30112-021",
+      "observations": "Edifício empresarial"
+    }],
+    "card": {
+      "cardNumber": "3530111333300000",
+      "cardHolderName": "DIEGO MATOS",
+      "cardExpirationDate": "10/29",
+      "cardCVV": "852",
+      "cardBrand": "AMEX"
+    },
+    "billingAddress": [{
+      "residenceType": "RESIDENCIAL",
+      "streetType": "RUA",
+      "street": "Rio Branco",
+      "number": "1200",
+      "complement": "Apto 203",
+      "neighborhood": "Boa Viagem",
+      "city": "Recife",
+      "state": "PE",
+      "zipCode": "51020-300",
+      "observations": "Prédio azul"
+    }]
+  },
+  {
+    "name": "Helena Castro",
+    "email": "helena.castro@teste.com",
+    "password": "Helena@2025",
+    "passwordConfirmation": "Helena@2025",
+    "cpf": "741.963.852-44",
+    "phone": "61955556666",
+    "birthdaydate": "05/06/1986",
+    "gender": "F",
+    "deliveryAddress": [{
+      "residenceType": "RESIDENCIAL",
+      "streetType": "ALAMEDA",
+      "street": "Das Palmeiras",
+      "number": "88",
+      "complement": "Bloco C",
+      "neighborhood": "Asa Sul",
+      "city": "Brasília",
+      "state": "DF",
+      "zipCode": "70200-000",
+      "observations": "Entregar na portaria"
+    }],
+    "card": {
+      "cardNumber": "30569309025904",
+      "cardHolderName": "HELENA CASTRO",
+      "cardExpirationDate": "04/26",
+      "cardCVV": "159",
+      "cardBrand": "ELO"
+    }
+  },
+  {
+    "name": "Rafael Oliveira",
+    "email": "rafael.oliveira@teste.com",
+    "password": "Rafa@2025",
+    "passwordConfirmation": "Rafa@2025",
+    "cpf": "852.741.369-77",
+    "phone": "11933332222",
+    "birthdaydate": "21/11/1983",
+    "gender": "M",
+    "deliveryAddress": [{
+      "residenceType": "RESIDENCIAL",
+      "streetType": "TRAVESSA",
+      "street": "São Miguel",
+      "number": "15",
+      "complement": "",
+      "neighborhood": "Cidade Nova",
+      "city": "Manaus",
+      "state": "AM",
+      "zipCode": "69010-060",
+      "observations": "Casa com portão branco"
+    }],
+    "card": {
+      "cardNumber": "6304000000000000",
+      "cardHolderName": "RAFAEL OLIVEIRA",
+      "cardExpirationDate": "07/27",
+      "cardCVV": "753",
+      "cardBrand": "MASTERCARD"
+    },
+    "billingAddress": [{
+      "residenceType": "COMERCIAL",
+      "streetType": "PRAÇA",
+      "street": "Da República",
+      "number": "400",
+      "complement": "Loja 02",
+      "neighborhood": "Centro",
+      "city": "Manaus",
+      "state": "AM",
+      "zipCode": "69005-040",
+      "observations": "Shopping térreo"
+    }]
   }
+]
 }

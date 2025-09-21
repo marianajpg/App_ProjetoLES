@@ -58,7 +58,7 @@ function CadastroCliente() {
 
   // Arrays de opções para os campos <select> do formulário.
   const generos = [{ value: 'F', label: 'Feminino' }, { value: 'M', label: 'Masculino' }];
-  const streetTypes = [{ value: 'RUA', label: 'Rua' }, { value: 'AVENIDA', label: 'Avenida' }, { value: 'ALAMEDA', label: 'Alameda' }, { value: 'PRAÇA', label: 'Praça' }, { value: 'VIELA', label: 'Viela' }, { value: 'TRAVESSA', label: 'Travessa' }];
+  const streetTypes = [{ value: 'RUA', label: 'Rua' }, { value: 'AVENIDA', label: 'Avenida' }, { value: 'ALAMEDA', label: 'Alameda' }, { value: 'PRAÇA', label: 'Praça' }, { value: 'VIELA', label: 'Viela' }, { value: 'TRAVESSA', label: 'Travessa' }, { value: 'RODOVIA', label: 'Rodovia' }];
   const tiposEndereco = [{ value: 'RESIDENCIAL', label: 'Residencial' }, { value: 'COMERCIAL', label: 'Comercial' }];
 
   // Busca dados de endereço a partir de um CEP usando a API ViaCEP.
@@ -201,7 +201,11 @@ function CadastroCliente() {
       }
     } catch (error) {
       console.error('Erro no cadastro:', error);
-      alert('Ocorreu um erro durante o cadastro. Verifique os dados e tente novamente.');
+      if (error.response && error.response.data && error.response.data.message) {
+        alert(error.response.data.message);
+      } else {
+        alert('Ocorreu um erro durante o cadastro. Verifique os dados e tente novamente.');
+      }
     }
   };
 
@@ -275,7 +279,32 @@ function CadastroCliente() {
                 </label>
                 {!formData.enderecoCobrancaIgualEntrega && (
                   <>
-                    {/* Campos do endereço de cobrança são renderizados aqui */}
+                    <div className="form-group">
+                      <div className='form-row'>
+                        <input type="text" name="cepCobranca" placeholder="CEP" value={formData.cepCobranca} onChange={(e) => handleCEPChange(e, 'Cobranca')} required />
+                        <input type="text" name="numeroCobranca" placeholder="Número" value={formData.numeroCobranca} onChange={handleChange} required />
+                      </div>
+                      {loadingCEP && <span>Buscando CEP...</span>}
+                      {cepError && <span className="error">{cepError}</span>}
+                      <div className='form-row'>
+                        <select className='cadastro-select' name="tipoEnderecoCobranca" value={formData.tipoEnderecoCobranca} onChange={handleChange} required>
+                          {tiposEndereco.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                        </select>
+                        <select className='cadastro-select' name="streetTypeCobranca" value={formData.streetTypeCobranca} onChange={handleChange} required>
+                          {streetTypes.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                        </select>
+                      </div>
+                      <div className='form-row'><input type="text" name="enderecoCobranca" placeholder="Endereço" value={formData.enderecoCobranca} onChange={handleChange} required /></div>
+                      <div className='form-row'>
+                        <input type="text" name="complementoCobranca" placeholder="Complemento" value={formData.complementoCobranca} onChange={handleChange} />
+                        <input type="text" name="observacoesCobranca" placeholder="Apelido" value={formData.observacoesCobranca} onChange={handleChange} required />
+                      </div>
+                      <div className='form-row'>
+                        <input type="text" name="bairroCobranca" placeholder="Bairro" value={formData.bairroCobranca} onChange={handleChange} required />
+                        <input type="text" name="cidadeCobranca" placeholder="Cidade" value={formData.cidadeCobranca} onChange={handleChange} required />
+                        <input type="text" name="ufCobranca" placeholder="UF" value={formData.ufCobranca} onChange={handleChange} required maxLength="2" />
+                      </div>
+                    </div>
                   </>
                 )}
               </div>
