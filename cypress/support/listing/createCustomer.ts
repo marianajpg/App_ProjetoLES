@@ -2,28 +2,28 @@ import { PersonalData, EnderecoEntrega, EnderecoCobranca, Cartao, Botoes } from 
 
 class CreateCustomer {
   fillDadosPessoaisEEndereco(customerData: any) {
-    cy.get(PersonalData.nomeCompleto).clear().type(customerData.name);
-    cy.get(PersonalData.dataNascimento).clear().type(customerData.birthdaydate.slice(0, 10));
+    cy.get(PersonalData.nomeCompleto).should('be.enabled').clear().type(customerData.name);
+    cy.get(PersonalData.dataNascimento).should('be.enabled').clear().type(customerData.birthdaydate.slice(0, 10));
     cy.get('body').click(0,0);
-    cy.get(PersonalData.cpf).clear().type(customerData.cpf);
-    cy.get(PersonalData.telefone).clear().type(customerData.phone);
-    cy.get(PersonalData.genero).select(customerData.gender);
+    cy.get(PersonalData.cpf).should('be.enabled').clear().type(customerData.cpf);
+    cy.get(PersonalData.telefone).should('be.enabled').clear().type(customerData.phone);
+    cy.get(PersonalData.genero).should('be.enabled').select(customerData.gender);
 
     const deliveryAddress = customerData.deliveryAddress[0];
-    cy.get(EnderecoEntrega.cep).clear().type(deliveryAddress.zipCode);
-    cy.get(EnderecoEntrega.numero).clear().type(deliveryAddress.number);
-    cy.get(EnderecoEntrega.tipoEndereco).select(deliveryAddress.residenceType);
-    cy.get(EnderecoEntrega.tipoLogradouro).select(deliveryAddress.streetType);
-    cy.get(EnderecoEntrega.logradouro).clear().type(deliveryAddress.street);
-    cy.get(EnderecoEntrega.complemento).clear().type(deliveryAddress.complement);
-    cy.get(EnderecoEntrega.apelido).clear().type(deliveryAddress.observations);
-    cy.get(EnderecoEntrega.bairro).clear().type(deliveryAddress.neighborhood);
-    cy.get(EnderecoEntrega.cidade).clear().type(deliveryAddress.city);
-    cy.get(EnderecoEntrega.uf).clear().type(deliveryAddress.state);
+    cy.get(EnderecoEntrega.cep).should('be.enabled').clear().type(deliveryAddress.zipCode);
+    cy.get(EnderecoEntrega.numero).should('be.enabled').clear().type(deliveryAddress.number);
+    cy.get(EnderecoEntrega.tipoEndereco).should('be.enabled').select(deliveryAddress.residenceType);
+    cy.get(EnderecoEntrega.tipoLogradouro).should('be.enabled').select(deliveryAddress.streetType);
+    cy.get(EnderecoEntrega.logradouro).should('be.enabled').clear().type(deliveryAddress.street);
+    cy.get(EnderecoEntrega.complemento).should('be.enabled').clear().type(deliveryAddress.complement);
+    cy.get(EnderecoEntrega.apelido).should('be.enabled').clear().type(deliveryAddress.observations);
+    cy.get(EnderecoEntrega.bairro).should('be.enabled').clear().type(deliveryAddress.neighborhood);
+    cy.get(EnderecoEntrega.cidade).should('be.enabled').clear().type(deliveryAddress.city);
+    cy.get(EnderecoEntrega.uf).should('be.enabled').clear().type(deliveryAddress.state);
 
-    cy.get(PersonalData.email).clear().type(customerData.email);
-    cy.get(PersonalData.senha).clear().type(customerData.password);
-    cy.get(PersonalData.confirmacaoSenha).clear().type(customerData.passwordConfirmation);
+    cy.get(PersonalData.email).should('be.enabled').clear().type(customerData.email);
+    cy.get(PersonalData.senha).should('be.enabled').clear().type(customerData.password);
+    cy.get(PersonalData.confirmacaoSenha).should('be.enabled').clear().type(customerData.passwordConfirmation);
   }
 
   uncheckEnderecoCobrancaIgualEntrega() {

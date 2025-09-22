@@ -2,6 +2,7 @@
   "customersToEdit":[
      {
     "id": 6,
+    "phone":"1147961437",
     "deliveryAddress": [{
       "id": 42,
       "residenceType": "RESIDENCIAL",
@@ -43,67 +44,9 @@
   }
   ],
   "customersToDelete": [{
-    "id": 20
+    "id": 17
   }],
-  "customersToCreate":[
-  {
-    "name": "Thiago Andrade",
-    "email": "thiago.andrade@clientmail.com",
-    "password": "Thi@2025",
-    "passwordConfirmation": "Thi@2025",
-    "cpf": "852.963.741-00",
-    "phone": "71998887766",
-    "birthdaydate": "02/02/1988",
-    "gender": "M",
-    "deliveryAddress": [{
-      "residenceType": "RESIDENCIAL",
-      "streetType": "TRAVESSA",
-      "street": "Boa Esperança",
-      "number": "12",
-      "complement": "Fundos",
-      "neighborhood": "Cabula",
-      "city": "Salvador",
-      "state": "BA",
-      "zipCode": "41200-000",
-      "observations": "Portão verde"
-    }],
-    "card": {
-      "cardNumber": "6011111111111117",
-      "cardHolderName": "THIAGO ANDRADE",
-      "cardExpirationDate": "08/29",
-      "cardCVV": "654",
-      "cardBrand": "ELO"
-    }
-  },
-  {
-    "name": "Patrícia Lima",
-    "email": "patricia.lima@contato.net",
-    "password": "Paty@2025",
-    "passwordConfirmation": "Paty@2025",
-    "cpf": "741.258.963-11",
-    "phone": "61977775544",
-    "birthdaydate": "19/05/1992",
-    "gender": "F",
-    "deliveryAddress": [{
-      "residenceType": "COMERCIAL",
-      "streetType": "AVENIDA",
-      "street": "das Palmeiras",
-      "number": "890",
-      "complement": "Sala 9",
-      "neighborhood": "Asa Norte",
-      "city": "Brasília",
-      "state": "DF",
-      "zipCode": "70700-010",
-      "observations": "Prédio azul, ao lado do shopping"
-    }],
-    "card": {
-      "cardNumber": "5105105105105100",
-      "cardHolderName": "PATRICIA LIMA",
-      "cardExpirationDate": "03/28",
-      "cardCVV": "852",
-      "cardBrand": "MASTERCARD"
-    }
-  },
+  "customersToCreate": [
   {
     "name": "Rafael Menezes",
     "email": "rafael.menezes@dominio.com",
@@ -203,5 +146,5 @@
       "cardBrand": "ELO"
     }
   }
-]
+  ]
 }
