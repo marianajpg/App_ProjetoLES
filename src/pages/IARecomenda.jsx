@@ -8,27 +8,96 @@ import iconUser from '../images/img_icon_user.png';
 import bannerFundoIA from '../images/img-bannerfundoIA.png';
 import { mockBooks, mockUser, mockPurchaseHistory } from '../services/mockData.js';
 
-// Função wrapper para a chamada da API Generativa do Google.
-async function callGeminiAPI(promptText, apiKey) {
-  const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-  const requestBody = { contents: [{ parts: [{ text: promptText }] }] };
+// Função wrapper para a chamada da API Generativa via Groq.
+
+async function callGroqAPI(promptText) {
+
+  // IMPORTANTE: Cole sua chave de API do Groq aqui.
+
+  // Você pode obter uma em: https://console.groq.com/keys
+
+  const GROQ_API_KEY = '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';
+  const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+
   try {
-    const response = await fetch(`${API_URL}`, {
+    const response = await fetch(GROQ_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey },
-      body: JSON.stringify(requestBody)
+      headers: {
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant', // Modelo recomendado atualmente pelo Groq
+        messages: [{ role: 'user', content: promptText }],
+        temperature: 0.7,
+      })
+
     });
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Erro da API: ${response.status} - ${errorData.error.message || 'Erro desconhecido'}`);
+      const errorBody = await response.json();
+      throw new Error(`Erro na resposta da API Groq: ${response.status} - ${errorBody.error.message}`);
     }
+
     const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível gerar uma resposta.";
+    return data.choices?.[0]?.message?.content || "Não foi possível obter uma resposta do modelo.";
+
   } catch (error) {
-    console.error("Erro ao chamar a API Gemini:", error);
-    return `Desculpe, houve um erro ao processar sua solicitação: ${error.message}`;
+    console.error("Erro ao chamar a API Groq:", error);
+    return `Desculpe, houve um erro ao conectar com o serviço de IA: ${error.message}`;
   }
+
 }
+
+
+/*
+
+// Implementações anteriores (Ollama e Gemini) mantidas como referência.
+
+// via Gemini
+
+async function callGeminiAPI(promptText, apiKey) {
+
+  const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+
+  const requestBody = { contents: [{ parts: [{ text: promptText }] }] };
+
+  try {
+
+    const response = await fetch(`${API_URL}`, {
+
+      method: 'POST',
+
+      headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey },
+
+      body: JSON.stringify(requestBody)
+
+    });
+
+    if (!response.ok) {
+
+      const errorData = await response.json();
+
+      throw new Error(`Erro da API: ${response.status} - ${errorData.error.message || 'Erro desconhecido'}`);
+
+    }
+
+    const data = await response.json();
+
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível gerar uma resposta.";
+
+  } catch (error) {
+
+    console.error("Erro ao chamar a API Gemini:", error);
+
+    return `Desculpe, houve um erro ao processar sua solicitação: ${error.message}`;
+
+  }
+
+}
+
+*/
 
 const IARecomenda = () => {
   // Tenta carregar o histórico do chat do sessionStorage ao iniciar.
@@ -106,7 +175,7 @@ const IARecomenda = () => {
 
       **Instruções IMPORTANTES:**
       1. Use o histórico e as preferências do cliente para fazer recomendações ALTAMENTE PERSONALIZADAS.
-      2. Responda de forma calorosa e pessoal.
+      2. Responda de forma calorosa e pessoal, seja breve.
       3. Se o cliente pedir algo vago como "um livro bom", sugira algo baseado nas compras passadas dele. Por exemplo, se ele comprou "Duna", sugira "Fundação".
       4. Se o cliente perguntar sobre um livro que não está no catálogo, informe educadamente que não o temos e sugira uma alternativa SIMILAR do catálogo.
       5. Ao recomendar um livro do catálogo, coloque o título EXATO em negrito, usando asteriscos duplos. Exemplo: **O Nome do Vento**. Isso é crucial.
@@ -118,9 +187,8 @@ const IARecomenda = () => {
       Sua resposta:
     `;
 
-    const API_KEY = "AIzaSyA-pW_YMrTkuWkKKf_7-YBBQqIQDKDM2x4"; 
     try {
-      const respostaIA = await callGeminiAPI(promptParaIA, API_KEY);
+      const respostaIA = await callGroqAPI(promptParaIA);
 
       // Processa a resposta da IA para extrair títulos de livros (marcados com **).
       // Isso transforma o texto da IA em componentes de UI interativos (cards de produto).

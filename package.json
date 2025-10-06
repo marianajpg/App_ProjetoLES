@@ -30,15 +30,27 @@
     "vite": "^5.4.20"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^4.11.0",
     "axios": "^1.8.4",
     "chart.js": "^4.5.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "ollama": "^0.6.0",
     "react-chartjs-2": "^5.3.0",
     "react-datepicker": "^8.3.0",
     "react-draggable": "^4.4.6",
     "react-router-dom": "^7.1.3",
+    "react-select": "^5.10.2",
     "selenium-webdriver": "^4.35.0"
   },
-  "main": "server.js"
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marianajpg/App_ProjetoLES.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marianajpg/App_ProjetoLES/issues"
+  },
+  "homepage": "https://github.com/marianajpg/App_ProjetoLES#readme"
 }

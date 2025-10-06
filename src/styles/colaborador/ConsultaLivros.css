@@ -74,3 +74,32 @@
 .card {
   position: relative;
 }
+
+.abas-e-botao-container {
+  display: flex;
+  justify-content: center; /* Centraliza o grupo de abas e o botão */
+  margin-bottom: 30px; /* Alinha com a margem original das abas */
+  gap: 10px; /* Espaço entre o último botão de aba e o botão de criar */
+}
+
+.botao-criar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;  /* Tamanho similar à altura dos outros botões */
+  height: 35px;
+  padding: 0;
+  background-color: #ffddcc; /* Mesma cor de fundo das abas inativas */
+  color: var(--primary-color); /* Mesma cor do texto das abas inativas */
+  border: none;
+  border-radius: 8px; /* Mesmo raio de borda das abas */
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+  transition: background-color 0.3s ease;
+}
+
+.botao-criar:hover {
+  background-color: var(--quaternary-color); /* Mesmo efeito hover das abas */
+}

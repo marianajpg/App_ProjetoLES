@@ -1,93 +1,176 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Breadcrumb from '../components/Breadcrumb';
 import FiltrosLivro from '../components/FiltrosLivro';
 import ProdutoCard from '../components/ProdutoCard';
-import '../styles/ShopLivros.css';
+import Paginacao from '../components/Paginacao';
+import InfoSection from '../components/InfoSection';
 import CampoPesquisa from '../components/CampoPesquisa';
-import InfoSection from '../components/InfoSection.jsx';
+import { getBooks } from '../services/books';
+import '../styles/ShopLivros.css';
 
-// Dados mockados para simular um catálogo de livros.
-const mockLivros = [
-  { id: 1, titulo: 'A Vida Secreta das Árvores', autor: { nome: 'Peter Wohlleben' }, editora: { nome: 'Sextante' }, ano: 2016, valorVenda: 48.99, categorias: [{ nome: 'Não-ficção' }, { nome: 'Ciência' }], imagens: [{ url: 'https://m.media-amazon.com/images/I/414U616yzqL._SY445_SX342_.jpg' }], estoque: [{ quantidade: 15 }] },
-  { id: 2, titulo: 'O Homem Mais Rico da Babilônia', autor: { nome: 'George S. Clason' }, editora: { nome: 'HarperCollins' }, ano: 2017, valorVenda: 25.99, categorias: [{ nome: 'Finanças' }, { nome: 'Desenvolvimento Pessoal' }], imagens: [{ url: 'https://m.media-amazon.com/images/I/41Xc4wyyMIL._SY445_SX342_.jpg' }], estoque: [{ quantidade: 30 }] },
-  { id: 3, titulo: 'Pai Rico, Pai Pobre', autor: { nome: 'Robert T. Kiyosaki' }, editora: { nome: 'Alta Books' }, ano: 2018, valorVenda: 35.50, categorias: [{ nome: 'Finanças' }, { nome: 'Desenvolvimento Pessoal' }], imagens: [{ url: 'https://m.media-amazon.com/images/I/51UjO3YMafL._SY445_SX342_.jpg' }], estoque: [{ quantidade: 25 }] },
-  { id: 4, titulo: 'Sapiens: Uma Breve História da Humanidade', autor: { nome: 'Yuval Noah Harari' }, editora: { nome: 'L&PM' }, ano: 2015, valorVenda: 69.90, categorias: [{ nome: 'História' }, { nome: 'Antropologia' }], imagens: [{ url: 'https://m.media-amazon.com/images/I/41FU42ESk5L._SY445_SX342_.jpg' }], estoque: [{ quantidade: 10 }] },
-  { id: 5, titulo: '1984', autor: { nome: 'George Orwell' }, editora: { nome: 'Companhia das Letras' }, ano: 2009, valorVenda: 22.80, categorias: [{ nome: 'Ficção' }, { nome: 'Distopia' }], imagens: [{ url: 'https://m.media-amazon.com/images/I/51VXYaKO-sL._SY445_SX342_.jpg' }], estoque: [{ quantidade: 50 }] }
+const faixasDePrecoMap = [
+  { label: 'R$10–R$30', min: 10, max: 30 },
+  { label: 'R$30–R$50', min: 30, max: 50 },
+  { label: 'R$50–R$100', min: 50, max: 100 },
+  { label: 'R$100–R$150', min: 100, max: 150 },
 ];
 
-// Página de catálogo de livros, com funcionalidades de pesquisa e filtro.
 const ShopLivros = () => {
   const breadcrumbItems = [{ label: 'Home', link: '/' }, { label: 'Livros', link: '' }];
+  const navigate = useNavigate();
+
+  const [allProdutos, setAllProdutos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const [termoPesquisa, setTermoPesquisa] = useState('');
   const [filtros, setFiltros] = useState({ autores: [], editoras: [], anos: [], faixasDePreco: [], categorias: [], ordenacao: '' });
-  const [livros, setLivros] = useState(mockLivros);
 
-  const faixasDePreco = [
-    { label: 'R$10–R$30', min: 10, max: 30 },
-    { label: 'R$30–R$50', min: 30, max: 50 },
-    { label: 'R$50–R$100', min: 50, max: 100 },
-    { label: 'R$100–R$150', min: 100, max: 150 },
-  ];
+  useEffect(() => {
+    const fetchAllBooks = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await getBooks({}); 
+        const booksArray = Array.isArray(response) ? response : response.books || [];
+        setAllProdutos(booksArray);
+      } catch (err) {
+        setError('Não foi possível carregar os livros. Tente novamente mais tarde.');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Função principal que aplica a pesquisa, os filtros e a ordenação sobre a lista de livros.
-  const filtrarLivros = () => {
-    let filtrados = livros.filter((livro) => {
-      const termo = termoPesquisa.toLowerCase();
-  
-      const correspondePesquisa = termo === '' || livro.titulo.toLowerCase().includes(termo) || livro.autor?.nome.toLowerCase().includes(termo) || livro.editora?.nome.toLowerCase().includes(termo);
-      const anoValido = filtros.anos.length === 0 || filtros.anos.includes(livro.ano);
-      const faixaPrecoValida = filtros.faixasDePreco.length === 0 || filtros.faixasDePreco.some((faixaLabel) => {
-        const faixa = faixasDePreco.find((f) => f.label === faixaLabel);
-        return faixa && livro.valorVenda >= faixa.min && livro.valorVenda <= faixa.max;
-      });
-      const categoriaValida = filtros.categorias.length === 0 || filtros.categorias.some((cat) => livro.categorias.map(c => c.nome).includes(cat));
-  
-      return correspondePesquisa && anoValido && faixaPrecoValida && categoriaValida;
-    });
-  
-    // Aplica a ordenação selecionada.
-    switch (filtros.ordenacao) {
-      case 'Menor preço': filtrados.sort((a, b) => a.valorVenda - b.valorVenda); break;
-      case 'Maior preço': filtrados.sort((a, b) => b.valorVenda - a.valorVenda); break;
-      case 'Mais recentes': filtrados.sort((a, b) => b.ano - a.ano); break;
-      default: break;
-    }
-    return filtrados;
+    fetchAllBooks();
+  }, []);
+
+  // Gera opções para os filtros dinâmicos
+  const autorOptions = useMemo(() => 
+    [...new Set(allProdutos.map(p => p.author).filter(Boolean))]
+      .map(author => ({ value: author, label: author }))
+      .sort((a, b) => a.label.localeCompare(b.label)),
+    [allProdutos]
+  );
+
+  const editoraOptions = useMemo(() => 
+    [...new Set(allProdutos.map(p => p.publisher).filter(Boolean))]
+      .map(publisher => ({ value: publisher, label: publisher }))
+      .sort((a, b) => a.label.localeCompare(b.label)),
+    [allProdutos]
+  );
+
+  const anoOptions = useMemo(() => 
+    [...new Set(allProdutos.map(p => p.year).filter(Boolean))]
+      .map(year => ({ value: year, label: year.toString() }))
+      .sort((a, b) => a.label.localeCompare(b.label)), 
+    [allProdutos]
+  );
+
+  const handleFiltroChange = (novosFiltros) => {
+    setFiltros(novosFiltros);
+    setCurrentPage(1);
   };
   
-  const livrosFiltrados = filtrarLivros();
+  const handlePesquisaChange = (termo) => {
+    setTermoPesquisa(termo);
+    setCurrentPage(1);
+  };
+
+const getFilteredAndSearchedItems = () => {
+  let items = allProdutos.filter(livro => {
+    const termo = termoPesquisa.toLowerCase();
+    const correspondePesquisa = termo === '' || 
+      livro.title.toLowerCase().includes(termo) ||
+      (livro.author && livro.author.toLowerCase().includes(termo));
+
+    const correspondeAutores = filtros.autores.length === 0 || filtros.autores.includes(livro.author);
+    const correspondeEditoras = filtros.editoras.length === 0 || filtros.editoras.includes(livro.publisher);
+    const correspondeAnos = filtros.anos.length === 0 || filtros.anos.includes(livro.year); // ← FILTRO DE ANOS
+    const correspondeCategorias = filtros.categorias.length === 0 || filtros.categorias.some(cat => (livro.categories || []).map(c => c.name).includes(cat));
+
+    const correspondePreco = filtros.faixasDePreco.length === 0 || filtros.faixasDePreco.some(faixaLabel => {
+      const faixa = faixasDePrecoMap.find(f => f.label === faixaLabel);
+      const price = parseFloat(livro.price);
+      return faixa && price >= faixa.min && price <= faixa.max;
+    });
+
+    return correspondePesquisa && correspondeAutores && correspondeEditoras && correspondeAnos && correspondeCategorias && correspondePreco;
+  });
+
+  switch (filtros.ordenacao) {
+    case 'Menor preço': items.sort((a, b) => parseFloat(a.price) - parseFloat(b.price)); break;
+    case 'Maior preço': items.sort((a, b) => parseFloat(b.price) - parseFloat(a.price)); break;
+    case 'Mais recentes': items.sort((a, b) => b.year - a.year); break;
+    default: break;
+  }
+
+  return items;
+};
+
+  const filteredItems = getFilteredAndSearchedItems();
+
+  const totalItems = filteredItems.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div>
       <Header />
       <Breadcrumb items={breadcrumbItems} />
       <h1 className="shop-titulo">CATÁLOGO DE LIVROS</h1>
-      <CampoPesquisa termoPesquisa={termoPesquisa} setTermoPesquisa={setTermoPesquisa} />
+      <CampoPesquisa termoPesquisa={termoPesquisa} setTermoPesquisa={handlePesquisaChange} />
       <div className="main-container">
-        <FiltrosLivro onFiltroChange={setFiltros} />
+        <FiltrosLivro 
+          onFiltroChange={handleFiltroChange}
+          autorOptions={autorOptions}
+          editoraOptions={editoraOptions}
+          anoOptions={anoOptions}
+        />
         <div className="cards-container">
-          {livrosFiltrados.map((livro) => (
-            <ProdutoCard
-              key={livro.id}
-              id={livro.id}
-              capaUrl={livro.imagens?.[0]?.url ?? 'https://via.placeholder.com/150'}
-              titulo={livro.titulo}
-              autor={livro.autor?.nome ?? 'Autor desconhecido'}
-              preco={livro.valorVenda}
-              estoque={livro.estoque?.reduce((total, item) => total + item.quantidade, 0) ?? 0}
-              imagens={livro.imagens ?? []}
-              editora={livro.editora?.nome ?? 'Editora desconhecida'}
-              extra={null}
-            />
-          ))}
+          {isLoading ? (
+            <p>Carregando...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : currentItems.length > 0 ? (
+            currentItems.map((livro) => (
+              <ProdutoCard
+                key={livro.id}
+                id={livro.id}
+                capaUrl={
+                  livro.images && livro.images.length > 0 ? livro.images[0].url : ""}
+                titulo={livro.title}
+                autor={livro.author ?? 'Autor desconhecido'}
+                preco={parseFloat(livro.price).toFixed(2) || 0}
+                estoque={null}
+                imagens={livro.images}
+                editora={livro.publisher ?? 'Editora desconhecida'}
+                onClick={() => navigate(`/tela-produto/${livro.id}`, { state: { livro } })}
+              />
+            ))
+          ) : (
+            <div className="nenhum-produto"
+            ><img src="/src/images/image-nenhumProduto.png" alt="Nenhum produto encontrado" className="no-pedidos-img" />
+            <p>Nenhum livro encontrado com os filtros selecionados.</p></div>
+          )}
         </div>
       </div>
+      <Paginacao
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
       <InfoSection />
     </div>
   );
 };
 
 export default ShopLivros;
+

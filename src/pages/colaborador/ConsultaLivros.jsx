@@ -1,46 +1,116 @@
 import React, { useState } from 'react';
-import EditarLivroModal from '../../components/EditarLivroModal';
+import { useNavigate } from 'react-router-dom';
+import LivroModal from '../../components/LivroModal';
 import AbasFiltro from '../../components/AbasFiltro';
 import CampoPesquisa from '../../components/CampoPesquisa';
 import ProdutoCard from '../../components/ProdutoCard';
 import '../../styles/colaborador/ConsultaLivros.css';
 import Header from '../../components/Header.jsx';
 
-// Página para colaboradores consultarem e gerenciarem o catálogo de livros.
-const ConsultaLivros = () => {
-  const mockLivros = [
-    { id: 1, titulo: 'O Senhor dos Anéis', autor: { nome: 'J.R.R. Tolkien' }, editora: { nome: 'HarperCollins' }, valorVenda: 59.9, estoque: { quantidade: 10 }, ativo: true, imagens: [{ url: 'https://m.media-amazon.com/images/I/81hCVEC0ExL._SY466_.jpg' }] },
-    { id: 2, titulo: 'Duna', autor: { nome: 'Frank Herbert' }, editora: { nome: 'Aleph' }, valorVenda: 49.9, estoque: { quantidade: 5 }, ativo: true, imagens: [{ url: 'https://m.media-amazon.com/images/I/81zN7udGRUL._SY425_.jpg' }] },
-    { id: 3, titulo: 'O Guia do Mochileiro das Galáxias', autor: { nome: 'Douglas Adams' }, editora: { nome: 'Arqueiro' }, valorVenda: 39.9, estoque: { quantidade: 0 }, ativo: false, imagens: [{ url: 'https://m.media-amazon.com/images/I/51B7vacPfEL._SY445_SX342_.jpg' }] },
-  ];
+// Mock data that matches the full API structure
+const mockLivros = [
+  { 
+    id: 1, 
+    title: 'O Senhor dos Anéis', 
+    author: 'J.R.R. Tolkien', 
+    publisher: 'HarperCollins', 
+    year: 1954,
+    edition: '1ª Edição',
+    ISBN: '978-0618640157',
+    pages: 1216,
+    synopsis: 'Uma jornada épica para destruir um anel poderoso e salvar a Terra-média da escuridão.',
+    dimensions: { height: 22, width: 15, depth: 5, weight: 1500 },
+    barcode: '9780618640157',
+    price: '129.90',
+    status: 'ACTIVE',
+    pricegroup: { id: 1, name: 'Padrão' },
+    ativo: true, // For filtering
+    imagens: [{ url: 'https://m.media-amazon.com/images/I/81hCVEC0ExL._SY466_.jpg' }] 
+  },
+  { 
+    id: 2, 
+    title: 'Duna', 
+    author: 'Frank Herbert', 
+    publisher: 'Aleph', 
+    year: 1965,
+    edition: 'Edição de Colecionador',
+    ISBN: '978-8576570013',
+    pages: 688,
+    synopsis: 'Em um futuro distante, casas nobres lutam pelo controle do planeta desértico Arrakis.',
+    dimensions: { height: 23, width: 16, depth: 4, weight: 900 },
+    barcode: '9788576570013',
+    price: '89.90',
+    status: 'ACTIVE',
+    pricegroup: { id: 1, name: 'Padrão' },
+    ativo: true,
+    imagens: [{ url: 'https://m.media-amazon.com/images/I/81zN7udGRUL._SY425_.jpg' }] 
+  },
+  { 
+    id: 3, 
+    title: 'O Guia do Mochileiro das Galáxias', 
+    author: 'Douglas Adams', 
+    publisher: 'Arqueiro', 
+    year: 1979,
+    edition: 'Edição Definitiva',
+    ISBN: '978-8576570488',
+    pages: 208,
+    synopsis: 'As aventuras de um humano azarado após a demolição da Terra para a construção de uma via expressa hiperespacial.',
+    dimensions: { height: 21, width: 14, depth: 2, weight: 300 },
+    barcode: '9788576570488',
+    price: '39.90',
+    status: 'INACTIVE',
+    pricegroup: { id: 2, name: 'Promoção' },
+    ativo: false,
+    imagens: [{ url: 'https://m.media-amazon.com/images/I/51B7vacPfEL._SY445_SX342_.jpg' }] 
+  },
+];
 
+
+const ConsultaLivros = () => {
+  const navigate = useNavigate();
   const [livros, setLivros] = useState(mockLivros);
   const [abaAtiva, setAbaAtiva] = useState('todos');
   const [termoPesquisa, setTermoPesquisa] = useState('');
+  
   const [modalAberto, setModalAberto] = useState(false);
   const [livroSelecionado, setLivroSelecionado] = useState(null);
 
-  // Funções para controlar a visibilidade e os dados do modal de edição.
-  const handleAbrirModal = (livro) => {
+  const handleAbrirModal = (livro = null) => {
     setLivroSelecionado(livro);
     setModalAberto(true);
   };
+
   const handleFecharModal = () => {
     setModalAberto(false);
     setLivroSelecionado(null);
   };
 
-  // Salva as alterações do livro (em modo mock, atualiza apenas o estado local).
-  const handleSalvar = (dados) => {
-    const updatedLivros = livros.map(livro => (livro.id === dados.id ? dados : livro));
-    setLivros(updatedLivros);
+  const handleSalvar = (dadosDoLivro) => {
+    if (livroSelecionado) { // Edit Mode
+      console.log('Atualizando livro:', dadosDoLivro);
+      const updatedLivros = livros.map(livro => 
+        livro.id === dadosDoLivro.id ? { ...livro, ...dadosDoLivro } : livro
+      );
+      setLivros(updatedLivros);
+    } else { // Create Mode
+      console.log('Criando novo livro:', dadosDoLivro);
+      const livroCriado = { 
+        ...dadosDoLivro, 
+        id: Math.random(), // Simulate new ID
+        ativo: dadosDoLivro.status === 'ACTIVE',
+        imagens: [], // Default empty image
+        pricegroup: { id: dadosDoLivro.pricegroupId, name: 'Novo Grupo' } // Simulate
+      };
+      setLivros(prev => [...prev, livroCriado]);
+    }
     handleFecharModal();
   };
 
-  // Filtra os livros com base na aba de status (todos, ativos, inativos) e no termo de pesquisa.
   const livrosFiltrados = livros.filter(livro => {
     const termo = termoPesquisa.toLowerCase();
-    const correspondePesquisa = livro.titulo.toLowerCase().includes(termo) || livro.autor?.nome.toLowerCase().includes(termo) || livro.editora?.nome.toLowerCase().includes(termo);
+    const correspondePesquisa = (livro.title || '').toLowerCase().includes(termo) || 
+                              (livro.author || '').toLowerCase().includes(termo) || 
+                              (livro.publisher || '').toLowerCase().includes(termo);
 
     if (abaAtiva === 'todos') return correspondePesquisa;
     if (abaAtiva === 'ativos') return correspondePesquisa && livro.ativo;
@@ -53,7 +123,20 @@ const ConsultaLivros = () => {
       <Header tipoUsuario="colaborador" />
       <div className="consulta-livros">
         <h1>Consulta de Livros</h1>
-        <AbasFiltro abaAtiva={abaAtiva} setAbaAtiva={setAbaAtiva} abas={[{ id: 'todos', label: 'Todos' }, { id: 'ativos', label: 'Ativos' }, { id: 'inativos', label: 'Inativos' }]} />
+        <div className="abas-e-botao-container">
+          <AbasFiltro 
+            abaAtiva={abaAtiva} 
+            setAbaAtiva={setAbaAtiva} 
+            abas={[{ id: 'todos', label: 'Todos' }, { id: 'ativos', label: 'Ativos' }, { id: 'inativos', label: 'Inativos' }]} 
+          />
+          <button 
+            className="botao-criar" 
+            onClick={() => handleAbrirModal()}
+            title="Criar Novo Livro"
+          >
+            +
+          </button>
+        </div>
         <CampoPesquisa termoPesquisa={termoPesquisa} setTermoPesquisa={setTermoPesquisa} />
         <div className="livros-container">
           {livrosFiltrados.map((livro) => (
@@ -61,17 +144,18 @@ const ConsultaLivros = () => {
               key={livro.id}
               id={livro.id}
               capaUrl={livro.imagens?.[0]?.url ?? 'https://via.placeholder.com/150'}
-              titulo={livro.titulo}
-              autor={livro.autor?.nome}
-              editora={livro.editora?.nome}
-              preco={livro.valorVenda}
-              estoque={livro.estoque?.quantidade}
-              onClick={() => handleAbrirModal(livro)} // Abre o modal ao clicar no card.
+              titulo={livro.title}
+              autor={livro.author}
+              editora={livro.publisher}
+              preco={livro.price}
+              // Estoque não existe mais na estrutura principal, removido para consistência
+              // estoque={livro.estoque?.quantidade} 
+              onClick={() => handleAbrirModal(livro)}
             />
           ))}
         </div>
       </div>
-      {modalAberto && <EditarLivroModal onClose={handleFecharModal} onSave={handleSalvar} livro={livroSelecionado} />}
+      {modalAberto && <LivroModal onClose={handleFecharModal} onSave={handleSalvar} livro={livroSelecionado} />}
     </div>
   );
 };

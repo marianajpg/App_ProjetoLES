@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import '../styles/FiltrosLivro.css'; // Mantemos o estilo
+import Select from 'react-select';
+import '../styles/FiltrosLivro.css';
 
-const FiltrosLivro = ({ onFiltroChange }) => {
+const FiltrosLivro = ({ 
+  onFiltroChange,
+  autorOptions = [],
+  editoraOptions = [],
+  anoOptions = []
+}) => {
   const [autoresSelecionados, setAutoresSelecionados] = useState([]);
   const [editorasSelecionadas, setEditorasSelecionadas] = useState([]);
   const [anosSelecionados, setAnosSelecionados] = useState([]);
@@ -9,9 +15,7 @@ const FiltrosLivro = ({ onFiltroChange }) => {
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [ordenacao, setOrdenacao] = useState('');
 
-  const autores = ['George Orwell', 'J. K. Rowling', 'Machado de Assis', 'Sun Tzu'];
-  const editoras = ['Companhia das Letras', 'Rocco', 'Record', 'Intrínseca', 'HarperCollins'];
-  const anos = [2023, 2022, 2021, 2020];
+  // Opções estáticas que não vêm das props
   const faixasDePreco = [
     { label: 'R$10–R$30', min: 10, max: 30 },
     { label: 'R$30–R$50', min: 30, max: 50 },
@@ -20,6 +24,32 @@ const FiltrosLivro = ({ onFiltroChange }) => {
   ];
   const categorias = ['Ficção', 'Romance', 'Fantasia', 'Clássico', 'Infantil', 'Fábula'];
 
+  // Handler genérico para os componentes react-select
+  const handleSelectChange = (selectedOptions, name) => {
+    const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
+    let newAutores = autoresSelecionados, newEditoras = editorasSelecionadas, newAnos = anosSelecionados;
+
+    if (name === 'autores') {
+      setAutoresSelecionados(values);
+      newAutores = values;
+    } else if (name === 'editoras') {
+      setEditorasSelecionadas(values);
+      newEditoras = values;
+    } else if (name === 'anos') {
+      setAnosSelecionados(values);
+      newAnos = values;
+    }
+
+    onFiltroChange({
+      autores: newAutores,
+      editoras: newEditoras,
+      anos: newAnos,
+      faixasDePreco: faixasDePrecoSelecionadas,
+      categorias: categoriasSelecionadas,
+      ordenacao,
+    });
+  };
+
   const tratarCheckbox = (valor, selecionados, setSelecionados, nomeFiltro) => {
     const atualizados = selecionados.includes(valor)
       ? selecionados.filter((v) => v !== valor)
@@ -27,9 +57,9 @@ const FiltrosLivro = ({ onFiltroChange }) => {
 
     setSelecionados(atualizados);
     onFiltroChange({
-      autores: nomeFiltro === 'autores' ? atualizados : autoresSelecionados,
-      editoras: nomeFiltro === 'editoras' ? atualizados : editorasSelecionadas,
-      anos: nomeFiltro === 'anos' ? atualizados : anosSelecionados,
+      autores: autoresSelecionados,
+      editoras: editorasSelecionadas,
+      anos: anosSelecionados,
       faixasDePreco: nomeFiltro === 'faixasDePreco' ? atualizados : faixasDePrecoSelecionadas,
       categorias: nomeFiltro === 'categorias' ? atualizados : categoriasSelecionadas,
       ordenacao,
@@ -48,60 +78,68 @@ const FiltrosLivro = ({ onFiltroChange }) => {
       ordenacao: novaOrdenacao,
     });
   };
+  
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      borderColor: '#ddd',
+      boxShadow: 'none',
+      '&:hover': {
+        borderColor: '#b3b3b3'
+      }
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: '#e0e0e0'
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: '#333'
+    }),
+  };
 
   return (
     <div className="filtros-container">
-
-
       <fieldset className="filtro-fieldset">
         <legend className="filtro-legend">Autor</legend>
-        <div className="filtro-group">
-          {autores.map((autor) => (
-            <label key={autor} className="filtro-label">
-              <input
-                type="checkbox"
-                checked={autoresSelecionados.includes(autor)}
-                onChange={() => tratarCheckbox(autor, autoresSelecionados, setAutoresSelecionados, 'autores')}
-              />
-              <span className="filtro-checkbox"></span>
-              {autor}
-            </label>
-          ))}
-        </div>
+        <Select
+          isMulti
+          name="autores"
+          options={autorOptions}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          placeholder="Selecione autores..."
+          onChange={(options) => handleSelectChange(options, 'autores')}
+          styles={customStyles}
+        />
       </fieldset>
 
       <fieldset className="filtro-fieldset">
         <legend className="filtro-legend">Editora</legend>
-        <div className="filtro-group">
-          {editoras.map((editora) => (
-            <label key={editora} className="filtro-label">
-              <input
-                type="checkbox"
-                checked={editorasSelecionadas.includes(editora)}
-                onChange={() => tratarCheckbox(editora, editorasSelecionadas, setEditorasSelecionadas, 'editoras')}
-              />
-              <span className="filtro-checkbox"></span>
-              {editora}
-            </label>
-          ))}
-        </div>
+        <Select
+          isMulti
+          name="editoras"
+          options={editoraOptions}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          placeholder="Selecione editoras..."
+          onChange={(options) => handleSelectChange(options, 'editoras')}
+          styles={customStyles}
+        />
       </fieldset>
 
       <fieldset className="filtro-fieldset">
         <legend className="filtro-legend">Ano de publicação</legend>
-        <div className="filtro-group">
-          {anos.map((ano) => (
-            <label key={ano} className="filtro-label">
-              <input
-                type="checkbox"
-                checked={anosSelecionados.includes(ano)}
-                onChange={() => tratarCheckbox(ano, anosSelecionados, setAnosSelecionados, 'anos')}
-              />
-              <span className="filtro-checkbox"></span>
-              {ano}
-            </label>
-          ))}
-        </div>
+        <Select
+          isMulti
+          name="anos"
+          options={anoOptions}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          placeholder="Selecione anos..."
+          onChange={(options) => handleSelectChange(options, 'anos')}
+          styles={customStyles}
+        />
       </fieldset>
 
       <fieldset className="filtro-fieldset">

@@ -28,7 +28,7 @@ function App() {
           <Routes>
             {/* Rotas públicas */}
             <Route path="/" element={<Home />} />
-            <Route path="/livros" element={<ShopLivros />} />
+            <Route path="/shop-livros" element={<ShopLivros />} />
             <Route path="/ia-recomenda" element={<IaRecomenda />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro-cliente" element={<CadastroCliente />} />

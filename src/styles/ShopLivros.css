@@ -66,6 +66,26 @@
   margin: 0;
 }
 
+.nenhum-produto{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 50vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: #888;
+  margin-top: 20px;
+}
+
+.nenhum-produto img{
+  width: 350px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
 @media (max-width: 768px) {
   .main-container {
     flex-direction: column; /* Em dispositivos móveis, os filtros ficam acima dos cards */
