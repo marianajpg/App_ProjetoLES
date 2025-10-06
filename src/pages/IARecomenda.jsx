@@ -5,20 +5,13 @@ import InfoSection from '../components/InfoSection.jsx';
 import '../styles/IARecomenda.css';
 import iconIA from '../images/img_icon_ia.png';
 import iconUser from '../images/img_icon_user.png';
-import bannerFundoIA from '../images/img-bannerfundoIA.png';
-import { mockBooks, mockUser, mockPurchaseHistory } from '../services/mockData.js';
+import {mockUser, mockPurchaseHistory } from '../services/mockData.js';
+import { getBooks } from '../services/books';
 
-// Função wrapper para a chamada da API Generativa via Groq.
 
 async function callGroqAPI(promptText) {
-
-  // IMPORTANTE: Cole sua chave de API do Groq aqui.
-
-  // Você pode obter uma em: https://console.groq.com/keys
-
   const GROQ_API_KEY = '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';
   const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-
   try {
     const response = await fetch(GROQ_URL, {
       method: 'POST',
@@ -54,49 +47,27 @@ async function callGroqAPI(promptText) {
 /*
 
 // Implementações anteriores (Ollama e Gemini) mantidas como referência.
-
 // via Gemini
-
 async function callGeminiAPI(promptText, apiKey) {
-
   const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-
   const requestBody = { contents: [{ parts: [{ text: promptText }] }] };
-
   try {
-
     const response = await fetch(`${API_URL}`, {
-
       method: 'POST',
-
       headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey },
-
       body: JSON.stringify(requestBody)
-
     });
-
     if (!response.ok) {
-
       const errorData = await response.json();
-
       throw new Error(`Erro da API: ${response.status} - ${errorData.error.message || 'Erro desconhecido'}`);
-
     }
-
     const data = await response.json();
-
     return data.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível gerar uma resposta.";
-
   } catch (error) {
-
     console.error("Erro ao chamar a API Gemini:", error);
-
     return `Desculpe, houve um erro ao processar sua solicitação: ${error.message}`;
-
   }
-
 }
-
 */
 
 const IARecomenda = () => {
@@ -114,6 +85,8 @@ const IARecomenda = () => {
 
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [allProdutos, setAllProdutos] = useState([]);
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
 
@@ -130,11 +103,32 @@ const IARecomenda = () => {
     }
   }, [messages]);
 
-  // Efeito para carregar os dados mockados e definir a mensagem de boas-vindas.
+
+  useEffect(() => {
+      const fetchAllBooks = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+          const response = await getBooks({}); 
+          const booksArray = Array.isArray(response) ? response : response.books || [];
+          setAllBooks(booksArray);
+        } catch (err) {
+          setError('Não foi possível carregar os livros. Tente novamente mais tarde.');
+          console.error(err);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+  
+      fetchAllBooks();
+    }, []);
+
+
+
+
   useEffect(() => {
     setCurrentUser(mockUser);
     setPurchaseHistory(mockPurchaseHistory);
-    setAllBooks(mockBooks);
 
     // Se não houver mensagens no histórico, envia a mensagem inicial da IA.
     if (messages.length === 0) {
@@ -158,8 +152,8 @@ const IARecomenda = () => {
 
     // Constrói um prompt detalhado para a IA, fornecendo contexto sobre o usuário e o catálogo.
     // Esta é a parte principal que permite a personalização da resposta.
-    const historyText = purchaseHistory.map(p => `- ${p.titulo}`).join('\n');
-    const catalogText = allBooks.map(b => `- Título: ${b.titulo}, Autor: ${b.autor}, Categoria: ${b.categoria}`).join('\n');
+    const historyText = purchaseHistory.map(p => `- ${p.title}`).join('\n');
+    const catalogText = allBooks.map(b => `- Título: ${b.title}, Autor: ${b.author}, Editora: ${b.publisher}`).join('\n');
 
     const promptParaIA = `
       Você é a MIART, uma IA especialista em recomendação de livros para a nossa livraria. Sua tarefa é agir como uma vendedora pessoal e amigável.
@@ -197,7 +191,7 @@ const IARecomenda = () => {
       let match;
       while ((match = regex.exec(respostaIA)) !== null) {
         const bookTitle = match[1];
-        const foundBook = allBooks.find(b => b.titulo.toLowerCase() === bookTitle.toLowerCase());
+        const foundBook = allBooks.find(b => b.title.toLowerCase() === bookTitle.toLowerCase());
         if (foundBook) {
           recommendedBooks.push(foundBook);
         }
@@ -205,14 +199,14 @@ const IARecomenda = () => {
 
       setMessages((prev) => [...prev, { text: respostaIA.replace(regex, "$1"), sender: 'ia', produtos: recommendedBooks }]);
     } catch (error) {
-      setMessages((prev) => [...prev, { text: "Desculpe, não consegui processar sua solicitação no momento.", sender: 'ia', produtos: [] }]);
+      setMessages((prev) => [...prev, { text: `Desculpe, ocorreu um erro: ${error.message}`, sender: 'ia', produtos: [] }]);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleProductClick = (livro) => {
-    navigate(`/tela-produto/${livro.id}`);
+    navigate(`/tela-produto/${livro.id}`, { state: { livro: livro } });
   };
 
   const handleKeyPress = (e) => { if (e.key === 'Enter') handleSendMessage(); };
@@ -235,9 +229,13 @@ const IARecomenda = () => {
                     <div className="produtos-sugeridos">
                       {message.produtos.map((livro, idx) => (
                         <div key={idx} className="produto-card" onClick={() => handleProductClick(livro)}>
-                          <img src={livro.capaUrl} alt={livro.titulo} />
-                          <p>{livro.titulo}</p>
-                          <span>R${livro.preco.toFixed(2)}</span>
+                          <img   src={
+                                livro.images?.find(img => img.caption === 'Principal')?.url ||
+                                'https://m.media-amazon.com/images/I/81doL+ml7uL._SY466_.jpg'
+                              }
+                              alt={livro.title} />
+                          <p>{livro.title}</p>
+                          <span>R${parseFloat(livro.price).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>

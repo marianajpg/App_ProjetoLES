@@ -9,7 +9,7 @@ const Nav = ({ user, BotaoComponent, logout }) => (
 
       {/* Links para clientes ou usuários não logados */}
       {user?.tipoUsuario !== 'colaborador' && (
-        <li><Link to="/livros">LIVROS</Link></li>
+        <li><Link to="/shop-livros">LIVROS</Link></li>
       )}
 
       {/* Links específicos para colaboradores */}

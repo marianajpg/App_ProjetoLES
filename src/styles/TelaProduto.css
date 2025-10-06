@@ -199,6 +199,10 @@
   border-color: #a73a21;
 }
 
+.miniatura.ativo {
+  border: 2px solid #A73A21;
+}
+
 .produto-descricao {
   background-color: #f9f9f9;
   padding: 20px;

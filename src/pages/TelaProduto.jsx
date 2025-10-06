@@ -23,8 +23,8 @@ const TelaProduto = () => {
     livro.images = [{ url: 'https://via.placeholder.com/300x450?text=Capa+Indispon%C3%ADvel' }];
   }
   
-  const imagemPrincipal = livro.images[0].url 
-  ;
+  const imagemCapa = livro.images.find(img => img.caption === 'Principal');
+  const [imagemPrincipal, setImagemPrincipal] = useState(imagemCapa ? imagemCapa.url : livro.images[0].url);
 
   // Se nenhum livro foi passado, mostra uma mensagem de erro
   if (!livro) {
@@ -69,6 +69,17 @@ const TelaProduto = () => {
       <Breadcrumb items={breadcrumbItems} />
       <div className="produto-container">
         <div className="produto-imagens">
+          <div className="produto-miniaturas">
+            {livro.images.map((imagem, index) => (
+              <img
+                key={index}
+                src={imagem.url}
+                alt={`Miniatura ${index + 1}`}
+                className={`miniatura ${imagem.url === imagemPrincipal ? 'ativo' : ''}`}
+                onClick={() => setImagemPrincipal(imagem.url)}
+              />
+            ))}
+          </div>
           <div className="produto-imagem-principal">
             <img src={imagemPrincipal} alt={livro.title} />
           </div>

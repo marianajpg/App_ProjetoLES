@@ -145,7 +145,7 @@ const getFilteredAndSearchedItems = () => {
                 key={livro.id}
                 id={livro.id}
                 capaUrl={
-                  livro.images && livro.images.length > 0 ? livro.images[0].url : ""}
+                  livro.images && livro.images.length > 0 ?  livro.images.find(img => img.caption === 'Principal').url: ""}
                 titulo={livro.title}
                 autor={livro.author ?? 'Autor desconhecido'}
                 preco={parseFloat(livro.price).toFixed(2) || 0}
