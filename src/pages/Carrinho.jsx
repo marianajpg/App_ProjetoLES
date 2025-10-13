@@ -29,8 +29,6 @@ const Carrinho = () => {
       <div className="carrinho-container">
         <h1>Meu Carrinho</h1>
 
-        {loading && <div className="carrinho-loading">Atualizando carrinho...</div>}
-
         {error && (
           <div className="carrinho-error">
             <p>{error}</p>

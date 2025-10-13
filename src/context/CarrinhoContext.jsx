@@ -19,6 +19,7 @@ export const CarrinhoProvider = ({ children }) => {
       const itemsDetails = await Promise.all(
         cart.items.map(async (item) => {
           const bookDetails = await getBookById(item.bookId);
+                console.log("item add", item)
           const imagensDetails = await getImagesById(item.bookId);
           const bookDetailsImages = imagensDetails.filter(livro => livro.caption === "Principal");
           console.log(item)
@@ -44,16 +45,14 @@ export const CarrinhoProvider = ({ children }) => {
         setLoading(false);
         return;
       }
+      console.log(user)
 
       try {
-        setLoading(true);
         setError(null);
         const cartData = await getCart(user.id);
-        setCartId(cartData.id);
-        await fetchAndSetCartDetails(cartData);
-      } catch (err) {
-        if (err.response && err.response.status === 404) {
-          console.log("Carrinho não encontrado para o usuário, criando um novo...");
+              console.log(cartData)
+        if (!cartData || !cartData.active) {
+          console.log("Carrinho inativo ou não encontrado para o usuário, criando um novo...");
           try {
             const newCart = await postCart({ clienteId: user.id });
             setCartId(newCart.id);
@@ -63,10 +62,10 @@ export const CarrinhoProvider = ({ children }) => {
             setError("Houve um problema ao criar seu carrinho.");
           }
         } else {
-          console.error(err);
-          setError("Não foi possível carregar seu carrinho.");
+          setCartId(cartData.id);
+          await fetchAndSetCartDetails(cartData);
         }
-      } finally {
+      } catch (err) {
         setLoading(false);
       }
     };
@@ -74,12 +73,17 @@ export const CarrinhoProvider = ({ children }) => {
   }, [user]);
 
   const handleApiCall = async (apiCall) => {
-    if (loading || !cartId) return;
     try {
-      setLoading(true);
+      setLoading(true); // Set loading to true only if not already loading and cartId is valid
       setError(null);
       await apiCall();
       const updatedCart = await getCart(cartId);
+      if (!updatedCart || !updatedCart.active) {
+        setItens([]);
+        setCartId(null);
+        setError("Carrinho inativo ou não encontrado após a operação.");
+        return;
+      }
       await fetchAndSetCartDetails(updatedCart);
     } catch (err) {
       console.error("Erro na operação do carrinho:", err);
@@ -104,10 +108,12 @@ export const CarrinhoProvider = ({ children }) => {
       atualizarQuantidade(itemExistente.id, novaQuantidade);
     } else {
       const itemPayload = {
-        bookId: livro.id,
+        itemId: livro.id,
         quantity: livro.quantidade || 1,
         price: parseFloat(livro.valorVenda || livro.price)
       };
+      console.log("adicionarAoCarrinho: cartId", cartId);
+      console.log("adicionarAoCarrinho: itemPayload", itemPayload);
       handleApiCall(() => postItemCart(cartId, itemPayload));
     }
   };
