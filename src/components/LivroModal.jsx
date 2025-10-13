@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select'; // Import react-select
+import { getCategory } from '../services/category'; // Import the new service
 import './../styles/LivroModal.css'; // Updated import path
 
 // Default state for a new book
@@ -21,6 +23,8 @@ const defaultLivroState = {
     depth: '',
     weight: '',
   },
+  category: [], // Changed from categories: ''
+  images: '',
 };
 
 // Mock data for price groups - in a real app, this would be fetched
@@ -33,13 +37,36 @@ const mockPriceGroups = [
 const LivroModal = ({ livro, onClose, onSave }) => {
   const isEditMode = Boolean(livro);
   const [dadosLivro, setDadosLivro] = useState(
-    isEditMode ? { ...livro, pricegroupId: livro.pricegroup?.id } : defaultLivroState
+    isEditMode 
+      ? { 
+          ...livro, 
+          pricegroupId: livro.pricegroup?.id,
+          // Convert array of category objects to array of IDs
+          category: livro.categories?.map(c => c.id) || [], 
+          images: livro.imagens?.map(i => i.url).join('\n') || ''
+        } 
+      : defaultLivroState
   );
   const [priceGroups, setPriceGroups] = useState([]);
+  const [availableCategories, setAvailableCategories] = useState([]);
 
   useEffect(() => {
-    // In a real app, you would fetch price groups here
+    // Fetch price groups (mocked)
     setPriceGroups(mockPriceGroups);
+
+    // Fetch categories from the API
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await getCategory();
+        const formattedCategories = categoriesData.map(cat => ({ value: cat.id, label: cat.name }));
+        setAvailableCategories(formattedCategories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+        // Optionally, show an error to the user
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   const handleChange = (e) => {
@@ -54,24 +81,36 @@ const LivroModal = ({ livro, onClose, onSave }) => {
     }
   };
 
+  const handleCategoryChange = (selectedOptions) => {
+    const categoryIds = selectedOptions ? selectedOptions.map(option => option.value) : [];
+    setDadosLivro(prev => ({ ...prev, category: categoryIds }));
+  };
+
   const handleSalvar = (e) => {
     e.preventDefault();
     
     // Prepare data for saving, ensuring correct types
     const dadosParaSalvar = {
       ...dadosLivro,
-      price: parseFloat(dadosLivro.price) || 0,
+      cost: parseFloat(dadosLivro.price) || 0, // Alterado de price para cost
       pages: parseInt(dadosLivro.pages, 10) || 0,
       year: parseInt(dadosLivro.year, 10) || 0,
-      pricegroupId: parseInt(dadosLivro.pricegroupId, 10) || null,
+      pricegroup: parseInt(dadosLivro.pricegroupId, 10) || null, // Alterado de pricegroupId para pricegroup
       dimensions: {
         height: parseFloat(dadosLivro.dimensions.height) || 0,
         width: parseFloat(dadosLivro.dimensions.width) || 0,
         depth: parseFloat(dadosLivro.dimensions.depth) || 0,
         weight: parseFloat(dadosLivro.dimensions.weight) || 0,
-      }
+      },
+      // O campo 'category' já é um array de IDs, o que está correto.
     };
     
+    // Remove campos que não fazem parte do body de criação
+    delete dadosParaSalvar.price;
+    delete dadosParaSalvar.pricegroupId;
+    delete dadosParaSalvar.images;
+    delete dadosParaSalvar.imagens;
+
     onSave(dadosParaSalvar);
   };
 
@@ -83,7 +122,7 @@ const LivroModal = ({ livro, onClose, onSave }) => {
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
         <form onSubmit={handleSalvar} className="form-grid">
-          {/* Using grid for layout */}
+          {/* ... other form fields ... */}
           <div className="form-group">
             <label>Título:</label>
             <input required type="text" name="title" value={dadosLivro.title} onChange={handleChange} />
@@ -148,6 +187,23 @@ const LivroModal = ({ livro, onClose, onSave }) => {
           <div className="form-group">
             <label>Peso (g):</label>
             <input type="number" step="0.1" name="weight" value={dadosLivro.dimensions.weight} onChange={handleChange} />
+          </div>
+          <div className="form-group full-width">
+            <label>Categorias:</label>
+            <Select
+              isMulti
+              name="category"
+              options={availableCategories}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Selecione categorias..."
+              value={availableCategories.filter(option => dadosLivro.category.includes(option.value))}
+              onChange={handleCategoryChange}
+            />
+          </div>
+          <div className="form-group full-width">
+            <label>Imagens (URLs, uma por linha):</label>
+            <textarea name="images" value={dadosLivro.images} onChange={handleChange} rows="3"></textarea>
           </div>
           <div className="form-group full-width">
             <label>Sinopse:</label>

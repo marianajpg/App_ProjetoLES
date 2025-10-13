@@ -30,7 +30,6 @@
   display: inline-flex;
   flex-wrap: wrap;
   gap: 20px; /* Espaçamento entre os cards */
-  height: 50px;
 }
 
 .card {

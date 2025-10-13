@@ -1,5 +1,6 @@
 :root {
   --primary-color: #752512;
+  --primary-color-rgb: 117, 37, 18; /* RGB values for --primary-color */
   --secondary-color: #A73A21;
   --tertiary-color: #C65338;
   --quaternary-color: #FEAA80;
@@ -31,10 +32,10 @@
   color: var(--primary-color);
 
 }
+.novo-endereco-formulario h3,
 .pagamento-container h3{
   font-weight:normal;
   font-size: 15px;
-
   color: var(--primary-color);
 
 }
@@ -138,7 +139,11 @@
   flex: 1;
 }
 
-.cupom button {
+.cupom input:focus{
+  border: 1px solid var(--primary-color) !important;
+}
+
+.cupom button { 
   padding: 5px 20px;
   background-color: var(--primary-color);
   color: white;
@@ -147,8 +152,12 @@
   cursor: pointer;
 }
 
-.cupom button:hover {
+.cupom button:hover,
+.botao-novo-cartao:hover, 
+.finalizar-compra:hover{
+  color: white;
   background-color: var(--secondary-color);
+
 }
 
 .finalizar-compra {
@@ -163,9 +172,6 @@
   margin-top: 20px;
 }
 
-.finalizar-compra:hover {
-  background-color: var(--secondary-color);
-}
 
 .cartao-formulario {
   margin-top: 10px;
@@ -210,12 +216,6 @@
 }
 
 
-
-
-
-
-
-
 .bandeiras-container {
   display: flex;
   gap: 10px;
@@ -227,11 +227,7 @@
   height: auto;
 }
 
-.cartao-formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+
 
 .cartao-formulario input,
 .cartao-formulario select {
@@ -280,6 +276,7 @@
   font-size: 14px;
 }
 
+.novo-endereco-formulario button,
 .endereco-entrega button,
 .cartao-formulario button{
   padding: 10px 20px;
@@ -291,10 +288,72 @@
   margin-top: 10px;
 }
 
+.endereco-card-actions button:hover{
+  background-color: var(--senary-color) !important;
+   color:white;
+  border-radius: 18px;
+}
+
 .endereco-entrega button:hover,
-.cartao-formulario button:hover{
+.cartao-formulario button:hover,
+.novo-endereco-formulario button:hover {
   background-color: var(--secondary-color);
-  color: white;
+   color: white;
+}
+
+.form-buttons-container {
+  grid-column: 1 / -1; 
+  display: flex;
+  gap: 10px; 
+  justify-content: flex-end; 
+}
+
+
+.form-buttons-container .cancel-button{
+  border:none !important
+}
+
+
+.cancel-button:hover {
+  background-color: #df421aa7 !important;
+    color:white !important
+}
+
+.botao-novo-cartao {
+  padding: 10px 20px;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  font-weight:bold;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  background-color: transparent;
+  width: 100%;
+}
+
+
+.form-buttons-container {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.form-buttons-container button {
+  width: 100%;
+  color: var(--primary-color);
+  padding: 12px 20px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid var(--primary-color);
+  background-color: transparent;
+}
+
+
+/* Garante que o DatePicker ocupe a largura total */
+.date-picker-full-width {
+  width: 100%;
 }
 
 .cartao-salvo input {
@@ -347,3 +406,69 @@
   left: 50%;
   transform: translate(-50%, -50%); /* Centraliza o círculo */
 }
+
+/* Estilos para o novo formulário de endereço */
+.novo-endereco-formulario, .cartao-formulario{
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+/* .novo-endereco-formulario h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+} */
+
+.novo-endereco-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px; 
+}
+
+.novo-endereco-formulario .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.novo-endereco-formulario input,
+.novo-endereco-formulario select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.full-width {
+  grid-column: 1 / -1; 
+}
+
+.novo-cartao-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cartao-formulario .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.cartao-formulario input,
+.cartao-formulario select,
+.cartao-formulario .date-picker-full-width {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
+

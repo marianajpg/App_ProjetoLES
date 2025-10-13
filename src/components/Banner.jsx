@@ -10,7 +10,7 @@ const Banner = () => {
         <h1 className="banner-title">MERGULHE EM NOVAS HISTÓRIAS!</h1>
         <h2 className="banner-subtitle">Histórias que marcam, livros que inspiram!</h2>
         <button className="banner-button">
-          <Link className='banner-button-legend' to="/livros">COMPRE AGORA</Link>
+          <Link className='banner-button-legend' to="/shop-livros">COMPRE AGORA</Link>
         </button>
       </div>
       <img src={modelo} alt="Capa de livro em destaque" className="banner-image" />

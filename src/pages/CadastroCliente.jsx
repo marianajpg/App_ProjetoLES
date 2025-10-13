@@ -192,7 +192,7 @@ function CadastroCliente() {
 
     try {
       const response = await postCustomer(dadosParaEnvio);
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         alert('Usuário e cartão cadastrados com sucesso!');
         login({ tipoUsuario: 'cliente', email: formData.email });
         navigate('/');

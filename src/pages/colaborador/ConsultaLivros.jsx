@@ -98,7 +98,6 @@ const ConsultaLivros = () => {
         ...dadosDoLivro, 
         id: Math.random(), // Simulate new ID
         ativo: dadosDoLivro.status === 'ACTIVE',
-        imagens: [], // Default empty image
         pricegroup: { id: dadosDoLivro.pricegroupId, name: 'Novo Grupo' } // Simulate
       };
       setLivros(prev => [...prev, livroCriado]);

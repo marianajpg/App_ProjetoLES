@@ -1,0 +1,80 @@
+.cartao-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+}
+
+.cartao-card-content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.cartao-card-body p {
+  margin: 4px 0;
+}
+.cartao-card-body .card-brand {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.cartao-card-body .card-number {
+  font-size: 1.2em;
+  margin: 10px 0;
+  color: #555;
+}
+
+.cartao-card-body .card-holder {
+  font-size: 1em;
+  color: #777;
+}
+
+.cartao-card-actions .card-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: 8px;
+}
+
+
+
+.delete-button:hover {
+  background-color: #FDBC9B; /* Cor de fundo suave ao passar o mouse */
+  border-radius: 8px; /* Transforma em círculo */
+}
+
+.card-amount-input {
+  width: 120px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 5px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+.card-amount-input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
+}
+
+.amount-error-message {
+  color: red;
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
+.endereco-card-actions .card-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+}

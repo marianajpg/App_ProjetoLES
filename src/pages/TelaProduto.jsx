@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext';
 import Header from '../components/Header.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import { useAuth } from '../context/AuthLogin.jsx';
+import { getInventory } from '../services/inventory.jsx';
 import '../styles/TelaProduto.css';
 import InfoSection from '../components/InfoSection.jsx';
 
@@ -18,6 +19,27 @@ const TelaProduto = () => {
 
   const [descricaoExpandida, setDescricaoExpandida] = useState(true);
   const [quantidade, setQuantidade] = useState(1);
+  const [estoque, setEstoque] = useState(null);
+
+  useEffect(() => {
+    if (livro) {
+      getInventory()
+        .then(data => {
+          const inventoryItem = data.filter(item => item.bookId === livro.id);
+          if (inventoryItem.length > 0) {
+            const totalQuantity = inventoryItem.reduce((total, item) => total + item.quantity, 0);
+            setEstoque(totalQuantity);
+          } else {
+            setEstoque(0);
+          }
+        })
+        .catch(error => {
+          console.error("Erro ao buscar estoque:", error);
+          setEstoque(0);
+        });
+    }
+  }, [livro]);
+
   // A API não fornece imagens, então usaremos um placeholder
   if (!livro || !livro.images || livro.images.length === 0) {
     livro.images = [{ url: 'https://via.placeholder.com/300x450?text=Capa+Indispon%C3%ADvel' }];
@@ -93,14 +115,22 @@ const TelaProduto = () => {
           <p><strong>Autor:</strong> {livro.author}</p>
           <p><strong>Editora:</strong> {livro.publisher}</p>
 
+          {estoque !== null ? (
+            <p><strong>Estoque disponível:</strong> {estoque}</p>
+          ) : (
+            <p><strong>Estoque disponível:</strong> Carregando...</p>
+          )}
+
           <div className="produto-quantidade">
             <label>Quantidade:</label>
             <div className="quantidade-controle">
               <input
                 type="number"
                 min="1"
+                max={estoque !== null ? estoque : undefined}
                 value={quantidade}
                 onChange={(e) => setQuantidade(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                disabled={estoque === 0}
               />
             </div>
           </div>
@@ -108,9 +138,9 @@ const TelaProduto = () => {
           <button
             className="produto-botao"
             onClick={handleAdicionarAoCarrinho}
-            disabled={usuario?.tipoUsuario === 'colaborador'}
+            disabled={usuario?.tipoUsuario === 'colaborador' || estoque === 0 || quantidade > estoque}
           >
-            Adicionar ao carrinho
+            {estoque === 0 ? 'Produto Indisponível' : 'Adicionar ao carrinho'}
           </button>
         </div>
       </div>

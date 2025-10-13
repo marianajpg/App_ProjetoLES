@@ -34,7 +34,7 @@ const Home = () => {
         image='/src/images/image_banner.png'
         title='Descubra Novas Histórias'
         description='Milhares de títulos esperando por você. Encontre sua próxima leitura favorita!'
-        link='/livros'
+        link='/shop-livros'
         linkText='Explorar Livros'
         textColor='#333'
         buttonColor='#852f1b'
@@ -49,7 +49,7 @@ const Home = () => {
           ))}
         </div>
         <div className="shop-link-container">
-          <Link to="/livros" className="shop-link-button">Ver todos os livros</Link>
+          <Link to="/shop-livros" className="shop-link-button">Ver todos os livros</Link>
         </div>
       </section>
 

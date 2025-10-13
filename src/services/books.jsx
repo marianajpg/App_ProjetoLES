@@ -1,7 +1,7 @@
 
 import { api } from "./api";
 
-export const getBooks = async (customerData) => {
+export const getBooks = async () => {
      try{
     const response = await api.get('/book');
     return response.data;
@@ -28,9 +28,24 @@ export const createBook = async (bookData) => {
 };
 
 
+// exemplo de body POST
+// {
+//     "author": "Frank Herbert",
+//     "category": [1],
+//     "year": 1965,
+//     "title": "Duna",
+//     "publisher": "Ace Books",
+//     "edition": "1ª edição (original)",In
+//     "ISBN": "9780441013593",
+//     "pages": 412,
+//     "synopsis": "No planeta desértico Arrakis, Paul Atreides enfrenta intrigas políticas, religião e ecologia em uma luta pelo controle da 'melange'.",
+//     "dimensions": { "height": 21.0, "width": 14.0, "depth": 4.0, "weight": 560 },
+//     "pricegroup": 1,
+//     "barcode": "9780441013593",
+//     "cost": 25.00
+//   }
 
-
-// exemplo de body
+// exemplo de body GET
 //   {
 //         "id": 7,
 //         "author": "H.G. Wells",

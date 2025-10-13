@@ -68,9 +68,9 @@ input[type="checkbox"] {
   justify-content: center;
 }
 
-/* Style of the checkmark inside */
+
 .filtro-checkbox::before {
-  content: '✔'; /* Use a checkmark character or an SVG */
+  content: '✔'; 
   color: white;
   font-size: 14px;
   position: absolute;
@@ -79,7 +79,7 @@ input[type="checkbox"] {
   transition: all 0.2s ease;
 }
 
-/* Style when checked */
+
 input[type="checkbox"]:checked + .filtro-checkbox {
   background-color: var(--tertiary-color);
   border-color: var(--tertiary-color);
@@ -131,7 +131,7 @@ input[type="checkbox"]:checked + .filtro-checkbox::before {
 .filtro-select:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(117, 37, 18, 0.2); /* Use theme color for focus ring */
+  box-shadow: 0 0 0 3px rgba(117, 37, 18, 0.2); 
 }
 
 .filtro-select option {
