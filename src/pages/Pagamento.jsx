@@ -264,28 +264,45 @@ const Pagamento = () => {
 
       const toPostalCode = selectedAddressDetails.zipCode.replace(/\D/g, ''); // Clean zip code
 
-      const totalQuantity = itens.reduce((sum, item) => sum + item.quantity, 0);
-      const totalGrossPrice = itens.reduce((sum, item) => sum + (item.valorVenda * item.quantity), 0);
+      // const totalQuantity = itens.reduce((sum, item) => sum + item.quantity, 0);
+      // const totalGrossPrice = itens.reduce((sum, item) => sum + (item.valorVenda * item.quantity), 0);
 
-      const maxDimensions = itens.reduce((max, item) => 
-        ({
-        height: Math.max(max.height, item.dimensions?.height || 0),
-        width: Math.max(max.width, item.dimensions?.width || 0),
-        depth: max.depth + (item.dimensions?.depth || 0),
-        weight: max.weight + (item.dimensions?.weight || 0)}), 
-        { height: 0, width: 0, depth: 0, weight: 0 })
-      console.log("Pagamento: Itens no carrinho:", itens);
-      console.log("Pagamento: Dimensões máximas calculadas:", maxDimensions);
+      // const maxDimensions = itens.reduce((max, item) => 
+      //   ({
+      //   height: Math.max(max.height, item.dimensions?.height || 0),
+      //   width: Math.max(max.width, item.dimensions?.width || 0),
+      //   depth: max.depth + (item.dimensions?.depth || 0),
+      //   weight: max.weight + (item.dimensions?.weight || 0)}), 
+      //   { height: 0, width: 0, depth: 0, weight: 0 })
+      // console.log("Pagamento: Itens no carrinho:", itens);
+      // console.log("Pagamento: Dimensões máximas calculadas:", maxDimensions);
+
+      const itensData = itens.map(item => ({
+          quantity: item.quantity,
+          dimensions: {
+            height: item.dimensions?.height || 0,
+            width: item.dimensions?.width || 0,
+            depth: item.dimensions?.depth || 0,
+            weight: item.dimensions?.weight || 0
+          },
+          price: (item.valorVenda * item.quantity)
+        }));
+
+
+      // const shippingData = {
+      //   toPostalCode,
+      //   cartItems: [
+      //     {
+      //       quantity: totalQuantity,
+      //       dimensions: maxDimensions,
+      //       price: totalGrossPrice
+      //     }
+      //   ]
+      // };
 
       const shippingData = {
         toPostalCode,
-        cartItems: [
-          {
-            quantity: totalQuantity,
-            dimensions: maxDimensions,
-            price: totalGrossPrice
-          }
-        ]
+        cartItems: itensData
       };
       console.log("Pagamento: Payload para cálculo de frete:", shippingData);
 
