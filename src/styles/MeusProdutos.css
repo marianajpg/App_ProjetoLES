@@ -35,7 +35,7 @@
 /* Indicador deslizante */
 .status-indicator {
   position: absolute;
-  bottom: -16px; /* Ajuste para alinhar com a linha */
+  bottom: 0px; /* Ajuste para alinhar com a linha */
   height: 2px;
   background-color: #A73A21;
   transition: width 0.3s ease, left 0.3s ease; /* Transição suave */

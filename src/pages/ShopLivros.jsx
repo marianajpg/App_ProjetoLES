@@ -8,6 +8,7 @@ import Paginacao from '../components/Paginacao';
 import InfoSection from '../components/InfoSection';
 import CampoPesquisa from '../components/CampoPesquisa';
 import { getBooks } from '../services/books';
+import { getInventory } from '../services/inventory';
 import '../styles/ShopLivros.css';
 
 const faixasDePrecoMap = [
@@ -32,22 +33,34 @@ const ShopLivros = () => {
   const [filtros, setFiltros] = useState({ autores: [], editoras: [], anos: [], faixasDePreco: [], categorias: [], ordenacao: '' });
 
   useEffect(() => {
-    const fetchAllBooks = async () => {
+    const fetchAllBooksAndInventory = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await getBooks({}); 
-        const booksArray = Array.isArray(response) ? response : response.books || [];
-        setAllProdutos(booksArray);
+        const [booksResponse, inventoryResponse] = await Promise.all([
+          getBooks({}),
+          getInventory()
+        ]);
+
+        const booksArray = Array.isArray(booksResponse) ? booksResponse : booksResponse.books || [];
+        const inventoryArray = Array.isArray(inventoryResponse) ? inventoryResponse : inventoryResponse.inventory || [];
+
+        const booksWithInventory = booksArray.map(book => {
+          const totalQuantity = inventoryArray
+            .filter(item => item.bookId === book.id)
+            .reduce((sum, item) => sum + item.quantity, 0);
+          return { ...book, inventory: totalQuantity };
+        });
+        setAllProdutos(booksWithInventory);
       } catch (err) {
-        setError('Não foi possível carregar os livros. Tente novamente mais tarde.');
+        setError('Não foi possível carregar os livros ou o estoque. Tente novamente mais tarde.');
         console.error(err);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchAllBooks();
+    fetchAllBooksAndInventory();
   }, []);
 
   // Gera opções para os filtros dinâmicos
@@ -149,7 +162,7 @@ const getFilteredAndSearchedItems = () => {
                 titulo={livro.title}
                 autor={livro.author ?? 'Autor desconhecido'}
                 preco={parseFloat(livro.price).toFixed(2) || 0}
-                estoque={null}
+                estoque={livro.inventory}
                 imagens={livro.images}
                 editora={livro.publisher ?? 'Editora desconhecida'}
                 onClick={() => navigate(`/tela-produto/${livro.id}`, { state: { livro } })}

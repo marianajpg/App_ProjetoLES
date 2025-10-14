@@ -24,6 +24,7 @@ const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, estoque, onClick, onVe
 
   return (
     <div className={`card ${estoque === 0 ? 'out-of-stock' : ''}`} onClick={handleClick}>
+      {estoque === 0 && <div className="out-of-stock-overlay">Produto fora de estoque</div>}
       <img src={capaUrl} alt={titulo} className="card-image" />
       <div className="card-info">
         <div className="card-text-content">

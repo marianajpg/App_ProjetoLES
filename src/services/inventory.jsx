@@ -10,6 +10,7 @@ export const getInventory = async () => {
     }
 };
 
+// exemplo GET
 //   {
 //         "id": 4,
 //         "quantity": 2,

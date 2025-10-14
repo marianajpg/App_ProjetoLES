@@ -1,0 +1,193 @@
+{
+  "booksToCreate": [
+    {
+      "author": "Arthur Conan Doyle",
+      "category": ["Romance Policial", "Clássicos da Literatura"],
+      "year": 1892,
+      "title": "As Aventuras de Sherlock Holmes",
+      "publisher": "Companhia das Letras",
+      "edition": "Edição Especial",
+      "ISBN": "9788571647758",
+      "pages": 416,
+      "synopsis": "Coletânea de contos protagonizados pelo detetive Sherlock Holmes e seu fiel companheiro Dr. Watson, solucionando casos complexos em Londres vitoriana.",
+      "dimensions": {
+        "height": 21.0,
+        "width": 14.0,
+        "depth": 2.5,
+        "weight": 500
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788571647758",
+      "cost": 39.90,
+      "price": 49.90
+    },
+    {
+      "author": "Isaac Asimov",
+      "category": ["Ficção Científica", "Clássicos da Literatura"],
+      "year": 1951,
+      "title": "Fundação",
+      "publisher": "Aleph",
+      "edition": "Edição Definitiva",
+      "ISBN": "9788576573137",
+      "pages": 320,
+      "synopsis": "Primeiro livro da saga Fundação, que retrata a tentativa de preservar o conhecimento humano em um império galáctico em decadência.",
+      "dimensions": {
+        "height": 22.0,
+        "width": 15.0,
+        "depth": 2.0,
+        "weight": 420
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788576573137",
+      "cost": 49.90,
+      "price": 64.90
+    },
+    {
+      "author": "J. R. R. Tolkien",
+      "category": ["Fantasia", "Aventura", "Clássicos da Literatura"],
+      "year": 1954,
+      "title": "O Senhor dos Anéis: A Sociedade do Anel",
+      "publisher": "HarperCollins Brasil",
+      "edition": "Edição de Colecionador",
+      "ISBN": "9788595084755",
+      "pages": 576,
+      "synopsis": "A jornada de Frodo Bolseiro e seus companheiros para destruir o Um Anel, enfrentando as forças sombrias de Sauron.",
+      "dimensions": {
+        "height": 23.5,
+        "width": 16.5,
+        "depth": 3.5,
+        "weight": 780
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788595084755",
+      "cost": 89.90,
+      "price": 119.90
+    },
+    {
+      "author": "Stephen King",
+      "category": ["Terror", "Drama"],
+      "year": 1977,
+      "title": "O Iluminado",
+      "publisher": "Suma de Letras",
+      "edition": "Edição Especial",
+      "ISBN": "9788576572000",
+      "pages": 520,
+      "synopsis": "Jack Torrance aceita o emprego de zelador de um hotel isolado, mas forças sobrenaturais transformam o local em um pesadelo de terror e insanidade.",
+      "dimensions": {
+        "height": 23.0,
+        "width": 16.0,
+        "depth": 3.0,
+        "weight": 700
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788576572000",
+      "cost": 74.90,
+      "price": 99.90
+    },
+    {
+      "author": "Clarice Lispector",
+      "category": ["Romance Contemporâneo", "Drama"],
+      "year": 1964,
+      "title": "A Paixão Segundo G.H.",
+      "publisher": "Rocco",
+      "edition": "Edição Comemorativa",
+      "ISBN": "9788532520665",
+      "pages": 192,
+      "synopsis": "Uma mulher de classe média enfrenta uma profunda crise existencial após um encontro simbólico com uma barata em seu apartamento.",
+      "dimensions": {
+        "height": 21.0,
+        "width": 14.0,
+        "depth": 1.5,
+        "weight": 280
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788532520665",
+      "cost": 39.90,
+      "price": 54.90
+    },
+    {
+      "author": "Friedrich Nietzsche",
+      "category": ["Filosofia", "Clássicos da Literatura"],
+      "year": 1883,
+      "title": "Assim Falou Zaratustra",
+      "publisher": "Martins Fontes",
+      "edition": "Edição Revisada",
+      "ISBN": "9788533620517",
+      "pages": 432,
+      "synopsis": "Obra filosófica que apresenta os ensinamentos de Zaratustra, símbolo da superação humana e da busca pela autotransformação.",
+      "dimensions": {
+        "height": 22.0,
+        "width": 15.0,
+        "depth": 2.5,
+        "weight": 480
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788533620517",
+      "cost": 49.90,
+      "price": 64.90
+    },
+    {
+      "author": "Cecília Meireles",
+      "category": ["Poesia", "Clássicos da Literatura"],
+      "year": 1951,
+      "title": "Romanceiro da Inconfidência",
+      "publisher": "Nova Fronteira",
+      "edition": "Edição Comentada",
+      "ISBN": "9788520925975",
+      "pages": 312,
+      "synopsis": "Obra poética que revive os ideais da Inconfidência Mineira, mesclando história, lirismo e reflexão sobre a liberdade.",
+      "dimensions": {
+        "height": 22.0,
+        "width": 15.0,
+        "depth": 2.0,
+        "weight": 430
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788520925975",
+      "cost": 44.90,
+      "price": 59.90
+    },
+    {
+      "author": "Anne Frank",
+      "category": ["Biografias e Memórias", "História", "Drama"],
+      "year": 1947,
+      "title": "O Diário de Anne Frank",
+      "publisher": "Record",
+      "edition": "Edição Definitiva",
+      "ISBN": "9788501044452",
+      "pages": 352,
+      "synopsis": "Relato comovente da adolescente judia que se escondeu com sua família durante a ocupação nazista em Amsterdã.",
+      "dimensions": {
+        "height": 21.0,
+        "width": 14.0,
+        "depth": 2.0,
+        "weight": 400
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788501044452",
+      "cost": 39.90,
+      "price": 54.90
+    },
+    {
+      "author": "Antoine de Saint-Exupéry",
+      "category": ["Infantojuvenil", "Filosofia", "Clássicos da Literatura"],
+      "year": 1943,
+      "title": "O Pequeno Príncipe",
+      "publisher": "Agir",
+      "edition": "Edição Ilustrada",
+      "ISBN": "9788522005231",
+      "pages": 96,
+      "synopsis": "A jornada de um pequeno príncipe que viaja entre planetas e reflete sobre amor, amizade e a essência da vida.",
+      "dimensions": {
+        "height": 21.0,
+        "width": 14.0,
+        "depth": 1.0,
+        "weight": 250
+      },
+      "pricegroup": "Teste",
+      "barcode": "9788522005231",
+      "cost": 29.90,
+      "price": 44.90
+    }
+  ]
+}

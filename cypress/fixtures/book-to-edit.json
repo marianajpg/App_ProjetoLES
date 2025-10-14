@@ -1,0 +1,54 @@
+
+{
+  "booksWithImages": [
+
+    {
+      "title": "Assim Falou Zaratustra",
+      "images": [
+        
+    {
+      "url": "https://m.media-amazon.com/images/I/81ML1XLkV6L._SY466_.jpg",
+      "caption": "Principal"
+    },{
+      "url": "https://m.media-amazon.com/images/I/81HwLoYD4SL._SL1500_.jpg",
+      "caption": "Principal"
+    }
+      ]
+    },
+    {
+      "title": "Romanceiro da Inconfidência",
+      "images": [
+        {
+      "url": "https://m.media-amazon.com/images/I/91EBBaMjxDL._SY466_.jpg",
+      "caption": "Principal"
+    }
+      ]
+    },
+    {
+      "title": "O Diário de Anne Frank",
+      "images": [
+        {
+      "url": "https://m.media-amazon.com/images/I/A1TO71w+DoL._SY466_.jpg",
+      "caption": "Principal"
+    }
+      ]
+    },
+    {
+      "title": "O Pequeno Príncipe",
+      "images": [
+        {
+      "url": "https://m.media-amazon.com/images/I/81dP9iwxRaL._AC_UL480_FMwebp_QL65_.jpg",
+      "caption": "Principal"
+    },
+            {
+      "url": "https://m.media-amazon.com/images/I/81A6BcMv8GL._SY466_.jpg",
+      "caption": "Aberto"
+    },
+            {
+      "url": "https://m.media-amazon.com/images/I/A1ckLQ4DsdL._SY466_.jpg",
+      "caption": "Aberto"
+    }
+      ]
+    }
+  ]
+}

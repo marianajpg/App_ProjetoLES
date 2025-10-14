@@ -1,3 +1,13 @@
+:root {
+  --primary-color: #752512;
+  --secondary-color: #A73A21;
+  --tertiary-color: #C65338;
+  --quaternary-color: #FEAA80;
+  --quinary-color: #FDBC9B;
+  --senary-color: #FFEBE1;
+  --septenary-color-vibrant: #ee5e3a;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -140,9 +150,11 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease
 }
 
+.add-image-btn:hover,
+.remove-image-btn:hover,
 .modal-actions button:hover {
     transform: translateY(-2px);
 }
@@ -162,6 +174,48 @@
   color: white;
 }
 
+.add-image-btn:hover,
+.remove-image-btn:hover,
 .modal-actions button:last-child:hover {
   background-color: #8e2d1a;
 }
+
+.image-input-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.image-input-group input[type="text"] {
+  flex-grow: 1;
+}
+
+.remove-image-btn {
+  background-color: #8e2d1a; /* Red */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  font-size: 16px;
+  line-height: 25px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+.add-image-btn {
+  background-color: var(--secondary-color); /* Green */
+  color: white;
+  width: 70%;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bolder;
+  transition: background-color 0.3s ease;
+}
+

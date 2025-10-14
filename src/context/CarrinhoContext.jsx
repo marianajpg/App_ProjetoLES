@@ -40,7 +40,7 @@ export const CarrinhoProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchInitialCart = async () => {
-      if (!user || !user.id) {
+      if (!user || !user.id || user.id == "colaborador-mock-id") {
         setItens([]);
         setLoading(false);
         return;
@@ -74,7 +74,7 @@ export const CarrinhoProvider = ({ children }) => {
 
   const handleApiCall = async (apiCall) => {
     try {
-      setLoading(true); // Set loading to true only if not already loading and cartId is valid
+      setLoading(true);
       setError(null);
       await apiCall();
       const updatedCart = await getCart(cartId);

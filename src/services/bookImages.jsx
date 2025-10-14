@@ -14,9 +14,31 @@ export const getImages = async ()=> {
 }
 
 export const postImageBook = async (id, imageData) => {
-    const { data } = await api.post(`/bookImages/book/${encodeURIComponent(id)}}/images`, imageData);
+    const { data } = await api.post(`/bookImages/book/${encodeURIComponent(id)}/images`, imageData);
     return data;
 };
+
+export const deleteImageBook = async (id) => {
+    try {
+        const response = await api.delete(`/bookImages/images/${encodeURIComponent(id)}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao deletar imagem:', error);
+        throw new Error('Não foi possível deletar a imagem');
+    }
+};
+
+export const putImageBook = async (id, imageBookData) => {
+    try {
+        const response = await api.put(`/bookImages/images/${encodeURIComponent(id)}`, imageBookData);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao tentar atualizar imagem:', error);
+        throw new Error('Não foi possível atualizar a imagem');
+    }
+}
+
+
 
 
 // exemplo POST
