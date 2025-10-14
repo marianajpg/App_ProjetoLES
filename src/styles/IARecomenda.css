@@ -124,6 +124,7 @@
   border-radius: 8px;
   padding: 0.8rem;
   cursor: pointer;
+  width: 150px;
   background-color: #FFFFFF;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease-in-out;

@@ -10,7 +10,7 @@ import { getBooks } from '../services/books';
 
 
 async function callGroqAPI(promptText) {
-  const GROQ_API_KEY = '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';
+  const GROQ_API_KEY = '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';
   const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
   try {
     const response = await fetch(GROQ_URL, {
