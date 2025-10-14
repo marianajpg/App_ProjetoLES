@@ -272,7 +272,7 @@ const Pagamento = () => {
         height: Math.max(max.height, item.dimensions?.height || 0),
         width: Math.max(max.width, item.dimensions?.width || 0),
         depth: max.depth + (item.dimensions?.depth || 0),
-        weight: (max.weight + (item.dimensions?.weight || 0))/100}), 
+        weight: max.weight + (item.dimensions?.weight || 0)}), 
         { height: 0, width: 0, depth: 0, weight: 0 })
       console.log("Pagamento: Itens no carrinho:", itens);
       console.log("Pagamento: Dimensões máximas calculadas:", maxDimensions);
