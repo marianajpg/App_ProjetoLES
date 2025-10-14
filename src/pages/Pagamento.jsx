@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import InfoSection from '../components/InfoSection.jsx';
 import { postCreditcards, deleteCreditcards, getCreditcardsByEmail } from '../services/creditcards.jsx';
 import { postCheckout } from '../services/checkout.jsx';
 import { getCupom } from '../services/cupons.jsx';
+import { postCalculateShipping, postShipping } from '../services/shipping.jsx';
 import CartaoCard from '../components/CartaoCard.jsx';
 import { getAddressById, deleteAddress, putAddress, postAddress } from '../services/addresses.jsx';
 import EnderecoCard from '../components/EnderecoCard.jsx';
@@ -23,12 +24,14 @@ const Pagamento = () => {
   const { itens, subtotal } = location.state || { itens: [], subtotal: 0 };
   const { user } = useAuth();
   const { cartId } = useCarrinho();
-
+  const navigate = useNavigate();
   const [cupom, setCupom] = useState('');
   const [cuponsAplicados, setCuponsAplicados] = useState([]);
   const [availableCupons, setAvailableCupons] = useState({});
   const [formaPagamento, setFormaPagamento] = useState('cartao');
   const [frete, setFrete] = useState('padrao');
+  const [shippingOptions, setShippingOptions] = useState([]); // New state variable
+  const [checkoutResponse, setCheckoutResponse] = useState(null); // New state variable
   const [contato, setContato] = useState({
     nome: '',
     email: '',
@@ -251,7 +254,64 @@ const Pagamento = () => {
     }
   };
 
-  const valorFrete = frete === 'expresso' ? 20 : 'nulo' ? 0 : 'padrao' ? 10 : 0;
+  useEffect(() => {
+    const fetchShippingOptions = async () => {
+      if (!enderecoSelecionado || itens.length === 0 || !selectedAddressDetails) {
+        setShippingOptions([]);
+        setFrete('padrao'); // Reset frete selection
+        return;
+      }
+
+      const toPostalCode = selectedAddressDetails.zipCode.replace(/\D/g, ''); // Clean zip code
+
+      const totalQuantity = itens.reduce((sum, item) => sum + item.quantity, 0);
+      const totalGrossPrice = itens.reduce((sum, item) => sum + (item.valorVenda * item.quantity), 0);
+
+      const maxDimensions = itens.reduce((max, item) => 
+        ({
+        height: Math.max(max.height, item.dimensions?.height || 0),
+        width: Math.max(max.width, item.dimensions?.width || 0),
+        depth: max.depth + (item.dimensions?.depth || 0),
+        weight: (max.weight + (item.dimensions?.weight || 0))/100}), 
+        { height: 0, width: 0, depth: 0, weight: 0 })
+      console.log("Pagamento: Itens no carrinho:", itens);
+      console.log("Pagamento: Dimensões máximas calculadas:", maxDimensions);
+
+      const shippingData = {
+        toPostalCode,
+        cartItems: [
+          {
+            quantity: totalQuantity,
+            dimensions: maxDimensions,
+            price: totalGrossPrice
+          }
+        ]
+      };
+      console.log("Pagamento: Payload para cálculo de frete:", shippingData);
+
+      try {
+        const response = await postCalculateShipping(shippingData);
+        console.log("Pagamento: Resposta do cálculo de frete:", response);
+        const validShippingOptions = response.services.filter(service => !service.error);
+        console.log("Pagamento: Opções de frete válidas:", validShippingOptions);
+        setShippingOptions(validShippingOptions);
+        
+        if (validShippingOptions.length > 0) {
+          setFrete(validShippingOptions[0].name); // Select the first valid option by default
+        } else {
+          setFrete('padrao');
+        }
+      } catch (error) {
+        console.error("Erro ao calcular frete:", error);
+        setShippingOptions([]);
+        setFrete('padrao');
+      }
+    };
+
+    fetchShippingOptions();
+  }, [enderecoSelecionado, itens, selectedAddressDetails]);
+
+  const valorFrete = parseFloat(shippingOptions.find(option => option.name === frete)?.price || 0);
   const total = subtotal + valorFrete;
 
   const handleAdicionarCartao = async () => {
@@ -397,11 +457,38 @@ const Pagamento = () => {
       clientId: user.id,
       payments: payments
     };
-
+    const selectedShippingOption = shippingOptions.find(option => option.name === frete);
+      
     try {
-      const response = await postCheckout(checkoutData);
-      alert('Compra finalizada com sucesso!');
-      // Optionally navigate to an order confirmation page
+      if ( selectedShippingOption) {
+
+        checkoutData.selectedShipping = {
+          serviceId: selectedShippingOption.id || "melhor_envio_123",
+          freightValue: parseFloat(selectedShippingOption.price),
+          carrier: selectedShippingOption.company?.name || "Transportadora X",
+          serviceName: selectedShippingOption.name
+        };
+        
+          const response = await postCheckout(checkoutData);
+          setCheckoutResponse(response); // Store the response
+          console.log("Checkout Response:", response); // Log the response
+          alert('Compra finalizada com sucesso!');
+      navigate('/perfil');      
+        if (response.id || response.saleId ){
+          const shippingPayload = {
+            saleId: response.id || response.saleId, 
+            freightValue: parseFloat(selectedShippingOption.price),
+            carrier: selectedShippingOption.company.name,
+            serviceName: selectedShippingOption.name,
+            trackingCode: "null" // `TRK-${Math.random().toString(36).substring(2, 10).toUpperCase()}`
+          };
+          await postShipping(shippingPayload);
+          console.log("Shipping registered successfully:", shippingPayload);
+        } else{
+          console.log("Shipping not registered:", shippingPayload);
+        }
+      }
+
       // navigate('/confirmacao-pedido/' + response.id);
     } catch (error) {
       console.error("Erro ao finalizar compra:", error);
@@ -467,18 +554,21 @@ const Pagamento = () => {
                 placeholder="Nome"
                 value={contato.nome}
                 onChange={(e) => setContato({ ...contato, nome: e.target.value })}
+                data-cy="contact-name-input"
               />
               <input
                 type="email"
                 placeholder="E-mail"
                 value={contato.email}
                 onChange={(e) => setContato({ ...contato, email: e.target.value })}
+                data-cy="contact-email-input"
               />
               <input
                 type="tel"
                 placeholder="Telefone"
                 value={contato.telefone}
                 onChange={(e) => setContato({ ...contato, telefone: e.target.value })}
+                data-cy="contact-phone-input"
               />
             </div>
 
@@ -488,6 +578,7 @@ const Pagamento = () => {
               <select
                 value={enderecoSelecionado}
                 onChange={(e) => setEnderecoSelecionado(Number(e.target.value))}
+                data-cy="address-select"
               >
                 {enderecos.filter(e => e.type === 'DELIVERY').map((endereco) => (
                   <option key={endereco.id} value={endereco.id}>
@@ -505,10 +596,9 @@ const Pagamento = () => {
               )}
 
               {!mostrarNovoEndereco && (
-                <button
-                  className="botao-novo-endereco"
+                <button className="botao-novo-endereco"
                   onClick={() => setMostrarNovoEndereco(true)}
-                >
+                  data-cy="add-new-address-button">
                   Cadastrar Novo Endereço
                 </button>
               )}
@@ -520,53 +610,52 @@ const Pagamento = () => {
                     
                     <div className="form-group full-width">
 
-                        <input type="text" placeholder="Apelido do Endereço" name="observations" value={novoEndereco.observations} onChange={(e) => setNovoEndereco({ ...novoEndereco, observations: e.target.value })} required />
+                        <input type="text" placeholder="Apelido do Endereço" name="observations" value={novoEndereco.observations} onChange={(e) => setNovoEndereco({ ...novoEndereco, observations: e.target.value })} required data-cy="new-address-observations-input" />
                     </div>
 
                     <div className="form-group">
 
-                        <input type="text" placeholder="CEP" name="zipCode" value={novoEndereco.zipCode} onChange={(e) => setNovoEndereco({ ...novoEndereco, zipCode: e.target.value })} required />
+                        <input type="text" placeholder="CEP" name="zipCode" value={novoEndereco.zipCode} onChange={(e) => setNovoEndereco({ ...novoEndereco, zipCode: e.target.value })} required data-cy="new-address-zipcode-input" />
                     </div>
 
                     <div className="form-group">
-                        <input type="text" placeholder="Logradouro" name="street" value={novoEndereco.street} onChange={(e) => setNovoEndereco({ ...novoEndereco, street: e.target.value })} required />
+                        <input type="text" placeholder="Logradouro" name="street" value={novoEndereco.street} onChange={(e) => setNovoEndereco({ ...novoEndereco, street: e.target.value })} required data-cy="new-address-street-input" />
                     </div>
 
                     <div className="form-group">
-                        <input type="text" placeholder="Número" name="number" value={novoEndereco.number} onChange={(e) => setNovoEndereco({ ...novoEndereco, number: e.target.value })} required />
+                        <input type="text" placeholder="Número" name="number" value={novoEndereco.number} onChange={(e) => setNovoEndereco({ ...novoEndereco, number: e.target.value })} required data-cy="new-address-number-input" />
                     </div>
 
                     <div className="form-group">
-                        <input type="text" placeholder="Bairro" name="neighborhood" value={novoEndereco.neighborhood} onChange={(e) => setNovoEndereco({ ...novoEndereco, neighborhood: e.target.value })} required />
+                        <input type="text" placeholder="Bairro" name="neighborhood" value={novoEndereco.neighborhood} onChange={(e) => setNovoEndereco({ ...novoEndereco, neighborhood: e.target.value })} required data-cy="new-address-neighborhood-input" />
                     </div>
 
                     <div className="form-group">
-                        <input type="text" placeholder="Cidade" name="city" value={novoEndereco.city} onChange={(e) => setNovoEndereco({ ...novoEndereco, city: e.target.value })} required />
+                        <input type="text" placeholder="Cidade" name="city" value={novoEndereco.city} onChange={(e) => setNovoEndereco({ ...novoEndereco, city: e.target.value })} required data-cy="new-address-city-input" />
                     </div>
 
                     <div className="form-group">
-                        <input type="text" placeholder="Estado (UF)" name="state" value={novoEndereco.state} onChange={(e) => setNovoEndereco({ ...novoEndereco, state: e.target.value })} required maxLength="2" />
+                        <input type="text" placeholder="Estado (UF)" name="state" value={novoEndereco.state} onChange={(e) => setNovoEndereco({ ...novoEndereco, state: e.target.value })} required maxLength="2" data-cy="new-address-state-input" />
                     </div>
 
                     <div className="form-group full-width">
-                        <input type="text" placeholder="Complemento" name="complement" value={novoEndereco.complement} onChange={(e) => setNovoEndereco({ ...novoEndereco, complement: e.target.value })} />
+                        <input type="text" placeholder="Complemento" name="complement" value={novoEndereco.complement} onChange={(e) => setNovoEndereco({ ...novoEndereco, complement: e.target.value })} data-cy="new-address-complement-input" />
                     </div>
 
                     <div className="form-group">
-                        <select name="residenceType" value={novoEndereco.residenceType} onChange={(e) => setNovoEndereco({ ...novoEndereco, residenceType: e.target.value })}>
+                        <select name="residenceType" value={novoEndereco.residenceType} onChange={(e) => setNovoEndereco({ ...novoEndereco, residenceType: e.target.value })} data-cy="new-address-residence-type-select">
                             {tiposEndereco.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                         </select>
                     </div>
 
                     <div className="form-group">
-                        <select name="streetType" value={novoEndereco.streetType} onChange={(e) => setNovoEndereco({ ...novoEndereco, streetType: e.target.value })}>
+                        <select name="streetType" value={novoEndereco.streetType} onChange={(e) => setNovoEndereco({ ...novoEndereco, streetType: e.target.value })} data-cy="new-address-street-type-select">
                             {tiposLogradouro.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                         </select>
                     </div>
-
                     <div className="form-buttons-container full-width">
                       <button type="button" onClick={() => setMostrarNovoEndereco(false)} className="cancel-button">Cancelar</button>
-                      <button type="button" onClick={handleAdicionarEndereco}>Adicionar Endereço</button>
+                      <button type="button" onClick={handleAdicionarEndereco} data-cy="add-address-button">Adicionar Endereço</button>
                     </div>
                   </div>
                 </div>
@@ -597,6 +686,7 @@ const Pagamento = () => {
                       label: `•••• ${card.numero.slice(-4)} (${card.bandeira}) ${card.preferredCard ? '(Preferencial)' : ''}`
                     }))}
                     styles={customSelectStyles}
+                    data-cy="saved-cards-select"
                   />
 
                   {cartoesSelecionados.map(cardId => {
@@ -621,6 +711,7 @@ const Pagamento = () => {
                 <button
                   className="botao-novo-cartao"
                   onClick={() => setMostrarNovoCartao(true)}
+                  data-cy="add-new-card-button"
                 >
                   Cadastrar Novo Cartão
                 </button>
@@ -637,6 +728,7 @@ const Pagamento = () => {
                         placeholder="Número do Cartão"
                         value={cartao.numero}
                         onChange={(e) => setCartao({ ...cartao, numero: e.target.value })}
+                        data-cy="new-card-number-input"
                       />
                     </div>
                     <div className="form-group">
@@ -647,6 +739,7 @@ const Pagamento = () => {
                         dateFormat="MM/yyyy"
                         showMonthYearPicker
                         className="date-picker-full-width" // Adicionando uma classe para estilização
+                        data-cy="new-card-validade-datepicker"
                       />
                     </div>
                     <div className="form-group">
@@ -656,6 +749,7 @@ const Pagamento = () => {
                         value={cartao.cvv}
                         onChange={(e) => setCartao({ ...cartao, cvv: e.target.value })}
                         maxLength="4"
+                        data-cy="new-card-cvv-input"
                       />
                     </div>
                     <div className="form-group full-width">
@@ -664,12 +758,14 @@ const Pagamento = () => {
                         placeholder="Nome no Cartão"
                         value={cartao.nome}
                         onChange={(e) => setCartao({ ...cartao, nome: e.target.value })}
+                        data-cy="new-card-name-input"
                       />
                     </div>
                     <div className="form-group full-width">
                       <select
                         value={cartao.bandeira}
                         onChange={(e) => setCartao({ ...cartao, bandeira: e.target.value })}
+                        data-cy="new-card-brand-select"
                       >
                         <option value="visa">Visa</option>
                         <option value="mastercard">Mastercard</option>
@@ -687,7 +783,7 @@ const Pagamento = () => {
                     </div>
                     <div className="form-buttons-container full-width">
                       <button type="button" onClick={() => { setMostrarNovoCartao(false); setCartao({ numero: '', validade: null, nome: '', bandeira: 'visa', cvv: '' }); }} className="cancel-button">Cancelar</button>
-                      <button type="button" onClick={handleAdicionarCartao}>Adicionar Cartão</button>
+                      <button type="button" onClick={handleAdicionarCartao} data-cy="add-card-button">Adicionar Cartão</button>
                     </div>
                   </div>
                 </div>
@@ -700,10 +796,16 @@ const Pagamento = () => {
               <select
                 value={frete}
                 onChange={(e) => setFrete(e.target.value)}
+                data-cy="shipping-select"
               >
-                <option value="padrao">Padrão (R$ 10,00)</option>
-                <option value="expresso">Expresso (R$ 20,00)</option>
-                <option value="nulo">Teste (R$ 00,00)</option>
+                {shippingOptions.map(option => (
+                  <option key={option.name} value={option.name}>
+                    {`${option.name} (R$${parseFloat(option.price).toFixed(2)}) - ${option.company.name}`}
+                  </option>
+                ))}
+                {shippingOptions.length === 0 && (
+                  <option value="padrao">Nenhuma opção de frete disponível</option>
+                )}
               </select>
             </div>
           </div>
@@ -724,7 +826,8 @@ const Pagamento = () => {
               ))}
               <div className="resumo-total">
                 <p>Subtotal: R${subtotal.toFixed(2)}</p>
-                <p>Frete: R${valorFrete.toFixed(2)}</p>
+                <p>Frete: R${parseFloat(valorFrete).toFixed(2)}</p>
+
                 {cuponsAplicados.length > 0 && (
                   <p>Desconto: R${calcularDesconto().toFixed(2)}</p>
                 )}
@@ -739,12 +842,13 @@ const Pagamento = () => {
                 placeholder="Insira o cupom"
                 value={cupom}
                 onChange={(e) => setCupom(e.target.value)}
+                data-cy="coupon-input"
               />
-              <button onClick={handleAplicarCupom}>Aplicar</button>
+              <button onClick={handleAplicarCupom} data-cy="apply-coupon-button">Aplicar</button>
             </div>
 
             {/* Botão de Finalizar Compra */}
-            <button className="finalizar-compra" onClick={handleFinalizarCompra}>
+            <button className="finalizar-compra" onClick={handleFinalizarCompra} data-cy="finalize-checkout-button">
               Finalizar Compra
             </button>
           </div>

@@ -11,7 +11,7 @@ function Perfil() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const [abaAtiva, setAbaAtiva] = useState("Perfil");
+  const [abaAtiva, setAbaAtiva] = useState("MeusProdutos");
   
   // Estado para gerenciar todos os campos do formulário de perfil.
   const [formData, setFormData] = useState({

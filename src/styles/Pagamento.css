@@ -276,6 +276,7 @@
   font-size: 14px;
 }
 
+.botao-novo-cartao,
 .novo-endereco-formulario button,
 .endereco-entrega button,
 .cartao-formulario button{
@@ -283,6 +284,7 @@
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
   font-weight:bold;
+  max-width: 250px;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
@@ -319,7 +321,8 @@
     color:white !important
 }
 
-.botao-novo-cartao {
+
+/* .botao-novo-cartao {
   padding: 10px 20px;
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
@@ -329,7 +332,7 @@
   margin-top: 10px;
   background-color: transparent;
   width: 100%;
-}
+} */
 
 
 .form-buttons-container {

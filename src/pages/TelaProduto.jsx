@@ -131,6 +131,7 @@ const TelaProduto = () => {
                 value={quantidade}
                 onChange={(e) => setQuantidade(Math.max(1, parseInt(e.target.value, 10) || 1))}
                 disabled={estoque === 0}
+                data-cy="product-quantity-input"
               />
             </div>
           </div>
@@ -139,6 +140,7 @@ const TelaProduto = () => {
             className="produto-botao"
             onClick={handleAdicionarAoCarrinho}
             disabled={usuario?.tipoUsuario === 'colaborador' || estoque === 0 || quantidade > estoque}
+            data-cy="add-to-cart-button"
           >
             {estoque === 0 ? 'Produto Indisponível' : 'Adicionar ao carrinho'}
           </button>

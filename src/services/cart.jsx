@@ -17,6 +17,18 @@ export const getCart = async (id) => {
     }
 };
 
+export const getAllCartsByClientId = async (clientId) => {
+    if (!clientId) return [];
+
+    try {
+        const response = await api.get(`/cart/costumer/${encodeURIComponent(clientId)}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao consultar carrinhos do cliente: ', error);
+        throw new Error('Não foi possível consultar os carrinhos do cliente');
+    }
+};
+
 
 
 // exemplo GET

@@ -53,6 +53,29 @@ Cypress.Commands.add('selectCategoryByName', (categoryName) => {
   cy.get('.select__menu').contains(categoryName).click();
 });
 
-Cypress.Commands.add('selectPriceGroupByName', (groupName) => {
-  cy.get('select[name="pricegroupId"]').select(groupName);
+
+Cypress.Commands.add('applyCoupon', (couponCode, expectedDiscount) => {
+  cy.getByDataCy('coupon-input').type(couponCode);
+  cy.getByDataCy('apply-coupon-button').click();
+  cy.contains('p', `Desconto: R$${expectedDiscount.toFixed(2)}`).should('be.visible');
+});
+
+Cypress.Commands.add('addNewCreditCard', (cardData) => {
+  cy.getByDataCy('add-new-card-button').click();
+  cy.getByDataCy('new-card-number-input').type(cardData.numero);
+  cy.getByDataCy('new-card-name-input').type(cardData.nome);
+  cy.getByDataCy('new-card-cvv-input').type(cardData.cvv);
+  cy.getByDataCy('new-card-brand-select').select(cardData.bandeira);
+  
+  // Handle DatePicker for validade
+  cy.getByDataCy('new-card-validade-datepicker').click();
+  cy.get('.react-datepicker__month-select').select(new Date(cardData.validade).getMonth().toString());
+  cy.get('.react-datepicker__year-select').select(new Date(cardData.validade).getFullYear().toString());
+  cy.get('.react-datepicker__day--today').click(); // Select current day, assuming any day is fine
+  cy.getByDataCy('add-card-button').click();
+});
+
+Cypress.Commands.add('finalizeCheckout', () => {
+  cy.getByDataCy('finalize-checkout-button').click();
+  cy.contains('Compra finalizada com sucesso!').should('be.visible');
 });

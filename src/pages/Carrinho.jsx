@@ -99,7 +99,16 @@ const Carrinho = () => {
             to="/pagamento"
             state={{ itens, subtotal }}
             className={`carrinho-botao ${itens.length === 0 || loading ? 'disabled' : ''}`}
-            onClick={(e) => (itens.length === 0 || loading) && e.preventDefault()}
+            onClick={(e) => {
+              if (itens.length === 0) {
+                console.log('Navigation prevented: Cart is empty.');
+                e.preventDefault();
+              } else if (loading) {
+                console.log('Navigation prevented: Cart is loading.');
+                e.preventDefault();
+              }
+            }}
+            data-cy="finalize-purchase-button"
           >
             Finalizar compra
           </Link>

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { getCart, postCart } from '../services/cart';
+import { getCart, postCart, getAllCartsByClientId } from '../services/cart';
 import { postItemCart, putItemCart, deleteItemCart } from '../services/itemCart';
 import { getBookById } from '../services/books';
 import { getImagesById } from '../services/bookImages'; 
@@ -15,58 +15,79 @@ export const CarrinhoProvider = ({ children }) => {
   const [cartId, setCartId] = useState(null);
 
   const fetchAndSetCartDetails = async (cart) => {
+    console.log("fetchAndSetCartDetails: Starting for cart:", cart);
     if (cart && cart.items) {
-      const itemsDetails = await Promise.all(
-        cart.items.map(async (item) => {
-          const bookDetails = await getBookById(item.bookId);
-                console.log("item add", item)
-          const imagensDetails = await getImagesById(item.bookId);
-          const bookDetailsImages = imagensDetails.filter(livro => livro.caption === "Principal");
-          console.log(item)
-          return {
-            ...item,
-            ...bookDetailsImages,
-            ...bookDetails,
-            valorVenda: item.price,
-            id: item.id,
-          };
-        })
-      );
-      setItens(itemsDetails);
+      try {
+        const itemsDetails = await Promise.all(
+          cart.items.map(async (item) => {
+            const bookDetails = await getBookById(item.bookId);
+            console.log("item add", item)
+            const imagensDetails = await getImagesById(item.bookId);
+            const bookDetailsImages = imagensDetails.filter(livro => livro.caption === "Principal");
+            console.log(item)
+            return {
+              ...item,
+              ...bookDetailsImages,
+              ...bookDetails,
+              valorVenda: parseFloat(item.price),
+              id: item.id,
+            };
+          })
+        );
+        setItens(itemsDetails);
+        console.log("fetchAndSetCartDetails: Successfully set items.");
+      } catch (detailError) {
+        console.error("fetchAndSetCartDetails: Error fetching item details:", detailError);
+        setError("Houve um problema ao carregar os detalhes dos itens do carrinho.");
+        setItens([]);
+      }
     } else {
       setItens([]);
+      console.log("fetchAndSetCartDetails: Cart is empty or invalid.");
     }
   };
 
   useEffect(() => {
     const fetchInitialCart = async () => {
+      console.log("fetchInitialCart: Starting.");
+      setLoading(true); // Ensure loading is true at the start of fetch
       if (!user || !user.id || user.id == "colaborador-mock-id") {
         setItens([]);
         setLoading(false);
+        console.log("CarrinhoContext: User is null, has no ID, or is a collaborator. Skipping cart fetch. Loading set to false.", { user });
         return;
       }
-      console.log(user)
+      console.log("CarrinhoContext: Fetching initial cart for user:", user);
 
       try {
         setError(null);
-        const cartData = await getCart(user.id);
-              console.log(cartData)
-        if (!cartData || !cartData.active) {
+        const allCarts = await getAllCartsByClientId(user.id);
+        console.log("CarrinhoContext: All carts for client:", allCarts);
+
+        let activeCart = allCarts.find(cart => cart.active === true || cart.active === "true");
+
+        if (!activeCart) {
           console.log("Carrinho inativo ou não encontrado para o usuário, criando um novo...");
           try {
             const newCart = await postCart({ clienteId: user.id });
             setCartId(newCart.id);
+            console.log("CarrinhoContext: New cart created:", newCart);
             await fetchAndSetCartDetails(newCart);
           } catch (creationError) {
             console.error("Falha ao criar um novo carrinho:", creationError);
             setError("Houve um problema ao criar seu carrinho.");
           }
         } else {
-          setCartId(cartData.id);
-          await fetchAndSetCartDetails(cartData);
+          setCartId(activeCart.id);
+          console.log("CarrinhoContext: Existing active cart found:", activeCart);
+          await fetchAndSetCartDetails(activeCart);
         }
       } catch (err) {
-        setLoading(false);
+        console.error("CarrinhoContext: Erro ao buscar ou criar carrinho inicial:", err);
+        setError(err.response?.data?.message || err.message || "Ocorreu um erro ao carregar o carrinho.");
+      } finally {
+        setLoading(false); // Ensure loading is false after initial fetch attempt
+        console.log("fetchInitialCart: Finished. Loading set to false.");
       }
     };
     fetchInitialCart();
@@ -84,6 +105,7 @@ export const CarrinhoProvider = ({ children }) => {
         setError("Carrinho inativo ou não encontrado após a operação.");
         return;
       }
+      console.log("CarrinhoContext: Cart updated after API call:", updatedCart);
       await fetchAndSetCartDetails(updatedCart);
     } catch (err) {
       console.error("Erro na operação do carrinho:", err);
@@ -105,6 +127,7 @@ export const CarrinhoProvider = ({ children }) => {
 
     if (itemExistente) {
       const novaQuantidade = itemExistente.quantity + (livro.quantidade || 1);
+      console.log("CarrinhoContext: Item existente, atualizando quantidade:", { itemId: itemExistente.id, novaQuantidade });
       atualizarQuantidade(itemExistente.id, novaQuantidade);
     } else {
       const itemPayload = {
@@ -112,8 +135,7 @@ export const CarrinhoProvider = ({ children }) => {
         quantity: livro.quantidade || 1,
         price: parseFloat(livro.valorVenda || livro.price)
       };
-      console.log("adicionarAoCarrinho: cartId", cartId);
-      console.log("adicionarAoCarrinho: itemPayload", itemPayload);
+      console.log("CarrinhoContext: Adicionando novo item ao carrinho:", { cartId, itemPayload });
       handleApiCall(() => postItemCart(cartId, itemPayload));
     }
   };

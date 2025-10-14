@@ -27,7 +27,7 @@ function Login() {
         // mesmo que o contexto do usuário ainda não esteja totalmente populado.
         localStorage.setItem('lastLoginEmail', trimmedEmail);
         await identifyUserByEmail(trimmedEmail, 'cliente');
-        navigate('/perfil');
+        navigate('/shoplivros');
       } catch (err) {
         const msg = err?.message || err?.response?.data?.message || 'Erro ao efetuar login';
         alert(msg);
