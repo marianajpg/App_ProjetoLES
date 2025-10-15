@@ -48,6 +48,6 @@
 
 .modal-actions {
   display: flex;
-  justify-content: flex;
+  justify-content: flex; 
   gap: 10px;
 }

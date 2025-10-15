@@ -1,54 +1,95 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link, useParams } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext';
 import Header from '../components/Header.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import { useAuth } from '../context/AuthLogin.jsx';
 import { getInventory } from '../services/inventory.jsx';
+import { getImagesById } from '../services/bookImages.jsx';
 import '../styles/TelaProduto.css';
 import InfoSection from '../components/InfoSection.jsx';
 
 const TelaProduto = () => {
   const { state } = useLocation();
+  const { id } = useParams();
   const navigate = useNavigate();
   const { usuario } = useAuth();
   const { adicionarAoCarrinho } = useCarrinho();
 
-  // O livro é recebido diretamente do estado da navegação
-  const livro = state?.livro;
+  const [livro, setLivro] = useState(state?.livro);
+  const [isLoading, setIsLoading] = useState(!state?.livro);
+  const [error, setError] = useState(null);
 
   const [descricaoExpandida, setDescricaoExpandida] = useState(true);
   const [quantidade, setQuantidade] = useState(1);
   const [estoque, setEstoque] = useState(null);
+  const [imagemPrincipal, setImagemPrincipal] = useState('');
+
+  useEffect(() => {
+    if (!livro) {
+      const fetchBookData = async () => {
+        try {
+          const data = await getImagesById(id);
+          setLivro(data[0].book);
+        } catch (err) {
+          setError('Não foi possível carregar as informações do livro.');
+          console.error("Erro ao buscar livro:", err);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchBookData();
+    }
+  }, [id, livro]);
 
   useEffect(() => {
     if (livro) {
+      setIsLoading(false);
       getInventory()
         .then(data => {
           const inventoryItem = data.filter(item => item.bookId === livro.id);
-          if (inventoryItem.length > 0) {
-            const totalQuantity = inventoryItem.reduce((total, item) => total + item.quantity, 0);
-            setEstoque(totalQuantity);
-          } else {
-            setEstoque(0);
-          }
+          const totalQuantity = inventoryItem.reduce((total, item) => total + item.quantity, 0);
+          setEstoque(totalQuantity);
         })
         .catch(error => {
           console.error("Erro ao buscar estoque:", error);
           setEstoque(0);
         });
+
+      // Define a imagem principal quando o livro é carregado
+      console.log("livro",livro)
+      const livroComImagens = { ...livro };
+      if (!livroComImagens.images || livroComImagens.images.length === 0) {
+        livroComImagens.images = [{ url: 'https://via.placeholder.com/300x450?text=Capa+Indispon%C3%ADvel', caption: 'Principal' }];
+      }
+      const imagemCapa = livroComImagens.images.find(img => img.caption === 'Principal') || livroComImagens.images[0];
+      setImagemPrincipal(imagemCapa.url);
     }
   }, [livro]);
 
-  // A API não fornece imagens, então usaremos um placeholder
-  if (!livro || !livro.images || livro.images.length === 0) {
-    livro.images = [{ url: 'https://via.placeholder.com/300x450?text=Capa+Indispon%C3%ADvel' }];
+  if (isLoading) {
+    return (
+      <div>
+        <Header />
+        <div style={{ textAlign: 'center', padding: '50px' }}>Carregando...</div>
+        <InfoSection />
+      </div>
+    );
   }
-  
-  const imagemCapa = livro.images.find(img => img.caption === 'Principal');
-  const [imagemPrincipal, setImagemPrincipal] = useState(imagemCapa ? imagemCapa.url : livro.images[0].url);
 
-  // Se nenhum livro foi passado, mostra uma mensagem de erro
+  if (error) {
+    return (
+      <div>
+        <Header />
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <h2>{error}</h2>
+          <Link to="/shop-livros">Voltar ao Catálogo</Link>
+        </div>
+        <InfoSection />
+      </div>
+    );
+  }
+
   if (!livro) {
     return (
       <div>
@@ -61,6 +102,12 @@ const TelaProduto = () => {
         <InfoSection />
       </div>
     );
+  }
+
+  // Prepara o objeto do livro com imagens, garantindo que não seja nulo
+  const livroComImagens = { ...livro };
+  if (!livroComImagens.images || livroComImagens.images.length === 0) {
+    livroComImagens.images = [{ url: 'https://via.placeholder.com/300x450?text=Capa+Indispon%C3%ADvel', caption: 'Principal' }];
   }
 
   const breadcrumbItems = [
@@ -92,7 +139,7 @@ const TelaProduto = () => {
       <div className="produto-container">
         <div className="produto-imagens">
           <div className="produto-miniaturas">
-            {livro.images.map((imagem, index) => (
+            {livroComImagens.images.map((imagem, index) => (
               <img
                 key={index}
                 src={imagem.url}
@@ -139,7 +186,7 @@ const TelaProduto = () => {
           <button
             className="produto-botao"
             onClick={handleAdicionarAoCarrinho}
-            disabled={usuario?.tipoUsuario === 'colaborador' || estoque === 0 || quantidade > estoque}
+            disabled={((usuario?.tipoUsuario === 'cliente' || !usuario) && estoque === 0) || (estoque !== null && quantidade > estoque)}
             data-cy="add-to-cart-button"
           >
             {estoque === 0 ? 'Produto Indisponível' : 'Adicionar ao carrinho'}

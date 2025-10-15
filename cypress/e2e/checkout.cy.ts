@@ -1,90 +1,66 @@
-interface UserData {
-  email: string;
-}
+import CheckoutListing from '../support/checkout/listing';
+import { CheckoutFixture, UserData, BookData, AddressData, CreditCardData, CouponData } from '../support/checkout/interfaces';
 
-interface BookData {
-  id: number;
-  title: string;
-  quantity: number;
-}
+// 1. Importa os dados diretamente do arquivo JSON.
+// Isso é síncrono e mais simples que usar cy.fixture para múltiplos testes.
+import * as checkoutScenarios from '../fixtures/checkout.json';
 
-interface AddressData {
-  id: number;
-  residenceType: string;
-  streetType: string;
-  street: string;
-  number: string;
-  complement: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  observations: string;
-}
+describe('Fluxo de Checkout Completo - Orientado a Dados', () => {
 
-interface CreditCardData {
-  numero: string;
-  validade: string;
-  nome: string;
-  bandeira: string;
-  cvv: string;
-}
+  // 2. Itera sobre a lista de checkouts do arquivo importado.
+  // Para cada cenário, um novo teste 'it(...)' será criado.
+  checkoutScenarios.checkouts.forEach((checkout: any, index: number) => {
 
-interface CouponData {
-  code: string;
-  value: number;
-}
+    it(`Cenário #${index + 1}: Deve realizar um checkout completo para o usuário ${checkout.user.email}`, () => {
+      
+      // 3. Os dados de 'checkout' já estão disponíveis diretamente, sem precisar de alias ou beforeEach.
+      const { user, book: booksData, address, creditCard, coupon } = checkout;
 
-interface CheckoutFixture {
-  user: UserData;
-  book: BookData;
-  address: AddressData;
-  creditCard: CreditCardData;
-  coupon: CouponData;
-}
+      CheckoutListing.loginAsCustomer(user.email);
+      cy.url().should('not.contain', '/login'); // Assertiva: verifica se o login teve sucesso
 
-describe('Fluxo de Checkout Completo', () => {
-  let userData: UserData;
-  let bookData: BookData;
-  let addressData: AddressData;
-  let creditCardData: CreditCardData;
-  let couponData: CouponData;
+      // Adicionar livros ao carrinho
+      booksData.forEach((book: BookData) => {
+        CheckoutListing.addBookToCart(book.id, book.quantity);
+      });
+      
+      // Ir para o carrinho e pagamento
+      CheckoutListing.goToCart();
+      cy.contains('h1', 'Carrinho').should('be.visible'); // Assertiva: verifica se está na página do carrinho
 
-  beforeEach(() => {
-    cy.fixture('checkout').then((data: CheckoutFixture) => {
-      userData = data.user;
-      bookData = data.book;
-      addressData = data.address;
-      creditCardData = data.creditCard;
-      couponData = data.coupon;
+      CheckoutListing.goToPaymentPage();
+      cy.url().should('contain', '/pagamento'); // Assertiva: verifica se está na página de pagamento
+
+      // Aplicar cupom, se existir
+      if (coupon && coupon.code) {
+        CheckoutListing.applyCoupon(coupon.code, coupon.value);
+        // cy.get('.coupon-success-message').should('be.visible'); // Exemplo de assertiva
+      }
+
+      // Escolher ou adicionar endereço
+      if (address.id) {
+        CheckoutListing.selectAddress(address);
+      } else {
+        CheckoutListing.addNewAddress(address);
+      }
+
+      // Escolher ou adicionar forma de pagamento
+      if (creditCard.id) {
+        CheckoutListing.selectCreditCard(creditCard);
+      } else {
+        CheckoutListing.addNewCreditCard(creditCard);
+      }
+      
+      CheckoutListing.fillCardAmountWithTotal();
+
+      // Finalizar Compra
+      CheckoutListing.finalizeCheckout();
+      cy.visit('/perfil');
+
+
+      // Assertiva Opcional: Verificar se o carrinho está vazio após a compra
+      // cy.visit('/carrinho');
+      // cy.contains('Seu carrinho está vazio').should('be.visible');
     });
-    cy.loginAsCustomer(userData.email);
-  });
-
-  it('Deve realizar um checkout completo com sucesso', () => {
-    // 1. Escolher livros e adicionar ao carrinho
-    cy.addBookToCart(Number(bookData.id), Number(bookData.quantity));
-
-    // 2. Ir para o carrinho
-    cy.getByDataCy('finalize-purchase-button').click();
-
-    // 3. Ir para a página de Pagamento
-    cy.url().should('include', '/pagamento');
-
-    // 4. Inserir cupom (se houver)
-    cy.applyCoupon(couponData.code, couponData.value);
-
-    // 5. Escolher o endereço (assumindo que já existe um endereço cadastrado para o usuário)
-    cy.selectAddress(addressData.id);
-
-    // 6. Escolher a forma de pagamento (adicionar um novo cartão)
-    cy.addNewCreditCard(creditCardData);
-
-    // 7. Escolher o frete
-    cy.selectShipping('padrao'); // Frete Padrão
-
-    // 8. Finalizar Compra
-    cy.finalizeCheckout();
-    cy.url().should('include', '/meusprodutos');
   });
 });

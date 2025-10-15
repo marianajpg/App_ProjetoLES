@@ -35,19 +35,26 @@
   color: #777;
 }
 
+.cartao-card-actions{
+  display: inline-flex
+}
 .cartao-card-actions .card-button {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 1.2rem;
-  margin-left: 8px;
+  margin: 0 50px 0 5%;
+  padding: 5% 10%;
+
 }
 
-
+.card-button img{
+  width: 25px;
+}
 
 .delete-button:hover {
-  background-color: #FDBC9B; /* Cor de fundo suave ao passar o mouse */
-  border-radius: 8px; /* Transforma em círculo */
+  background-color: #ffbe9ece; /* Cor de fundo suave ao passar o mouse */
+  border-radius: 15px; /* Transforma em círculo */
 }
 
 .card-amount-input {
