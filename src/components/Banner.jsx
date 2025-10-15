@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styles/Home.css'; 
-import modelo from '../images/image_banner.png'; // Importe a imagem de destaque
+import modelo from '../images/image_banner.png'; 
 import { Link } from 'react-router-dom';
 
 const Banner = () => {

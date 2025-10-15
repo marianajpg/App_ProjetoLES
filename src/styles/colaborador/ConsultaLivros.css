@@ -44,7 +44,7 @@
 
 .campo-pesquisa {
   display: flex;
-  justify-content: center; /* Centraliza horizontalmente */
+  justify-content: center;  
   margin-bottom: 40px;
 }
 
@@ -77,22 +77,22 @@
 
 .abas-e-botao-container {
   display: flex;
-  justify-content: center; /* Centraliza o grupo de abas e o botão */
-  margin-bottom: 30px; /* Alinha com a margem original das abas */
-  gap: 10px; /* Espaço entre o último botão de aba e o botão de criar */
+  justify-content: center;  
+  margin-bottom: 30px;  
+  gap: 10px;  
 }
 
 .botao-criar {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 44px;  /* Tamanho similar à altura dos outros botões */
+  width: 44px;  
   height: 35px;
   padding: 0;
-  background-color: #ffddcc; /* Mesma cor de fundo das abas inativas */
-  color: var(--primary-color); /* Mesma cor do texto das abas inativas */
+  background-color: #ffddcc; 
+  color: var(--primary-color);  
   border: none;
-  border-radius: 8px; /* Mesmo raio de borda das abas */
+  border-radius: 8px; 
   cursor: pointer;
   font-size: 24px;
   font-weight: bold;
@@ -101,5 +101,5 @@
 }
 
 .botao-criar:hover {
-  background-color: var(--quaternary-color); /* Mesmo efeito hover das abas */
+  background-color: var(--quaternary-color);  
 }

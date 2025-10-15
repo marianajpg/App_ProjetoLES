@@ -9,8 +9,8 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  justify-content: flex-start; /* Alinha à esquerda */
-  align-self: flex-end; /* Alinha à direita dentro de um flex-direction: column */
+  justify-content: flex-start;
+  align-self: flex-end; 
   margin-right: 10%;
 }
 

@@ -53,8 +53,8 @@
 }
 
 .delete-button:hover {
-  background-color: #ffbe9ece; /* Cor de fundo suave ao passar o mouse */
-  border-radius: 15px; /* Transforma em círculo */
+  background-color: #ffbe9ece;  
+  border-radius: 15px;  
 }
 
 .card-amount-input {

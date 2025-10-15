@@ -50,7 +50,7 @@ export const CarrinhoProvider = ({ children }) => {
   useEffect(() => {
     const fetchInitialCart = async () => {
       console.log("fetchInitialCart: Starting.");
-      setLoading(true); // Ensure loading is true at the start of fetch
+      setLoading(true); 
       if (!user || !user.id || user.id == "colaborador-mock-id") {
         setItens([]);
         setLoading(false);
@@ -86,7 +86,7 @@ export const CarrinhoProvider = ({ children }) => {
         console.error("CarrinhoContext: Erro ao buscar ou criar carrinho inicial:", err);
         setError(err.response?.data?.message || err.message || "Ocorreu um erro ao carregar o carrinho.");
       } finally {
-        setLoading(false); // Ensure loading is false after initial fetch attempt
+        setLoading(false);  
         console.log("fetchInitialCart: Finished. Loading set to false.");
       }
     };

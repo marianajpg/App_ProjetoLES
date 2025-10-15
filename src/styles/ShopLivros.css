@@ -24,13 +24,13 @@
 }
 /* Estilos para os cards */
 .cards-container {
-  margin-left: 10px; /* Margem à esquerda para acomodar os filtros */
+  margin-left: 10px; 
   padding: 20px;
-  flex: 1; /* Ocupa o restante do espaço */
+  flex: 1;
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 20px; /* Espaçamento entre os cards */
-  align-items: flex-start; /* Impede que os cards estiquem */
+  gap: 20px; 
+  align-items: flex-start; 
 }
 
 .card {
@@ -41,12 +41,12 @@
   text-align: center;
   min-height: 480px; 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Adiciona transição */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
 .card.out-of-stock {
   opacity: 0.5;
-  position: relative; /* Necessário para posicionar o overlay */
+  position: relative; 
 }
 
 .out-of-stock-overlay {
@@ -55,7 +55,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 217, 217, 0.507); /* Fundo escuro semi-transparente */
+  background-color: rgba(255, 217, 217, 0.507); 
   color: rgb(86, 0, 0);
   text-shadow: 1px 1px rgba(0, 0, 0, 0.634);;
   border: solid 1px rgb(240, 159, 159);
@@ -66,12 +66,12 @@
   font-weight: bold;
   text-align: center;
   border-radius: 8px;
-  z-index: 1; /* Garante que o overlay fique por cima */
+  z-index: 1; 
 }
 
 .card:hover {
-  transform: translateY(-5px); /* Efeito de levantar */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
 }
 
 .card img {
@@ -116,18 +116,18 @@
 
 @media (max-width: 768px) {
   .main-container {
-    flex-direction: column; /* Em dispositivos móveis, os filtros ficam acima dos cards */
+    flex-direction: column; 
   }
 
   .filtros-container {
-    width: 100%; /* Ocupa toda a largura em dispositivos móveis */
-    position: relative; /* Remove a posição fixa em dispositivos móveis */
-    height: auto; /* Altura automática */
+    width: 100%; 
+    position: relative; 
+    height: auto; 
     padding: 15px;
   }
 
   .cards-container {
-    margin-left: 0; /* Remove a margem à esquerda em dispositivos móveis */
+    margin-left: 0; 
     padding: 15px;
   }
 }

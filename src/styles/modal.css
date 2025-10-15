@@ -15,10 +15,10 @@
     padding: 20px;
     border-radius: 8px;
     width: 90%;
-    max-width: 700px; /* Aumenta a largura máxima para acomodar formulários maiores */
-    max-height: 95vh; /* Garante que o modal não seja maior que a tela */
-    overflow-y: auto; /* Adiciona rolagem se o conteúdo for grande */
-    box-sizing: border-box; /* Garante que o padding não afete a largura final */
+    max-width: 700px; 
+    max-height: 95vh; 
+    overflow-y: auto; 
+    box-sizing: border-box; 
   }
 
   .modal-content h2 {

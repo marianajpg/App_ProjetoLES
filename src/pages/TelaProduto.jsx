@@ -60,7 +60,7 @@ const TelaProduto = () => {
       console.log("livro",livro)
       const livroComImagens = { ...livro };
       if (!livroComImagens.images || livroComImagens.images.length === 0) {
-        livroComImagens.images = [{ url: 'https://via.placeholder.com/300x450?text=Capa+Indispon%C3%ADvel', caption: 'Principal' }];
+        livroComImagens.images = [{ url: 'https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzsc7phps7xh2d', caption: 'Principal' }];
       }
       const imagemCapa = livroComImagens.images.find(img => img.caption === 'Principal') || livroComImagens.images[0];
       setImagemPrincipal(imagemCapa.url);
@@ -107,7 +107,7 @@ const TelaProduto = () => {
   // Prepara o objeto do livro com imagens, garantindo que não seja nulo
   const livroComImagens = { ...livro };
   if (!livroComImagens.images || livroComImagens.images.length === 0) {
-    livroComImagens.images = [{ url: 'https://via.placeholder.com/300x450?text=Capa+Indispon%C3%ADvel', caption: 'Principal' }];
+    livroComImagens.images = [{ url: 'https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzsc7phps7xh2d', caption: 'Principal' }];
   }
 
   const breadcrumbItems = [

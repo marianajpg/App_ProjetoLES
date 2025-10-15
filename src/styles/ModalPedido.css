@@ -50,7 +50,7 @@
 /* ============================================= */
 .modal-overlay {
   position: fixed;
-  inset: 0; /* Equivalente a top/left/right/bottom: 0 */
+  inset: 0; 
   background-color: rgba(0, 0, 0, 0.6);
   display: grid;
   place-items: center;
@@ -59,7 +59,7 @@
   animation: fadeIn var(--transition-speed) ease-out;
 }
 
-.modal { /* .modal-container */
+.modal { 
   background-color: var(--color-white);
   border-radius: var(--border-radius-md);
   width: 100%;
@@ -74,7 +74,6 @@
   animation: scaleUp var(--transition-speed) ease-out;
 }
 
-/* Header */
 .modal__header {
   display: flex;
   justify-content: space-between;
@@ -83,20 +82,20 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.modal__title { /* .modal-header h3 */
+.modal__title {
   font-size: 1.4rem;
   color: var(--color-primary);
   font-weight: 700;
   margin: 0;
 }
 
-.modal__delivery-date { /* .data-entrega */
+.modal__delivery-date { 
   margin-left: var(--spacing-sm);
   font-weight: 600;
   color: var(--color-secondary);
 }
 
-.modal__close-btn { /* .close-btn */
+.modal__close-btn { 
   background: none;
   border: none;
   font-size: 2rem;
@@ -121,7 +120,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.status-bar__step { /* .status-step */
+.status-bar__step { 
   color: var(--color-text-muted);
   font-size: 0.95rem;
   position: relative;
@@ -131,7 +130,7 @@
   transition: color var(--transition-speed);
 }
 
-.status-bar__step--active { /* .status-step.active */
+.status-bar__step--active { 
   color: var(--color-secondary);
   font-weight: bold;
 }
@@ -155,7 +154,7 @@
   gap: var(--spacing-lg);
 }
 
-.pedido-info__id { /* .pedido-id */
+.pedido-info__id { 
   font-size: 1rem;
   color: var(--color-primary);
   font-weight: 600;
@@ -163,7 +162,7 @@
   margin: 0;
 }
 
-.pedido-info__book-details { /* .livro-detalhes */
+.pedido-info__book-details { 
   display: flex;
   align-items: center;
   gap: var(--spacing-lg);
@@ -172,7 +171,7 @@
   border-radius: var(--border-radius-sm);
 }
 
-.pedido-info__book-cover { /* .livro-capa */
+.pedido-info__book-cover { 
   width: 80px;
   height: 120px;
   object-fit: cover;
@@ -181,7 +180,7 @@
 }
 
 /* Resumo de Valores */
-.summary { /* .produto-detalhes */
+.summary {
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--color-border);
   display: flex;
@@ -189,22 +188,22 @@
   gap: var(--spacing-md);
 }
 
-.summary__quantity { /* .quantidade */
+.summary__quantity { 
   font-size: 0.95rem;
   color: var(--color-text-secondary);
   text-align: center;
 }
 
-.summary__values { /* .produto-valores */
+.summary__values { 
   display: grid;
-  grid-template-columns: 1fr auto; /* Duas colunas: label e valor */
+  grid-template-columns: 1fr auto;
   gap: var(--spacing-sm);
   font-size: 1rem;
 }
 
 .summary__values p {
-  grid-column: 1 / -1; /* Ocupa as duas colunas */
-  display: contents; /* Permite que os spans se alinhem ao grid pai */
+  grid-column: 1 / -1; 
+  display: contents; 
   margin: 0;
 }
 
@@ -219,13 +218,12 @@
   text-align: right;
 }
 
-.summary__total { /* .total */
+.summary__total { 
   font-weight: 700;
   font-size: 1.1rem;
   color: var(--color-secondary);
 }
 
-/* Actions */
 .modal__actions {
   display: flex;
   justify-content: space-around;
@@ -233,10 +231,10 @@
   gap: var(--spacing-md);
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--color-border);
-  flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+  flex-wrap: wrap; 
 }
 
-.modal__main-action { /* .action-btn.ver-produto */
+.modal__main-action { 
   padding: 12px 28px;
   font-size: 1rem;
   background-color: var(--color-secondary);
@@ -259,13 +257,13 @@
   align-items: flex-start;
 }
 
-.help-actions__title { /* h5 */
+.help-actions__title {
   font-size: 1rem;
   color: var(--color-primary);
   margin: 0;
 }
 
-.help-actions__btn { /* .help-btn */
+.help-actions__btn { 
   background: none;
   border: none;
   color: var(--color-text-secondary);

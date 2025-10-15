@@ -64,7 +64,7 @@ h1{
 /* Estilos do campo de pesquisa */
 .campo-pesquisa {
   display: flex;
-  justify-content: center; /* Centraliza horizontalmente */
+  justify-content: center;  
   margin-bottom: 40px;
 }
 
@@ -85,8 +85,8 @@ h1{
 .campo-pesquisa .botao-lupa {
   padding: 10px;
   border: 0px solid #ccc;
-  border-left: none; /* Remove a borda esquerda para unir com o input */
-  border-radius: 0 8px 8px 0; /* Bordas arredondadas apenas à direita */
+  border-left: none; 
+  border-radius: 0 8px 8px 0;  
   background-color: #f9f9f9;
   cursor: pointer;
   justify-content:center;
@@ -98,18 +98,18 @@ h1{
 }
 
 .campo-pesquisa .lupa {
-  width: 20px; /* Ajuste o tamanho da lupa */
+  width: 20px; 
   height: 20px;
 }
 
 
 @media (max-width: 768px) {
   .campo-pesquisa input {
-    width: 80%; /* Aumenta a largura em telas menores */
+    width: 80%; 
   }
 
   .campo-pesquisa .lupa {
-    right: 10%; /* Ajusta a posição da lupa em telas menores */
+    right: 10%;  
   }
 }
 
@@ -146,7 +146,7 @@ h1{
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin: 0 auto; /* Centraliza o contêiner */
+  margin: 0 auto; 
 }
 
 /* Estilos da tabela */
@@ -190,13 +190,13 @@ last-child td{
 }
 /* Estilos para as imagens de ação */
 .acao-imagem {
-  width: 24px; /* Ajuste o tamanho conforme necessário */
+  width: 24px;  
   height: 24px;
   transition: opacity 0.3s ease;
 }
 
 .acao-imagem:hover {
-  opacity: 0.8; /* Efeito de hover */
+  opacity: 0.8;  
 }
 
 
