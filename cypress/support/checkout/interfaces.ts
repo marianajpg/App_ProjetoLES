@@ -29,6 +29,7 @@ export interface CreditCardData {
   nomeImpresso: string;
   bandeira: string;
   cvv: string;
+  percent: number;
 }
 
 export interface CouponData {
@@ -40,6 +41,6 @@ export interface CheckoutFixture {
   user: UserData;
   book: BookData[];
   address: AddressData;
-  creditCard: CreditCardData;
+  creditCard: CreditCardData[];
   coupon: CouponData;
 }

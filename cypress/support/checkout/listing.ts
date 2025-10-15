@@ -1,4 +1,5 @@
 import { Checkout, Cart } from './elements';
+import { CheckoutFixture, UserData, BookData, AddressData, CreditCardData, CouponData } from './interfaces';
 
 class CheckoutListing {
   addBookToCart(bookId: number, quantity: number) {
@@ -62,21 +63,62 @@ class CheckoutListing {
     cy.get(Checkout.newCard.saveButton).click();
   }
 
-   fillCardAmountWithTotal() {
-      cy.get('.resumo-total p strong').invoke('text').then((totalText) => {
+  // fillCardAmountWithTotal(creditCards: CreditCardData[]) {
+  // cy.get('.resumo-total p strong').invoke('text').then((totalText) => {
 
-        const numericValue = totalText
-         .replace('Total: R$', '')   
-        .replace(',', '.');       
+  //   const numericValue = totalText
+  //     .replace('Total: R$', '')   
+  //       .replace(',', '.');       
    
-      const totalAmount = parseFloat(numericValue);
+  //     const totalAmount = parseFloat(numericValue);
+  //     const pay = totalAmount * percent
 
-      cy.get('.card-amount-input').first().type(totalAmount.toString());
-      });
+  //     cy.get(`.cartao-card:nth-child(${index + 3}) .card-amount-input`).type(pay.toString());
+  //     });
+  //   }
+
+  fillCardAmountWithTotal(creditCards: CreditCardData[]) {
+  cy.get('.resumo-total p strong').invoke('text').then((totalText) => {
+
+    const numericValue = totalText
+      .replace('Total: R$', '')
+      .replace(',', '.');
+    const totalAmount = parseFloat(numericValue);
+    cy.log(`Total Amount: ${totalAmount}`);
+    const rawValues = creditCards.map(c => totalAmount * c.percent);
+    cy.log(`Raw Values: ${JSON.stringify(rawValues)}`);
+
+    const roundedValues = rawValues.map(v => parseFloat(v.toFixed(2)));
+    cy.log(`Rounded Values (initial): ${JSON.stringify(roundedValues)}`);
+
+    const sum = roundedValues.reduce((a, b) => a + b, 0);
+    cy.log(`Sum of Rounded Values: ${sum}`);
+    const diff = parseFloat((totalAmount - sum).toFixed(2));
+    cy.log(`Difference (totalAmount - sum): ${diff}`);
+
+    if (creditCards.length > 0) {
+      roundedValues[roundedValues.length - 1] = parseFloat((roundedValues[roundedValues.length - 1] + diff).toFixed(2));
+      cy.log(`Rounded Values (adjusted last): ${JSON.stringify(roundedValues)}`);
     }
+
+    creditCards.forEach((creditCard: CreditCardData, index: number) => {
+      const pay = roundedValues[index];
+      const typedValue = pay.toFixed(2);
+      cy.log(`Card ${index + 1} - Payment: ${pay}, Typed Value: ${typedValue}`);
+      cy.get('.cartao-card').eq(index).find('.card-amount-input')
+        .clear()
+        .type(typedValue);
+    });
+  });
+}
+
 
   selectShipping(shippingType: string) {
     cy.get(Checkout.shippingOption(shippingType)).check({ force: true });
+  }
+
+  selectFirstShippingOption() {
+    cy.get('[data-cy="shipping-select"]').should('be.visible').select(0);
   }
 
   finalizeCheckout() {

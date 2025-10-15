@@ -32,6 +32,7 @@ describe('Fluxo de Checkout Completo - Orientado a Dados', () => {
       cy.url().should('contain', '/pagamento'); // Assertiva: verifica se está na página de pagamento
 
       // Aplicar cupom, se existir
+      
       if (coupon && coupon.code) {
         CheckoutListing.applyCoupon(coupon.code, coupon.value);
         // cy.get('.coupon-success-message').should('be.visible'); // Exemplo de assertiva
@@ -43,16 +44,21 @@ describe('Fluxo de Checkout Completo - Orientado a Dados', () => {
       } else {
         CheckoutListing.addNewAddress(address);
       }
-
+      cy.wait(2000);
+      CheckoutListing.selectFirstShippingOption();
+      cy.wait(1000);
       // Escolher ou adicionar forma de pagamento
-      if (creditCard.id) {
-        CheckoutListing.selectCreditCard(creditCard);
-      } else {
-        CheckoutListing.addNewCreditCard(creditCard);
-      }
-      
-      CheckoutListing.fillCardAmountWithTotal();
 
+      creditCard.forEach((card: CreditCardData) => {
+      if (card.id) {
+        CheckoutListing.selectCreditCard(card);
+      } else {
+        CheckoutListing.addNewCreditCard(card);
+      }
+      });
+      CheckoutListing.fillCardAmountWithTotal(creditCard);
+
+      
       // Finalizar Compra
       CheckoutListing.finalizeCheckout();
       cy.visit('/perfil');

@@ -29,17 +29,26 @@
         "zipCode": "98765-432",
         "observations": "Casa Nova"
       },
-      "creditCard": {
+      "creditCard": [{
         "id": 8,
         "numero": "1111222233334444",
         "validade": "12/2025",
         "nomeImpresso": "TESTE COMPRADOR",
         "bandeira": "visa",
-        "cvv": "123"
+        "cvv": "123",
+        "percent": 0.2
       },
+    {
+        "id": 4,
+        "numero": "454352334534",
+        "validade": "05/2025",
+        "nomeImpresso": "JFNJBFJKWBJFK",
+        "bandeira": "visa",
+        "cvv": "123",
+        "percent": 0.8
+      }],
       "coupon": {
-        "code": "TESTPROMO30",
-        "value": 10.00
+        "code": "TESTPROMO30"
       }
     }
   ]

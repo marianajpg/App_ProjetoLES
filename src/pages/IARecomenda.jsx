@@ -43,33 +43,6 @@ async function callGroqAPI(promptText) {
 
 }
 
-
-/*
-
-// Implementações anteriores (Ollama e Gemini) mantidas como referência.
-// via Gemini
-async function callGeminiAPI(promptText, apiKey) {
-  const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-  const requestBody = { contents: [{ parts: [{ text: promptText }] }] };
-  try {
-    const response = await fetch(`${API_URL}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey },
-      body: JSON.stringify(requestBody)
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Erro da API: ${response.status} - ${errorData.error.message || 'Erro desconhecido'}`);
-    }
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível gerar uma resposta.";
-  } catch (error) {
-    console.error("Erro ao chamar a API Gemini:", error);
-    return `Desculpe, houve um erro ao processar sua solicitação: ${error.message}`;
-  }
-}
-*/
-
 const IARecomenda = () => {
   // Tenta carregar o histórico do chat do sessionStorage ao iniciar.
   // Isso permite que a conversa persista ao navegar entre páginas.
