@@ -1,9 +1,13 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { getCart, postCart, getAllCartsByClientId } from '../services/cart';
-import { postItemCart, putItemCart, deleteItemCart } from '../services/itemCart';
-import { getBookById } from '../services/books';
-import { getImagesById } from '../services/bookImages'; 
-import { useAuth } from '../context/AuthLogin';
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { getCart, postCart, getAllCartsByClientId } from "../services/cart";
+import {
+  postItemCart,
+  putItemCart,
+  deleteItemCart,
+} from "../services/itemCart";
+import { getBookById } from "../services/books";
+import { getImagesById } from "../services/bookImages";
+import { useAuth } from "../context/AuthLogin";
 
 const CarrinhoContext = createContext();
 
@@ -21,10 +25,12 @@ export const CarrinhoProvider = ({ children }) => {
         const itemsDetails = await Promise.all(
           cart.items.map(async (item) => {
             const bookDetails = await getBookById(item.bookId);
-            console.log("item add", item)
+            console.log("item add", item);
             const imagensDetails = await getImagesById(item.bookId);
-            const bookDetailsImages = imagensDetails.filter(livro => livro.caption === "Principal");
-            console.log(item)
+            const bookDetailsImages = imagensDetails.filter(
+              (livro) => livro.caption === "Principal"
+            );
+            console.log(item);
             return {
               ...item,
               ...bookDetailsImages,
@@ -37,8 +43,13 @@ export const CarrinhoProvider = ({ children }) => {
         setItens(itemsDetails);
         console.log("fetchAndSetCartDetails: Successfully set items.");
       } catch (detailError) {
-        console.error("fetchAndSetCartDetails: Error fetching item details:", detailError);
-        setError("Houve um problema ao carregar os detalhes dos itens do carrinho.");
+        console.error(
+          "fetchAndSetCartDetails: Error fetching item details:",
+          detailError
+        );
+        setError(
+          "Houve um problema ao carregar os detalhes dos itens do carrinho."
+        );
         setItens([]);
       }
     } else {
@@ -54,7 +65,10 @@ export const CarrinhoProvider = ({ children }) => {
       if (!user || !user.id || user.id == "colaborador-mock-id") {
         setItens([]);
         setLoading(false);
-        console.log("CarrinhoContext: User is null, has no ID, or is a collaborator. Skipping cart fetch. Loading set to false.", { user });
+        console.log(
+          "CarrinhoContext: User is null, has no ID, or is a collaborator. Skipping cart fetch. Loading set to false.",
+          { user }
+        );
         return;
       }
       console.log("CarrinhoContext: Fetching initial cart for user:", user);
@@ -64,10 +78,14 @@ export const CarrinhoProvider = ({ children }) => {
         const allCarts = await getAllCartsByClientId(user.id);
         console.log("CarrinhoContext: All carts for client:", allCarts);
 
-        let activeCart = allCarts.find(cart => cart.active === true || cart.active === "true");
+        let activeCart = allCarts.find(
+          (cart) => cart.active === true || cart.active === "true"
+        );
 
         if (!activeCart) {
-          console.log("Carrinho inativo ou não encontrado para o usuário, criando um novo...");
+          console.log(
+            "Carrinho inativo ou não encontrado para o usuário, criando um novo..."
+          );
           try {
             const newCart = await postCart({ clienteId: user.id });
             setCartId(newCart.id);
@@ -79,12 +97,22 @@ export const CarrinhoProvider = ({ children }) => {
           }
         } else {
           setCartId(activeCart.id);
-          console.log("CarrinhoContext: Existing active cart found:", activeCart);
+          console.log(
+            "CarrinhoContext: Existing active cart found:",
+            activeCart
+          );
           await fetchAndSetCartDetails(activeCart);
         }
       } catch (err) {
-        console.error("CarrinhoContext: Erro ao buscar ou criar carrinho inicial:", err);
-        setError(err.response?.data?.message || err.message || "Ocorreu um erro ao carregar o carrinho.");
+        console.error(
+          "CarrinhoContext: Erro ao buscar ou criar carrinho inicial:",
+          err
+        );
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Ocorreu um erro ao carregar o carrinho."
+        );
       } finally {
         setLoading(false); // Ensure loading is false after initial fetch attempt
         console.log("fetchInitialCart: Finished. Loading set to false.");
@@ -109,7 +137,10 @@ export const CarrinhoProvider = ({ children }) => {
       await fetchAndSetCartDetails(updatedCart);
     } catch (err) {
       console.error("Erro na operação do carrinho:", err);
-      const errorMessage = err.response?.data?.message || err.message || "Ocorreu um erro ao atualizar o carrinho.";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Ocorreu um erro ao atualizar o carrinho.";
       setError(errorMessage);
       try {
         const cartData = await getCart(cartId);
@@ -122,21 +153,83 @@ export const CarrinhoProvider = ({ children }) => {
     }
   };
 
-  const adicionarAoCarrinho = (livro) => {
-    const itemExistente = itens.find(item => item.bookId === livro.id);
+  // const adicionarAoCarrinho = (livro) => {
+  //   const itemExistente = itens.find(item => item.bookId === livro.id);
 
-    if (itemExistente) {
-      const novaQuantidade = itemExistente.quantity + (livro.quantidade || 1);
-      console.log("CarrinhoContext: Item existente, atualizando quantidade:", { itemId: itemExistente.id, novaQuantidade });
-      atualizarQuantidade(itemExistente.id, novaQuantidade);
-    } else {
-      const itemPayload = {
-        itemId: livro.id,
-        quantity: livro.quantidade || 1,
-        price: parseFloat(livro.valorVenda || livro.price)
-      };
-      console.log("CarrinhoContext: Adicionando novo item ao carrinho:", { cartId, itemPayload });
-      handleApiCall(() => postItemCart(cartId, itemPayload));
+  //   if (itemExistente) {
+  //     const novaQuantidade = itemExistente.quantity + (livro.quantidade || 1);
+  //     console.log("CarrinhoContext: Item existente, atualizando quantidade:", { itemId: itemExistente.id, novaQuantidade });
+  //     atualizarQuantidade(itemExistente.id, novaQuantidade);
+  //   } else {
+  //     const itemPayload = {
+  //       itemId: livro.id,
+  //       quantity: livro.quantidade || 1,
+  //       price: parseFloat(livro.valorVenda || livro.price)
+  //     };
+  //     console.log("CarrinhoContext: Adicionando novo item ao carrinho:", { cartId, itemPayload });
+  //     handleApiCall(() => postItemCart(cartId, itemPayload));
+  //   }
+  // };
+
+  // Substitua esta função no CarrinhoContext.jsx
+  const adicionarAoCarrinho = async (livro) => {
+    try {
+      // Primeiro: se não tivermos um cartId válido, criar um novo carrinho
+      let currentCartId = cartId;
+      if (!currentCartId || Number.isNaN(Number(currentCartId))) {
+        try {
+          // Se há usuário, associe; senão, crie sem cliente (dependendo do backend)
+          const cartPayload = user && user.id ? { clienteId: user.id } : {};
+          const newCart = await postCart(cartPayload);
+          if (!newCart || !newCart.id) {
+            throw new Error("Não foi possível criar um carrinho");
+          }
+          currentCartId = newCart.id;
+          setCartId(currentCartId);
+          console.log(
+            "CarrinhoContext: Novo carrinho criado com id:",
+            currentCartId
+          );
+        } catch (creationErr) {
+          console.error(
+            "CarrinhoContext: Erro ao criar carrinho antes de adicionar item:",
+            creationErr
+          );
+          setError("Não foi possível criar um novo carrinho. Tente novamente.");
+          return;
+        }
+      }
+
+      // Agora temos um cartId válido (currentCartId). continuar com lógica original.
+      const itemExistente = itens.find((item) => item.bookId === livro.id);
+
+      if (itemExistente) {
+        const novaQuantidade = itemExistente.quantity + (livro.quantidade || 1);
+        console.log(
+          "CarrinhoContext: Item existente, atualizando quantidade:",
+          { itemId: itemExistente.id, novaQuantidade }
+        );
+        atualizarQuantidade(itemExistente.id, novaQuantidade);
+      } else {
+        const itemPayload = {
+          itemId: livro.id,
+          quantity: livro.quantidade || 1,
+          price: parseFloat(livro.valorVenda || livro.price),
+        };
+        console.log("CarrinhoContext: Adicionando novo item ao carrinho:", {
+          cartId: currentCartId,
+          itemPayload,
+        });
+        // Passar currentCartId explicitamente para garantir que o id criado seja usado
+        handleApiCall(() => postItemCart(currentCartId, itemPayload));
+      }
+    } catch (err) {
+      console.error("CarrinhoContext: Erro em adicionarAoCarrinho:", err);
+      setError(
+        err?.response?.data?.message ||
+          err.message ||
+          "Erro ao adicionar ao carrinho"
+      );
     }
   };
 
@@ -166,7 +259,7 @@ export const CarrinhoProvider = ({ children }) => {
         adicionarAoCarrinho,
         removerDoCarrinho,
         atualizarQuantidade,
-        cartId, 
+        cartId,
       }}
     >
       {children}
