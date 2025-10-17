@@ -38,7 +38,6 @@ body {
   align-items: center;
 }
 
-/* Breadcrumb.css */
 .breadcrumb {
   font-size: 12px;
   color: #666;
@@ -120,12 +119,12 @@ body {
 .botao-opcoes {
   display: flex;
   align-items: center;
-  gap: 10px; /* Espaçamento entre os elementos */
+  gap: 10px; 
 }
 
 .icone-perfil,
 .icone-sacola {
-  width: 30px; /* Ajuste o tamanho das imagens conforme necessário */
+  width: 30px; 
   height: 30px;
   cursor: pointer;
 }
@@ -133,7 +132,7 @@ body {
 .botao-sair {
   background: none;
   border: none;
-  color: #000; /* Cor do texto */
+  color: #000; 
   cursor: pointer;
   font-size: 16px;
 }
@@ -143,7 +142,6 @@ body {
 }
 
 
-/* Estilos responsivos */
 @media (max-width: 800px) {
   .header {
     flex-direction: column;

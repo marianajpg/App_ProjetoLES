@@ -6,7 +6,7 @@ const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, estoque, onClick, onVe
 
   const handleClick = (e) => {
     if (onVerDetalhes) {
-      return; // Disable main click if onVerDetalhes is present
+      return;  
     }
     if (onClick) {
       onClick();
@@ -16,7 +16,7 @@ const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, estoque, onClick, onVe
   };
 
   const handleDetalhesClick = (e) => {
-    e.stopPropagation(); // Stop click from propagating to the main card div
+    e.stopPropagation(); 
     if (onVerDetalhes) {
       onVerDetalhes();
     }

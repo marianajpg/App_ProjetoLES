@@ -1,32 +1,32 @@
 .banner-container {
   display: flex;
   align-items: center;
-  justify-content: center; /* Centralizar o conteúdo */
+  justify-content: center;  
   padding: 2rem 4rem;
-  background-color: #FFEBE1; /* Cor de fallback */
+  background-color: #FFEBE1;  
   max-width: 1200px;
-  height: 400px; /* Altura fixa para o banner */
+  height: 400px;  
   margin: 3rem auto;
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  /* As propriedades background-image, background-size, etc. serão definidas via estilo inline no componente Banner.jsx */
+ 
 }
 
 .banner-content {
-  max-width: 500px; /* More space for content */
+  max-width: 500px; 
   text-align: left;
-  margin: 0; /* Remove margin, use padding on parent */
+  margin: 0;  
   z-index: 1;
 }
 
 .banner-title {
   text-align: left;
-  font-size: 3.5rem; /* Responsive font size */
-  font-weight: 800; /* Extra bold */
+  font-size: 3.5rem;  
+  font-weight: 800; 
   margin-bottom: 1rem;
   color: var(--primary-color);
-  width: auto; /* Let it be auto */
+  width: auto;  
   line-height: 1.2;
 }
 
@@ -66,9 +66,9 @@
 }
 
 .banner-image {
-  width: 60% !important; /* Adjust size - more aggressive reduction with !important */
+  width: 60% !important; 
   height: auto;
-  object-fit: contain; /* Use contain to avoid cropping */
+  object-fit: contain;  
 }
 
 .produtos-grid {
@@ -88,7 +88,7 @@
 }
 
 .home-section-title {
-  font-size: 2rem; /* Reduced from 2.5rem */
+  font-size: 2rem;  
   font-weight: 700;
   color: #333;
   text-align: center;
@@ -109,12 +109,12 @@
   border-radius: 2px;
 }
 
-/* Specifically for the categories section background */
+ 
 .categories-section {
   background-color: #f9f9f9;
   padding-top: 4rem;
   padding-bottom: 4rem;
-  max-width: none; /* Allow background to span full width */
+  max-width: none;  
 }
 
 .categories-grid {
@@ -128,7 +128,7 @@
 .category-card {
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: all 0.3s ease; /* Combined transition */
+  transition: all 0.3s ease;  
   box-shadow: var(--shadow-md);
   height: 250px;
   display: flex;
@@ -138,9 +138,9 @@
 }
 
 .category-card:hover {
-  transform: translateY(-10px) scale(1.03); /* More dynamic hover effect */
+  transform: translateY(-10px) scale(1.03);  
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  filter: brightness(1.1); /* Brighten the color on hover */
+  filter: brightness(1.1);  
 }
 
 .category-name {
@@ -155,8 +155,8 @@
 
 /* ================== FOOTER STYLES ================== */
 .footer-container {
-  background-color: #2d2d2d; /* Dark, modern background */
-  color: #ccc; /* Softer text color */
+  background-color: #2d2d2d;  
+  color: #ccc;  
   padding: 4rem 2rem;
   margin-top: 4rem;
 }
@@ -183,7 +183,7 @@
   padding-bottom: 0.5rem;
 }
 
-/* Underline effect for headings */
+ 
 .footer-title::after {
   content: '';
   position: absolute;
@@ -217,7 +217,7 @@
 
 .footer-section ul li a:hover {
   color: var(--quaternary-color);
-  padding-left: 5px; /* Indent on hover */
+  padding-left: 5px;  
 }
 
 .footer-bottom {
@@ -237,7 +237,7 @@
 
 .social-icons a {
   color: #ccc;
-  font-size: 1.5rem; /* Larger icons */
+  font-size: 1.5rem;  
   text-decoration: none;
   transition: var(--transition-fast);
 }

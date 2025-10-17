@@ -10,11 +10,11 @@ const TransacoesCliente = ({ clienteId }) => {
       .then((response) => {
         const transacoesFormatadas = response.data.map((post) => ({
           id: post.id,
-          data: new Date().toLocaleDateString(), // Data fictícia
-          desconto: `R$ ${(Math.random() * 50).toFixed(2)}`, // Desconto aleatório
-          valorTotal: `R$ ${(Math.random() * 500).toFixed(2)}`, // Valor total aleatório
-          formaPagamento: Math.random() > 0.5 ? 'Cartão Único' : 'Múltiplos Cartões', // Forma de pagamento aleatória
-          detalhes: 'Ver detalhes', // Link para detalhes
+          data: new Date().toLocaleDateString(), 
+          desconto: `R$ ${(Math.random() * 50).toFixed(2)}`,  
+          valorTotal: `R$ ${(Math.random() * 500).toFixed(2)}`, 
+          formaPagamento: Math.random() > 0.5 ? 'Cartão Único' : 'Múltiplos Cartões', 
+          detalhes: 'Ver detalhes',  
         }));
         setTransacoes(transacoesFormatadas);
       })

@@ -58,8 +58,6 @@ function Perfil() {
     }) || (addresses.length ? addresses[0] : null);
 
     // Popula o estado do formulário com os dados do usuário.
-    // Usa o operador OR para garantir que, se um campo não existir no objeto `user`,
-    // o valor atual do formulário seja mantido, evitando que campos se tornem "undefined".
     setFormData(prev => ({
       ...prev,
       nomeCompleto: user.name || user.nome || prev.nomeCompleto || '',

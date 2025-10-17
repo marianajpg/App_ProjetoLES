@@ -32,7 +32,7 @@ function App() {
         <Route path="/cadastro-cliente" element={<CadastroCliente />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* Rotas protegidas */}
+        {/* Rotas protegidas Colaborador*/}
         <Route
           path="/consultar-cliente"
           element={
@@ -81,6 +81,8 @@ function App() {
             </RotaProtegida>
           }
         />
+
+        {/* Rotas protegidas Cliente*/}
         <Route 
           path="/perfil" 
           element={

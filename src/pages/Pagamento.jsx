@@ -30,8 +30,8 @@ const Pagamento = () => {
   const [availableCupons, setAvailableCupons] = useState({});
   const [formaPagamento, setFormaPagamento] = useState('cartao');
   const [frete, setFrete] = useState('padrao');
-  const [shippingOptions, setShippingOptions] = useState([]); // New state variable
-  const [checkoutResponse, setCheckoutResponse] = useState(null); // New state variable
+  const [shippingOptions, setShippingOptions] = useState([]);  
+  const [checkoutResponse, setCheckoutResponse] = useState(null);  
   const [contato, setContato] = useState({
     nome: '',
     email: '',

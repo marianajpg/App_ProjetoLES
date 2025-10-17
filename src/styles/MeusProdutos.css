@@ -13,8 +13,8 @@
   margin-bottom: 30px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 15px;
-  flex-wrap: wrap; /* Permite que os botões quebrem a linha */
-  position: relative; /* Para posicionar o indicador */
+  flex-wrap: wrap; 
+  position: relative; 
 }
 
 .status-filtros button {
@@ -35,10 +35,10 @@
 /* Indicador deslizante */
 .status-indicator {
   position: absolute;
-  bottom: 0px; /* Ajuste para alinhar com a linha */
+  bottom: 0px; 
   height: 2px;
   background-color: #A73A21;
-  transition: width 0.3s ease, left 0.3s ease; /* Transição suave */
+  transition: width 0.3s ease, left 0.3s ease; 
 }
 
 /* Estilos para o container dos cards de produto */
@@ -51,9 +51,10 @@
 /* Estilo individual do Card */
 .produto-card-meus-produtos .card {
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 16px;
   width: 100%;
+  min-height: 140px !important; 
   display: flex;
   align-items: center;
   gap: 16px;
@@ -66,19 +67,19 @@
   height: 120px;
   object-fit: cover;
   border-radius: 4px;
-  flex-shrink: 0; /* Impede que a imagem encolha */
+  flex-shrink: 0; 
 }
 
 .produto-card-meus-produtos .card-info {
-  flex: 1; /* Ocupa o espaço restante */
+  flex: 1;
   display: flex;
-  flex-direction: column; /* Empilha o conteúdo de texto e o rodapé */
-  justify-content: space-between; /* Espaça o conteúdo e o rodapé */
+  flex-direction: column; 
+  justify-content: space-between; 
   text-align: left;
 }
 
 .produto-card-meus-produtos .card-text-content {
-  margin-bottom: 10px; /* Espaço entre o texto e o rodapé */
+  margin-bottom: 10px;
 }
 
 .produto-card-meus-produtos .card-title {
@@ -97,7 +98,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; /* Empurra o rodapé para o fundo */
+  margin-top: auto;
 }
 
 .produto-card-meus-produtos .card-price {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { getCategory } from '../services/category';
-import { getPriceGroups } from '../services/pricegroup'; // Import the new service
+import { getPriceGroups } from '../services/pricegroup'; 
 import './../styles/LivroModal.css';
 
 const defaultLivroState = {

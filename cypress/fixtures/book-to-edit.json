@@ -1,54 +1,129 @@
 
 {
   "booksWithImages": [
-
-    {
-      "title": "Assim Falou Zaratustra",
-      "images": [
-        
-    {
-      "url": "https://m.media-amazon.com/images/I/81ML1XLkV6L._SY466_.jpg",
-      "caption": "Principal"
-    },{
-      "url": "https://m.media-amazon.com/images/I/81HwLoYD4SL._SL1500_.jpg",
-      "caption": "Principal"
-    }
-      ]
-    },
-    {
-      "title": "Romanceiro da Inconfidência",
-      "images": [
-        {
-      "url": "https://m.media-amazon.com/images/I/91EBBaMjxDL._SY466_.jpg",
-      "caption": "Principal"
-    }
-      ]
-    },
-    {
-      "title": "O Diário de Anne Frank",
-      "images": [
-        {
-      "url": "https://m.media-amazon.com/images/I/A1TO71w+DoL._SY466_.jpg",
-      "caption": "Principal"
-    }
-      ]
-    },
-    {
-      "title": "O Pequeno Príncipe",
-      "images": [
-        {
-      "url": "https://m.media-amazon.com/images/I/81dP9iwxRaL._AC_UL480_FMwebp_QL65_.jpg",
-      "caption": "Principal"
-    },
-            {
-      "url": "https://m.media-amazon.com/images/I/81A6BcMv8GL._SY466_.jpg",
-      "caption": "Aberto"
-    },
-            {
-      "url": "https://m.media-amazon.com/images/I/A1ckLQ4DsdL._SY466_.jpg",
-      "caption": "Aberto"
-    }
-      ]
-    }
-  ]
+  {
+    "title": "Matéria Escura",
+    "images": [
+      {
+        "url": "https://m.media-amazon.com/images/I/61xHkoffp3L._SY425_.jpg",
+        "caption": "Principal"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/519lhSHQRWL._SY425_.jpg",
+        "caption": "Aberto"
+      }
+    ]
+  },
+  {
+    "title": "The Wicked + The Divine, Vol. 1: O Ato Fáustico",
+    "images": [
+      {
+        "url": "https://m.media-amazon.com/images/I/81KI7T7eYSL._SL1500_.jpg",
+        "caption": "Principal"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/61FWHUWS2PL._SL1100_.jpg",
+        "caption": "Aberto"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/61wgx+V5tML._SL1100_.jpg",
+        "caption": "Aberto"
+      }
+    ]
+  },
+  {
+    "title": "A Quinta Estação",
+    "images": [
+      {
+        "url": "https://m.media-amazon.com/images/I/515SxWoZKLL._SY445_SX342_ML2_.jpg",
+        "caption": "Principal"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/91kgiiDs78L._SY466_.jpg",
+        "caption": "Aberto"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/81yP6L0hnNL._SY466_.jpg",
+        "caption": "Aberto"
+      }
+    ]
+  },
+  {
+    "title": "História da Sua Vida e Outros Contos",
+    "images": [
+      {
+        "url": "https://m.media-amazon.com/images/I/518kvubJrtL._SY445_SX342_ML2_.jpg",
+        "caption": "Principal"
+      }
+    ]
+  },
+  {
+    "title": "O Problema dos Três Corpos",
+    "images": [
+      {
+        "url": "https://m.media-amazon.com/images/I/81JEoeOD+4L._SY425_.jpg",
+        "caption": "Principal"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/71eQekapP+L._SL1500_.jpg",
+        "caption": "Contracapa"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/71D52mu9lVL._SL1500_.jpg",
+        "caption": "Aberto"
+      }
+    ]
+  },
+  {
+    "title": "O Circo da Noite",
+    "images": [
+      {
+        "url": "https://m.media-amazon.com/images/I/81mQNpDPIuL._SY466_.jpg",
+        "caption": "Principal"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/71BUuhcqAUL._SY466_.jpg",
+        "caption": "Aberto"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/71UQapVWrSL._SY466_.jpg",
+        "caption": "Edição Inglesa"
+      }
+    ]
+  },
+  {
+    "title": "A Biblioteca da Meia-Noite",
+    "images": [
+      {
+        "url": "https://m.media-amazon.com/images/I/51kAYMwbQIL._SY445_SX342_ML2_.jpg",
+        "caption": "Principal"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/81rTSs7auzL._SY425_.jpg",
+        "caption": "Contracapa"
+      }
+    ]
+  },
+  {
+    "title": "A Casa das Folhas",
+    "images": [
+      {
+        "url": "https://m.media-amazon.com/images/I/71QR6iXeZ8L._SY466_.jpg",
+        "caption": "Principal"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/71LzgNR2rEL._SY466_.jpg",
+        "caption": "Aberto"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/61QpIajCNrL._SY466_.jpg",
+        "caption": "Aberto"
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/71Fig6xxCaL._SL1200_.jpg",
+        "caption": "Aberto"
+      }
+    ]
+  }
+]
 }
