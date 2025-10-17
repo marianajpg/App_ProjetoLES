@@ -171,14 +171,14 @@ export const CarrinhoProvider = ({ children }) => {
   //   }
   // };
 
-  // Substitua esta função no CarrinhoContext.jsx
+  
   const adicionarAoCarrinho = async (livro) => {
     try {
-      // Primeiro: se não tivermos um cartId válido, criar um novo carrinho
+      // Criar um carrinho se não existir
       let currentCartId = cartId;
       if (!currentCartId || Number.isNaN(Number(currentCartId))) {
         try {
-          // Se há usuário, associe; senão, crie sem cliente (dependendo do backend)
+          // Se o usuário estiver logado, associar o carrinho ao cliente
           const cartPayload = user && user.id ? { clienteId: user.id } : {};
           const newCart = await postCart(cartPayload);
           if (!newCart || !newCart.id) {
@@ -200,7 +200,7 @@ export const CarrinhoProvider = ({ children }) => {
         }
       }
 
-      // Agora temos um cartId válido (currentCartId). continuar com lógica original.
+      // Adicionar o item ao carrinho existente
       const itemExistente = itens.find((item) => item.bookId === livro.id);
 
       if (itemExistente) {
@@ -220,7 +220,7 @@ export const CarrinhoProvider = ({ children }) => {
           cartId: currentCartId,
           itemPayload,
         });
-        // Passar currentCartId explicitamente para garantir que o id criado seja usado
+        // Passar o currentCartId para garantir que estamos usando o ID correto
         handleApiCall(() => postItemCart(currentCartId, itemPayload));
       }
     } catch (err) {
@@ -243,7 +243,7 @@ export const CarrinhoProvider = ({ children }) => {
       return;
     }
 
-    //const itemPayload = { quantity };
+    // Atualiza a quantidade do item no carrinho
     handleApiCall(() => putItemCart(cartId, itemId, quantity));
   };
 
