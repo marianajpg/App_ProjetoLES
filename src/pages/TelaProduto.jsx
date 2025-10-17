@@ -207,7 +207,6 @@ const TelaProduto = () => {
             opacity: descricaoExpandida ? 1 : 0
           }}
         >
-          <p><strong>Categorias:</strong> {livro.categories.forEach() || 'Não especificada'}</p>
           <p><strong>ISBN:</strong> {livro.ISBN || 'Não especificado'}</p>
           <p><strong>Edição:</strong> {livro.edition || 'Não especificada'}</p>
           <p><strong>Páginas:</strong> {livro.pages || 'Não especificado'}</p>
