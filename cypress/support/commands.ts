@@ -53,3 +53,6 @@ Cypress.Commands.add('selectCategoryByName', (categoryName) => {
   cy.get('.select__menu').contains(categoryName).click();
 });
 
+Cypress.Commands.add('selectPriceGroupByName', (groupName) => {
+   cy.get('select[name="pricegroupId"]').select(groupName);
+});
