@@ -164,10 +164,11 @@ useEffect(() => {
 
   const adicionarAoCarrinho = async (livro) => {
     try {
-      // Primeiro: se não tivermos um cartId válido, criar um novo carrinho
+      // Criar um carrinho se não existir
       let currentCartId = cartId;
       if (!currentCartId || Number.isNaN(Number(currentCartId))) {
         try {
+
           const cartPayload = user && user.id ? { clienteId: user.id } : {};
           const newCart = await postCart(cartPayload);
           if (!newCart || !newCart.id) {
@@ -232,7 +233,7 @@ useEffect(() => {
       return;
     }
 
-    //const itemPayload = { quantity };
+    // Atualiza a quantidade do item no carrinho
     handleApiCall(() => putItemCart(cartId, itemId, quantity));
   };
 
