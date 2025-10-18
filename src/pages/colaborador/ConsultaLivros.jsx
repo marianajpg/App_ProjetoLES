@@ -6,7 +6,7 @@ import CampoPesquisa from '../../components/CampoPesquisa';
 import ProdutoCard from '../../components/ProdutoCard';
 import '../../styles/colaborador/ConsultaLivros.css';
 import Header from '../../components/Header.jsx';
-import { getBooks, createBook } from '../../services/books';
+import { getBooks, createBook, putBook } from '../../services/books';
 import { postImageBook, deleteImageBook, putImageBook } from '../../services/bookImages';
 import { getInventory } from '../../services/inventory';
 
@@ -26,17 +26,16 @@ const ConsultaLivros = () => {
         getInventory()
       ]);
 
-      const livrosComStatus = livrosData.map(livro => {
+      const livrosComEstoque = livrosData.map(livro => {
         const totalQuantity = inventoryData
           .filter(item => item.bookId === livro.id)
           .reduce((sum, item) => sum + item.quantity, 0);
         return {
           ...livro,
-          ativo: livro.status === 'ACTIVE',
           inventory: totalQuantity
         };
       });
-      setLivros(livrosComStatus);
+      setLivros(livrosComEstoque);
     } catch (error) {
       console.error("Falha ao buscar livros:", error);
       // Opcional: mostrar uma mensagem de erro para o usuário
@@ -63,8 +62,7 @@ const ConsultaLivros = () => {
         const { images: newImages, ...bookData } = dadosDoLivro;
         const originalImages = livroSelecionado.images || [];
 
-        // Lógica de atualização do livro (a ser implementada)
-        // await updateBook(livroSelecionado.id, bookData);
+        await putBook(livroSelecionado.id, bookData);
 
         const imagesToAdd = newImages.filter(img => !img.id);
         const imagesToDelete = originalImages.filter(origImg => !newImages.some(newImg => newImg.id === origImg.id));
@@ -117,8 +115,8 @@ const ConsultaLivros = () => {
                               (livro.publisher || '').toLowerCase().includes(termo);
 
     if (abaAtiva === 'todos') return correspondePesquisa;
-    if (abaAtiva === 'ativos') return correspondePesquisa && livro.ativo;
-    if (abaAtiva === 'inativos') return correspondePesquisa && !livro.ativo;
+    if (abaAtiva === 'ativos') return correspondePesquisa && livro.active;
+    if (abaAtiva === 'inativos') return correspondePesquisa && !livro.active;
     return true;
   });
 

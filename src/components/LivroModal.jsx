@@ -29,7 +29,7 @@ const LivroModal = ({ livro, onClose, onSave }) => {
       ? {
           ...livro,
           pricegroupId: livro.pricegroup?.id,
-          category: livro.category?.map(c => c.id) || [],
+          category: livro.categories?.map(c => c.id) || [],
           images: livro.images?.length > 0 ? livro.images : [{ url: '', caption: '' }],
         }
       : defaultLivroState

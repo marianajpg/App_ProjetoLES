@@ -27,6 +27,17 @@ export const createBook = async (bookData) => {
   }
 };
 
+export const putBook = async (id, bookData) => {
+    try {
+        const response = await api.put(`/book/${id}`,bookData);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao tentar atualizar livro:', error);
+        throw new Error('Não foi possível atualizar o livro');
+    }
+}
+
+
 
 // exemplo de body POST
 // {
