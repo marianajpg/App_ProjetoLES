@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { getCart, postCart, getAllCartsByClientId } from "../services/cart";
 import {
   postItemCart,
@@ -58,68 +58,59 @@ export const CarrinhoProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchInitialCart = async () => {
-      console.log("fetchInitialCart: Starting.");
-      setLoading(true); 
-      if (!user || !user.id || user.id == "colaborador-mock-id") {
-        setItens([]);
-        setLoading(false);
-        console.log(
-          "CarrinhoContext: User is null, has no ID, or is a collaborator. Skipping cart fetch. Loading set to false.",
-          { user }
-        );
-        return;
-      }
-      console.log("CarrinhoContext: Fetching initial cart for user:", user);
+// Defina a função fora do useEffect
+const fetchInitialCart = useCallback(async () => {
+  console.log("fetchInitialCart: Starting.");
+  setLoading(true);
 
-      try {
-        setError(null);
-        const allCarts = await getAllCartsByClientId(user.id);
-        console.log("CarrinhoContext: All carts for client:", allCarts);
+  if (!user || !user.id || user.id === "colaborador-mock-id") {
+    setItens([]);
+    setLoading(false);
+    console.log(
+      "CarrinhoContext: User is null, has no ID, or is a collaborator. Skipping cart fetch. Loading set to false.",
+      { user }
+    );
+    return;
+  }
 
-        let activeCart = allCarts.find(
-          (cart) => cart.active === true || cart.active === "true"
-        );
+  try {
+    setError(null);
+    const allCarts = await getAllCartsByClientId(user.id);
+    console.log("CarrinhoContext: All carts for client:", allCarts);
 
-        if (!activeCart) {
-          console.log(
-            "Carrinho inativo ou não encontrado para o usuário, criando um novo..."
-          );
-          try {
-            const newCart = await postCart({ clienteId: user.id });
-            setCartId(newCart.id);
-            console.log("CarrinhoContext: New cart created:", newCart);
-            await fetchAndSetCartDetails(newCart);
-          } catch (creationError) {
-            console.error("Falha ao criar um novo carrinho:", creationError);
-            setError("Houve um problema ao criar seu carrinho.");
-          }
-        } else {
-          setCartId(activeCart.id);
-          console.log(
-            "CarrinhoContext: Existing active cart found:",
-            activeCart
-          );
-          await fetchAndSetCartDetails(activeCart);
-        }
-      } catch (err) {
-        console.error(
-          "CarrinhoContext: Erro ao buscar ou criar carrinho inicial:",
-          err
-        );
-        setError(
-          err.response?.data?.message ||
-            err.message ||
-            "Ocorreu um erro ao carregar o carrinho."
-        );
-      } finally {
-        setLoading(false);  
-        console.log("fetchInitialCart: Finished. Loading set to false.");
-      }
-    };
-    fetchInitialCart();
-  }, [user]);
+    let activeCart = allCarts.find(
+      (cart) => cart.active === true || cart.active === "true"
+    );
+
+    if (!activeCart) {
+      console.log("Carrinho inativo ou não encontrado para o usuário, criando um novo...");
+      const newCart = await postCart({ clienteId: user.id });
+      setCartId(newCart.id);
+      console.log("CarrinhoContext: New cart created:", newCart);
+      await fetchAndSetCartDetails(newCart);
+    } else {
+      setCartId(activeCart.id);
+      console.log("CarrinhoContext: Existing active cart found:", activeCart);
+      await fetchAndSetCartDetails(activeCart);
+    }
+  } catch (err) {
+    console.error("CarrinhoContext: Erro ao buscar ou criar carrinho inicial:", err);
+    setError(
+      err.response?.data?.message ||
+      err.message ||
+      "Ocorreu um erro ao carregar o carrinho."
+    );
+  } finally {
+    setLoading(false);
+    console.log("fetchInitialCart: Finished. Loading set to false.");
+  }
+}, [user]);
+
+// useEffect apenas chama a função
+useEffect(() => {
+  fetchInitialCart();
+}, [fetchInitialCart]);
+
 
   const handleApiCall = async (apiCall) => {
     try {
@@ -171,14 +162,12 @@ export const CarrinhoProvider = ({ children }) => {
   //   }
   // };
 
-  // Substitua esta função no CarrinhoContext.jsx
   const adicionarAoCarrinho = async (livro) => {
     try {
       // Primeiro: se não tivermos um cartId válido, criar um novo carrinho
       let currentCartId = cartId;
       if (!currentCartId || Number.isNaN(Number(currentCartId))) {
         try {
-          // Se há usuário, associe; senão, crie sem cliente (dependendo do backend)
           const cartPayload = user && user.id ? { clienteId: user.id } : {};
           const newCart = await postCart(cartPayload);
           if (!newCart || !newCart.id) {
@@ -200,7 +189,7 @@ export const CarrinhoProvider = ({ children }) => {
         }
       }
 
-      // Agora temos um cartId válido (currentCartId). continuar com lógica original.
+
       const itemExistente = itens.find((item) => item.bookId === livro.id);
 
       if (itemExistente) {
@@ -220,7 +209,7 @@ export const CarrinhoProvider = ({ children }) => {
           cartId: currentCartId,
           itemPayload,
         });
-        // Passar currentCartId explicitamente para garantir que o id criado seja usado
+
         handleApiCall(() => postItemCart(currentCartId, itemPayload));
       }
     } catch (err) {
@@ -249,6 +238,12 @@ export const CarrinhoProvider = ({ children }) => {
 
   const clearError = () => setError(null);
 
+  const clearCart = () => {
+    setItens([]);
+    fetchInitialCart()
+    setCartId(null);
+  };
+
   return (
     <CarrinhoContext.Provider
       value={{
@@ -260,6 +255,7 @@ export const CarrinhoProvider = ({ children }) => {
         removerDoCarrinho,
         atualizarQuantidade,
         cartId,
+        clearCart,
       }}
     >
       {children}

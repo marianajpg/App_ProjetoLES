@@ -141,7 +141,7 @@ const LivroModal = ({ livro, onClose, onSave }) => {
               {dadosLivro.images.map((image, index) => (
                 <div key={index} className="image-input-group">
                   <input type="text" name="url" placeholder="URL da Imagem" value={image.url} onChange={(e) => handleImageChange(index, e)} />
-                  <input type="text" name="caption" placeholder="Legenda (Ex: Principal, Aberto)" value={image.caption} onChange={(e) => handleImageChange(index, e)} />
+                  <input type="text" name="caption" placeholder="Para imagem da capa: 'Principal'; Para miniaturas:  'Aberto'" value={image.caption} onChange={(e) => handleImageChange(index, e)} />
                   <button type="button" className="remove-image-btn" onClick={() => removeImageInput(index)}>&times;</button>
                 </div>
               ))}

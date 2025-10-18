@@ -6,6 +6,7 @@ import Breadcrumb from '../components/Breadcrumb.jsx';
 import { useAuth } from '../context/AuthLogin.jsx';
 import { getInventory } from '../services/inventory.jsx';
 import { getImagesById } from '../services/bookImages.jsx';
+import { getBookById } from '../services/books.jsx';
 import '../styles/TelaProduto.css';
 import InfoSection from '../components/InfoSection.jsx';
 
@@ -29,8 +30,12 @@ const TelaProduto = () => {
     if (!livro) {
       const fetchBookData = async () => {
         try {
-          const data = await getImagesById(id);
-          setLivro(data[0].book);
+            const data = await getImagesById(id);
+            const data_book = await getBookById(id);
+            const all_data = data[0].book;
+            all_data.categories = data_book.categories;
+            setLivro(all_data);
+            
         } catch (err) {
           setError('Não foi possível carregar as informações do livro.');
           console.error("Erro ao buscar livro:", err);
@@ -55,9 +60,24 @@ const TelaProduto = () => {
           console.error("Erro ao buscar estoque:", error);
           setEstoque(0);
         });
-
+      
+      const fetchBookData = async () => {
+      try {
+            const data_book = await getBookById(id);
+            const data_categories = data_book.categories;
+            setLivro(prev => ({
+            ...prev,
+            categories: data_categories
+          }));
+      } catch (err) {
+          setError('Não foi possível carregar as categorias do livro.');
+          console.error("Erro ao buscar livro:", err);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      fetchBookData();
       // Define a imagem principal quando o livro é carregado
-      console.log("livro",livro)
       const livroComImagens = { ...livro };
       if (!livroComImagens.images || livroComImagens.images.length === 0) {
         livroComImagens.images = [{ url: 'https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzsc7phps7xh2d', caption: 'Principal' }];
@@ -207,6 +227,7 @@ const TelaProduto = () => {
             opacity: descricaoExpandida ? 1 : 0
           }}
         >
+          <p><strong>Categorias:</strong> {livro.categories && livro.categories.length > 0 ? livro.categories.map(c => c.name).join(", ") : 'Não especificada'}</p>
           <p><strong>ISBN:</strong> {livro.ISBN || 'Não especificado'}</p>
           <p><strong>Edição:</strong> {livro.edition || 'Não especificada'}</p>
           <p><strong>Páginas:</strong> {livro.pages || 'Não especificado'}</p>

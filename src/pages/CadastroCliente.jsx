@@ -7,6 +7,7 @@ import Header from '../components/Header.jsx';
 import InfoSection from '../components/InfoSection.jsx';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import '../styles/CadastroCliente.css';
 import { postCustomer } from '../services/customers.jsx';
 
 function CadastroCliente() {
@@ -50,7 +51,7 @@ function CadastroCliente() {
     confirmacaoSenha: '',
     numeroCartao: '',
     nomeImpresso: '',
-    validadeCartao: '',
+    validadeCartao: null, // Changed to null
     cvv: '',
     bandeiraCartao: '',
     preferencialCartao: false
@@ -166,7 +167,7 @@ function CadastroCliente() {
         card:[{
             cardNumber: formData.numeroCartao,
             cardHolderName: formData.nomeImpresso,
-            cardExpirationDate: formData.validadeCartao,
+            cardExpirationDate: formData.validadeCartao ? new Date(formData.validadeCartao.getFullYear(), formData.validadeCartao.getMonth() + 1, 0).toISOString().split('T')[0] : null,
             cardCVV: formData.cvv,
             cardBrand: formData.bandeiraCartao,
             preferredCard: formData.preferencialCartao
@@ -195,9 +196,10 @@ function CadastroCliente() {
       if (response.status === 201 || response.status === 200) {
         alert('Usuário e cartão cadastrados com sucesso!');
         login({ tipoUsuario: 'cliente', email: formData.email });
-        navigate('/');
+        navigate('/shop-livros');
       } else {
         alert('Cadastro realizado com sucesso!');
+        navigate('/shop-livros');
       }
     } catch (error) {
       console.error('Erro no cadastro:', error);
@@ -332,7 +334,14 @@ function CadastroCliente() {
               <div className="form-group">
                 <input type="text" name="numeroCartao" placeholder="Número do Cartão" value={formData.numeroCartao} onChange={handleChange} required />
                 <input type="text" name="nomeImpresso" placeholder="Nome no Cartão" value={formData.nomeImpresso} onChange={handleChange} required />
-                <input type="text" name="validadeCartao" placeholder="Validade (MM/AA)" value={formData.validadeCartao} onChange={handleChange} required />
+                <DatePicker
+                  selected={formData.validadeCartao}
+                  onChange={(date) => setFormData({ ...formData, validadeCartao: date })}
+                  placeholderText="Validade (MM/AAAA)"
+                  dateFormat="MM/yyyy"
+                  showMonthYearPicker
+                  className="date-picker-full-width"
+                />
                 <input type="text" name="cvv" placeholder="CVV" value={formData.cvv} onChange={handleChange} required />
                 <select className='cadastro-select' name="bandeiraCartao" value={formData.bandeiraCartao} onChange={handleChange} required>
                   <option value="">Selecione a Bandeira</option>

@@ -46,10 +46,8 @@
         "bandeira": "visa",
         "cvv": "123",
         "percent": 0.8
-      }],
-      "coupon": {
-        "code": "TESTPROMO30"
-      }
+      }]
+
     }
   ]
 }

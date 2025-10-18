@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/CartaoCard.css';
 import lixeira from  '../images/image9.png';
 
-const CartaoCard = ({ cartao, onDelete, onAmountChange, amount }) => {
+const CartaoCard = ({ cartao, onDelete, onAmountChange, amount, placeholder }) => {
   const [amountError, setAmountError] = useState('');
 
   if (!cartao) {
@@ -33,7 +33,7 @@ const CartaoCard = ({ cartao, onDelete, onAmountChange, amount }) => {
         <div className="cartao-card-actions">
           <input
             type="number"
-            placeholder="Valor a pagar"
+            placeholder={placeholder}
             value={amount || ''}
             onChange={handleAmountChangeInternal}
             min="0"
