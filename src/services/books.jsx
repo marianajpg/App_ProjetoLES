@@ -51,6 +51,7 @@ export const createBook = async (bookData) => {
 //         "author": "H.G. Wells",
 //         "year": 1895,
 //         "title": "A Máquina do Tempo",
+//         "categories":[{"id":1,"name":"Romance Policial","description":"Narrativas de mistério, investigação e suspense criminal.","active":true,"created_at":"2025-10-06T01:09:56.909Z","updated_at":"2025-10-06T01:09:56.909Z"},
 //         "publisher": "William Heinemann",
 //         "edition": "1ª edição",
 //         "ISBN": "9780451528551",

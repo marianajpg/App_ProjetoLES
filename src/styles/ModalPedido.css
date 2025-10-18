@@ -22,7 +22,7 @@
   /* Espaçamento e Bordas */
   --spacing-sm: 8px;
   --spacing-md: 16px;
-  --spacing-lg: 24px;
+  --spacing-lg: 20px;
   --spacing-xl: 32px;
   --border-radius-sm: 6px;
   --border-radius-md: 12px;
@@ -68,11 +68,14 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
   font-family: var(--font-family-main);
   display: flex;
+  max-height: 90vh; 
+  overflow-y: auto; 
   flex-direction: column;
   gap: var(--spacing-lg);
   position: relative;
   animation: scaleUp var(--transition-speed) ease-out;
 }
+
 
 .modal__header {
   display: flex;
@@ -168,7 +171,21 @@
   gap: var(--spacing-lg);
   padding: var(--spacing-md);
   background-color: var(--color-background-light);
-  border-radius: var(--border-radius-sm);
+  border-radius: 20px;
+}
+
+.livro-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.livro-info__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
 }
 
 .pedido-info__book-cover { 
@@ -191,7 +208,8 @@
 .summary__quantity { 
   font-size: 0.95rem;
   color: var(--color-text-secondary);
-  text-align: center;
+  text-align: end;
+  padding-right: 5%;
 }
 
 .summary__values { 
@@ -243,6 +261,7 @@
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: background-color var(--transition-speed), transform var(--transition-speed);
+  align-items: flex-end;
 }
 
 .modal__main-action:hover {
@@ -301,6 +320,7 @@
   
   .pedido-info__book-details {
     flex-direction: column;
+    
     text-align: center;
   }
 

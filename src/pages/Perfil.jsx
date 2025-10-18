@@ -249,7 +249,7 @@ function Perfil() {
           </form>
         )}
 
-        {abaAtiva === "MeusProdutos" && <MeusProdutos />}
+        {abaAtiva === "MeusProdutos" && <MeusProdutos user={user} />}
 
         {abaAtiva === "Comunidade" && (
           <div className="perfil-comunidade">

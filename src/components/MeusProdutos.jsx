@@ -2,68 +2,47 @@ import React, { useState, useEffect, useRef } from 'react';
 import ProdutoCard from './ProdutoCard';
 import ModalPedido from './ModalPedido';
 import '../styles/MeusProdutos.css';
+import { getCheckout } from '../services/checkout';
 
-const MeusProdutos = () => {
-  const [statusAtivo, setStatusAtivo] = useState('Em processamento');
+const MeusProdutos = ({ user }) => {
+  const [statusAtivo, setStatusAtivo] = useState('Em trânsito'); // Changed initial state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [indicatorStyle, setIndicatorStyle] = useState({});
   const buttonsRef = useRef({});
+  const [todosOsPedidos, setTodosOsPedidos] = useState([]);
 
-  const todosOsPedidos = [
-    {
-      id: '1',
-      status: 'Em processamento',
-      dataEntrega: '20/08/2024',
-      capaUrl: 'https://m.media-amazon.com/images/I/414U616yzqL._SY445_SX342_.jpg',
-      titulo: 'A Vida Secreta das Árvores',
-      autor: 'Peter Wohlleben',
-      preco: 48.99,
-      quantidade: 1,
-      subTotal: 48.99,
-      frete: 5.00,
-      total: 53.99,
-    },
-    {
-      id: '2',
-      status: 'Em trânsito',
-      dataEntrega: '22/08/2024',
-      capaUrl: 'https://m.media-amazon.com/images/I/41Xc4wyyMIL._SY445_SX342_.jpg',
-      titulo: 'O Homem Mais Rico da Babilônia',
-      autor: 'George S. Clason',
-      preco: 25.99,
-      quantidade: 1,
-      subTotal: 25.99,
-      frete: 5.00,
-      total: 30.99,
-    },
-    {
-      id: '3',
-      status: 'Entregue',
-      dataEntrega: '15/08/2024',
-      capaUrl: 'https://m.media-amazon.com/images/I/41897yAI4LL._SY445_SX342_.jpg',
-      titulo: 'Pai Rico, Pai Pobre',
-      autor: 'Robert T. Kiyosaki',
-      preco: 35.50,
-      quantidade: 1,
-      subTotal: 35.50,
-      frete: 5.00,
-      total: 40.50,
-    },
-     {
-      id: '4',
-      status: 'Devoluções/Trocas',
-      dataEntrega: '15/08/2024',
-      capaUrl: 'https://m.media-amazon.com/images/I/41897yAI4LL._SY445_SX342_.jpg',
-      titulo: 'Pai Rico, Pai Pobre',
-      autor: 'Robert T. Kiyosaki',
-      preco: 35.50,
-      quantidade: 1,
-      subTotal: 35.50,
-      frete: 0.00,
-      total: 35.50,
+  useEffect(() => {
+    const fetchSales = async () => {
+      if (user && user.id) {
+        try {
+          const sales = await getCheckout();
+          const userSales = sales.filter(sale => sale.clientId === user.id);
+          setTodosOsPedidos(userSales);
+        } catch (error) {
+          console.error("Erro ao buscar vendas:", error);
+        }
+      }
+    };
+    fetchSales();
+  }, [user]);
+
+  const mapStatus = (apiStatus) => {
+    switch (apiStatus) {
+      case 'APPROVED':
+        return 'Em trânsito';
+      case 'PROCESSING':
+        return 'Em processamento';
+      case 'DELIVERED':
+        return 'Entregue';
+      case 'RETURNED':
+        return 'Devoluções/Trocas';
+      case 'CANCELED':
+        return 'Cancelado';
+      default:
+        return apiStatus;
     }
-  ];
+  };
 
   useEffect(() => {
     const activeBtn = buttonsRef.current[statusAtivo];
@@ -85,7 +64,7 @@ const MeusProdutos = () => {
     setSelectedPedido(null);
   };
 
-  const pedidosFiltrados = todosOsPedidos.filter(p => p.status === statusAtivo);
+  const pedidosFiltrados = todosOsPedidos.filter(p => mapStatus(p.status) === statusAtivo);
 
   const statusOptions = [
     'Em processamento',
@@ -116,7 +95,12 @@ const MeusProdutos = () => {
           pedidosFiltrados.map(pedido => (
             <ProdutoCard 
               key={pedido.id}
-              {...pedido}
+              id={pedido.items[0].book.id}
+              capaUrl={pedido.items[0].book.images.find(img => img.caption === 'Principal').url}
+              titulo={pedido.items[0].book.title}
+              autor={pedido.items[0].book.author}
+              preco={pedido.items[0].unitPrice}
+              estoque={1} // Estoque não é relevante aqui
               onVerDetalhes={() => handleOpenModal(pedido)}
             />
           ))

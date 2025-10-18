@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import '../styles/FiltrosLivro.css';
+import { getCategory } from '../services/category';
 
 const FiltrosLivro = ({ 
   onFiltroChange,
@@ -12,8 +13,21 @@ const FiltrosLivro = ({
   const [editorasSelecionadas, setEditorasSelecionadas] = useState([]);
   const [anosSelecionados, setAnosSelecionados] = useState([]);
   const [faixasDePrecoSelecionadas, setFaixasDePrecoSelecionadas] = useState([]);
+  const [categorias, setCategorias] = useState([]);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [ordenacao, setOrdenacao] = useState('');
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await getCategory();
+        setCategorias(categoriesData);
+      } catch (error) {
+        console.error("Erro ao buscar categorias:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   // Opções estáticas que não vêm das props
   const faixasDePreco = [
@@ -22,7 +36,6 @@ const FiltrosLivro = ({
     { label: 'R$50–R$100', min: 50, max: 100 },
     { label: 'R$100–R$150', min: 100, max: 150 },
   ];
-  const categorias = ['Ficção', 'Romance', 'Fantasia', 'Clássico', 'Infantil', 'Fábula'];
 
   // Handler genérico para os componentes react-select
   const handleSelectChange = (selectedOptions, name) => {
@@ -163,14 +176,14 @@ const FiltrosLivro = ({
         <legend className="filtro-legend">Categoria</legend>
         <div className="filtro-group">
           {categorias.map((categoria) => (
-            <label key={categoria} className="filtro-label">
+            <label key={categoria.id} className="filtro-label">
               <input
                 type="checkbox"
-                checked={categoriasSelecionadas.includes(categoria)}
-                onChange={() => tratarCheckbox(categoria, categoriasSelecionadas, setCategoriasSelecionadas, 'categorias')}
+                checked={categoriasSelecionadas.includes(categoria.name)}
+                onChange={() => tratarCheckbox(categoria.name, categoriasSelecionadas, setCategoriasSelecionadas, 'categorias')}
               />
               <span className="filtro-checkbox"></span>
-              {categoria}
+              {categoria.name}
             </label>
           ))}
         </div>

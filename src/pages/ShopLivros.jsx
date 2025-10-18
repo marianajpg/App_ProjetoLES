@@ -106,7 +106,6 @@ const getFilteredAndSearchedItems = () => {
     const correspondeEditoras = filtros.editoras.length === 0 || filtros.editoras.includes(livro.publisher);
     const correspondeAnos = filtros.anos.length === 0 || filtros.anos.includes(livro.year); // ← FILTRO DE ANOS
     const correspondeCategorias = filtros.categorias.length === 0 || filtros.categorias.some(cat => (livro.categories || []).map(c => c.name).includes(cat));
-
     const correspondePreco = filtros.faixasDePreco.length === 0 || filtros.faixasDePreco.some(faixaLabel => {
       const faixa = faixasDePrecoMap.find(f => f.label === faixaLabel);
       const price = parseFloat(livro.price);
