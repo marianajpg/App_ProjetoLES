@@ -141,6 +141,14 @@ body {
   text-decoration: underline;
 }
 
+.nav-button {
+  background: transparent;
+  border: 0px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+
 
 @media (max-width: 800px) {
   .header {

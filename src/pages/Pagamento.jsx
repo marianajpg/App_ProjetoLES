@@ -22,7 +22,7 @@ import '../styles/Pagamento.css';
 
 const Pagamento = () => {
   const location = useLocation();
-  const { cartId, clearCart } = useCarrinho();
+  const { cartId } = useCarrinho();
   const { user } = useAuth();
   const { itens, subtotal } = location.state || { itens: [], subtotal: 0 };
   const navigate = useNavigate();
@@ -466,7 +466,6 @@ const Pagamento = () => {
           setCheckoutResponse(response); // Store the response
           console.log("Checkout Response:", response); // Log the response
           alert('Compra finalizada com sucesso!');
-          clearCart();
           navigate('/perfil');      
         if (response.id || response.saleId ){
           const shippingPayload = {
