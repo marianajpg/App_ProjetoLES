@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import axios from 'axios';
-import Header from '../../components/Header.jsx';
-import AbasFiltro from '../../components/AbasFiltro.jsx';
-import Breadcrumb from '../../components/Breadcrumb.jsx';
-import { putCustomer } from '../../services/customers.jsx';
-import TransacoesCliente from './TransacoesCliente';
-import '../../styles/colaborador/EditarCliente.css';
+import React, { useState } from "react";
+import { useLocation, Link } from "react-router-dom";
+import axios from "axios";
+import Header from "../../components/Header.jsx";
+import AbasFiltro from "../../components/AbasFiltro.jsx";
+import Breadcrumb from "../../components/Breadcrumb.jsx";
+import { putCustomer } from "../../services/customers.jsx";
+import TransacoesCliente from "./TransacoesCliente";
+import "../../styles/colaborador/EditarCliente.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Accordion from '../../components/Accordion.jsx';
-
+import Accordion from "../../components/Accordion.jsx";
 
 const EditarCliente = () => {
   const location = useLocation();
   const { cliente } = location.state || {};
-  const [abaAtiva, setAbaAtiva] = useState('editar');
-  const [status, setStatus] = useState(cliente?.status || 'ativo');
+  const [abaAtiva, setAbaAtiva] = useState("editar");
+  const [status, setStatus] = useState(cliente?.status || "ativo");
   const [loadingCEPEntrega, setLoadingCEPEntrega] = useState(false);
   const [loadingCEPCobranca, setLoadingCEPCobranca] = useState(false);
   const [cepErrorEntrega, setCepErrorEntrega] = useState(null);
@@ -24,139 +23,146 @@ const EditarCliente = () => {
 
   // Lista de abas
   const abas = [
-    { id: 'editar', label: 'Editar' },
-    { id: 'transacoes', label: 'Transações' },
+    { id: "editar", label: "Editar" },
+    { id: "transacoes", label: "Transações" },
   ];
 
   // Opções para gênero e tipo de endereço
   const generos = [
-    { value: 'FEMININO', label: 'Feminino' },
-    { value: 'MASCULINO', label: 'Masculino' },
-    { value: 'OUTRO', label: 'Outro' },
-    { value: 'PREFIRO_NAO_DIZER', label: 'Prefiro não dizer' }
+    { value: "FEMININO", label: "Feminino" },
+    { value: "MASCULINO", label: "Masculino" },
+    { value: "OUTRO", label: "Outro" },
+    { value: "PREFIRO_NAO_DIZER", label: "Prefiro não dizer" },
   ];
 
   const tiposEndereco = [
-    { value: 'RESIDENCIAL', label: 'Residencial' },
-    { value: 'COMERCIAL', label: 'Comercial' },
-    { value: 'OUTRO', label: 'Outro' }
+    { value: "RESIDENCIAL", label: "Residencial" },
+    { value: "COMERCIAL", label: "Comercial" },
+    { value: "OUTRO", label: "Outro" },
   ];
 
   const tiposLogradouro = [
-    { value: 'RUA', label: 'Rua' },
-    { value: 'AVENIDA', label: 'Avenida' },
-    { value: 'ALAMEDA', label: 'Alameda' },
-    { value: 'PRACA', label: 'Praça' },
-    { value: 'TRAVESSA', label: 'Travessa' },
-    { value: 'RODOVIA', label: 'Rodovia' },
-    { value: 'ESTRADA', label: 'Estrada' },
-    { value: 'OUTRO', label: 'Outro' },
+    { value: "RUA", label: "Rua" },
+    { value: "AVENIDA", label: "Avenida" },
+    { value: "ALAMEDA", label: "Alameda" },
+    { value: "PRACA", label: "Praça" },
+    { value: "TRAVESSA", label: "Travessa" },
+    { value: "RODOVIA", label: "Rodovia" },
+    { value: "ESTRADA", label: "Estrada" },
+    { value: "OUTRO", label: "Outro" },
   ];
 
   const breadcrumbItems = [
-    { label: 'Clientes', link: '/consultar-cliente' },
-    { label: 'Editar', link: '' },
+    { label: "Clientes", link: "/consultar-cliente" },
+    { label: "Editar", link: "" },
   ];
 
-  const billingAddress = cliente?.addresses.find(address => address.type === 'BILLING');
-  const deliveryAddresses = cliente?.addresses.filter(address => address.type === 'DELIVERY') || [];
+  const billingAddress = cliente?.addresses.find(
+    (address) => address.type === "BILLING"
+  );
+  const deliveryAddresses =
+    cliente?.addresses.filter((address) => address.type === "DELIVERY") || [];
 
-  const [enderecosEntrega, setEnderecosEntrega] = useState(deliveryAddresses.map((addr, index) => ({
-    id: addr.id,
-    tipo: addr.residenceType || 'RESIDENCIAL',
-    streetType: addr.streetType || 'RUA',
-    logradouro: addr.street || '',
-    numero: addr.number || '',
-    complemento: addr.complement || '',
-    bairro: addr.neighborhood || '',
-    cep: addr.zipCode || '',
-    cidade: addr.city || '',
-    uf: addr.state || '',
-    observacoes: addr.observations || `Endereço de Entrega ${index + 1}`,
-  })));
-  console.log("END", cliente)
+  const [enderecosEntrega, setEnderecosEntrega] = useState(
+    deliveryAddresses.map((addr, index) => ({
+      id: addr.id,
+      tipo: addr.residenceType || "RESIDENCIAL",
+      streetType: addr.streetType || "RUA",
+      logradouro: addr.street || "",
+      numero: addr.number || "",
+      complemento: addr.complement || "",
+      bairro: addr.neighborhood || "",
+      cep: addr.zipCode || "",
+      cidade: addr.city || "",
+      uf: addr.state || "",
+      observacoes: addr.observations || `Endereço de Entrega ${index + 1}`,
+    }))
+  );
+  console.log("END", cliente);
   // Estados para os campos editáveis
   const [formData, setFormData] = useState({
-    nomeCompleto: cliente?.name || '',
-    cpf: cliente?.cpf || '',
-    dataNascimento: cliente?.birthdaydate ? new Date(cliente.birthdaydate) : null,
-    telefone: cliente?.phone || '',
-    genero: cliente?.gender || 'FEMININO',
-    email: cliente?.email || '',
+    nomeCompleto: cliente?.name || "",
+    cpf: cliente?.cpf || "",
+    // dataNascimento: cliente?.birthdaydate ? new Date(cliente.birthdaydate) : null,
+    dataNascimento: cliente?.birthdaydate || "",
+    telefone: cliente?.phone || "",
+    genero: cliente?.gender || "FEMININO",
+    email: cliente?.email || "",
     enderecoCobranca: {
-      tipo: billingAddress?.residenceType || 'RESIDENCIAL',
-      streetType: billingAddress?.streetType || 'RUA', // Adicionado streetType
-      logradouro: billingAddress?.street || '',
-      numero: billingAddress?.number || '',
-      complemento: billingAddress?.complement || '',
-      bairro: billingAddress?.neighborhood || '',
-      cep: billingAddress?.zipCode || '',
-      cidade: billingAddress?.city || '',
-      uf: billingAddress?.state || '',
-      observacoes: billingAddress?.observations || '',
-    }
+      tipo: billingAddress?.residenceType || "RESIDENCIAL",
+      streetType: billingAddress?.streetType || "RUA", // Adicionado streetType
+      logradouro: billingAddress?.street || "",
+      numero: billingAddress?.number || "",
+      complemento: billingAddress?.complement || "",
+      bairro: billingAddress?.neighborhood || "",
+      cep: billingAddress?.zipCode || "",
+      cidade: billingAddress?.city || "",
+      uf: billingAddress?.state || "",
+      observacoes: billingAddress?.observations || "",
+    },
   });
 
   // Função para buscar dados do CEP
   const buscarCEP = async (cep, tipoEndereco, index = null) => {
-    const cepNumerico = cep.replace(/\D/g, '');
-    
+    const cepNumerico = cep.replace(/\D/g, "");
+
     if (cepNumerico.length !== 8) return;
-    
-    if (tipoEndereco === 'Entrega') {
+
+    if (tipoEndereco === "Entrega") {
       setLoadingCEPEntrega(true);
       setCepErrorEntrega(null);
     } else {
       setLoadingCEPCobranca(true);
       setCepErrorCobranca(null);
     }
-    
+
     try {
-      const response = await axios.get(`https://viacep.com.br/ws/${cepNumerico}/json/`);
-      
+      const response = await axios.get(
+        `https://viacep.com.br/ws/${cepNumerico}/json/`
+      );
+
       if (response.data.erro) {
-        throw new Error('CEP não encontrado');
+        throw new Error("CEP não encontrado");
       }
-      
+
       const { logradouro, complemento, bairro, localidade, uf } = response.data;
-      
-      if (tipoEndereco === 'Entrega' && index !== null) {
+
+      if (tipoEndereco === "Entrega" && index !== null) {
         const novosEnderecos = [...enderecosEntrega];
         novosEnderecos[index] = {
           ...novosEnderecos[index],
           cep: cep,
-          logradouro: logradouro || '',
+          logradouro: logradouro || "",
           complemento: complemento || novosEnderecos[index].complemento,
-          bairro: bairro || '',
-          cidade: localidade || '',
-          uf: uf || ''
+          bairro: bairro || "",
+          cidade: localidade || "",
+          uf: uf || "",
         };
         setEnderecosEntrega(novosEnderecos);
       } else {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           enderecoCobranca: {
             ...prev.enderecoCobranca,
             cep: cep,
-            logradouro: logradouro || '',
+            logradouro: logradouro || "",
             complemento: complemento || prev.enderecoCobranca.complemento,
-            bairro: bairro || '',
-            cidade: localidade || '',
-            uf: uf || ''
-          }
+            bairro: bairro || "",
+            cidade: localidade || "",
+            uf: uf || "",
+          },
         }));
       }
-      
     } catch (error) {
-      const errorMsg = 'CEP não encontrado ou erro na consulta';
-      if (tipoEndereco === 'Entrega') {
+      const errorMsg = "CEP não encontrado ou erro na consulta";
+      if (tipoEndereco === "Entrega") {
         setCepErrorEntrega(errorMsg);
       } else {
         setCepErrorCobranca(errorMsg);
       }
-      console.error('Erro ao buscar CEP:', error);
+      console.error("Erro ao buscar CEP:", error);
     } finally {
-      if (tipoEndereco === 'Entrega') {
+      if (tipoEndereco === "Entrega") {
         setLoadingCEPEntrega(false);
       } else {
         setLoadingCEPCobranca(false);
@@ -167,23 +173,25 @@ const EditarCliente = () => {
   // Função para lidar com mudanças no CEP
   const handleCEPChange = (e, tipoEndereco, index = null) => {
     const { value } = e.target;
-    const cepFormatado = value.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2');
-    
-    if (tipoEndereco === 'Entrega' && index !== null) {
+    const cepFormatado = value
+      .replace(/\D/g, "")
+      .replace(/^(\d{5})(\d)/, "$1-$2");
+
+    if (tipoEndereco === "Entrega" && index !== null) {
       const novosEnderecos = [...enderecosEntrega];
       novosEnderecos[index].cep = cepFormatado;
       setEnderecosEntrega(novosEnderecos);
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         enderecoCobranca: {
           ...prev.enderecoCobranca,
-          cep: cepFormatado
-        }
+          cep: cepFormatado,
+        },
       }));
     }
-    
-    if (value.replace(/\D/g, '').length === 8) {
+
+    if (value.replace(/\D/g, "").length === 8) {
       buscarCEP(value, tipoEndereco, index);
     }
   };
@@ -220,42 +228,43 @@ const EditarCliente = () => {
   // Função para lidar com o checkbox "Mesmo Endereço de Entrega"
   const handleMesmoEnderecoChange = () => {
     const novoValor = !formData.enderecoCobranca.mesmoEndereco;
-    
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
       enderecoCobranca: {
         ...prev.enderecoCobranca,
         mesmoEndereco: novoValor,
-        ...(novoValor ? {
-          logradouro: prev.enderecoEntrega.logradouro,
-          numero: prev.enderecoEntrega.numero,
-          complemento: prev.enderecoEntrega.complemento,
-          bairro: prev.enderecoEntrega.bairro,
-          cep: prev.enderecoEntrega.cep,
-          cidade: prev.enderecoEntrega.cidade,
-          uf: prev.enderecoEntrega.uf,
-          observacoes: prev.enderecoEntrega.observacoes,
-          tipo: prev.enderecoEntrega.tipo
-        } : {
-          logradouro: '',
-          numero: '',
-          complemento: '',
-          bairro: '',
-          cep: '',
-          cidade: '',
-          uf: '',
-          observacoes: '',
-          tipo: 'RESIDENCIAL'
-        })
-      }
+        ...(novoValor
+          ? {
+              logradouro: prev.enderecoEntrega.logradouro,
+              numero: prev.enderecoEntrega.numero,
+              complemento: prev.enderecoEntrega.complemento,
+              bairro: prev.enderecoEntrega.bairro,
+              cep: prev.enderecoEntrega.cep,
+              cidade: prev.enderecoEntrega.cidade,
+              uf: prev.enderecoEntrega.uf,
+              observacoes: prev.enderecoEntrega.observacoes,
+              tipo: prev.enderecoEntrega.tipo,
+            }
+          : {
+              logradouro: "",
+              numero: "",
+              complemento: "",
+              bairro: "",
+              cep: "",
+              cidade: "",
+              uf: "",
+              observacoes: "",
+              tipo: "RESIDENCIAL",
+            }),
+      },
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const dadosParaEnvio = {
 
+    const dadosParaEnvio = {
       name: formData.nomeCompleto,
       email: formData.email,
       cpf: formData.cpf,
@@ -268,19 +277,19 @@ const EditarCliente = () => {
           id: billingAddress.id,
           type: "BILLING",
           residenceType: formData.enderecoCobranca.tipo,
-          streetType: formData.enderecoCobranca.streetType, 
+          streetType: formData.enderecoCobranca.streetType,
           street: formData.enderecoCobranca.logradouro,
           number: formData.enderecoCobranca.numero,
           neighborhood: formData.enderecoCobranca.bairro,
           zipCode: formData.enderecoCobranca.cep,
           city: formData.enderecoCobranca.cidade,
           state: formData.enderecoCobranca.uf,
-          complement: formData.enderecoCobranca.complemento || '',
-          observations: formData.enderecoCobranca.observacoes || '',
-          country: "Brasil"
-        }
+          complement: formData.enderecoCobranca.complemento || "",
+          observations: formData.enderecoCobranca.observacoes || "",
+          country: "Brasil",
+        },
       ],
-      deliveryAddress: enderecosEntrega.map(addr => ({
+      deliveryAddress: enderecosEntrega.map((addr) => ({
         id: addr.id,
         type: "DELIVERY",
         residenceType: addr.tipo,
@@ -291,19 +300,19 @@ const EditarCliente = () => {
         zipCode: addr.cep,
         city: addr.cidade,
         state: addr.uf,
-        complement: addr.complemento || '',
-        observations: addr.observacoes || '',
-        country: "Brasil"
-      }))
+        complement: addr.complemento || "",
+        observations: addr.observacoes || "",
+        country: "Brasil",
+      })),
     };
 
     try {
       const response = await putCustomer(cliente.id, dadosParaEnvio);
-      console.log('Cliente atualizado:', response);
-      alert('Cliente atualizado com sucesso!');
+      console.log("Cliente atualizado:", response);
+      alert("Cliente atualizado com sucesso!");
     } catch (error) {
-      console.error('Erro ao atualizar cliente:', error);
-      alert('Erro ao atualizar cliente. Verifique os dados e tente novamente.');
+      console.error("Erro ao atualizar cliente:", error);
+      alert("Erro ao atualizar cliente. Verifique os dados e tente novamente.");
     }
   };
 
@@ -334,7 +343,9 @@ const EditarCliente = () => {
             required
           >
             {tiposEndereco.map((tipo) => (
-              <option key={tipo.value} value={tipo.value}>{tipo.label}</option>
+              <option key={tipo.value} value={tipo.value}>
+                {tipo.label}
+              </option>
             ))}
           </select>
         </div>
@@ -347,7 +358,9 @@ const EditarCliente = () => {
             required
           >
             {tiposLogradouro.map((tipo) => (
-              <option key={tipo.value} value={tipo.value}>{tipo.label}</option>
+              <option key={tipo.value} value={tipo.value}>
+                {tipo.label}
+              </option>
             ))}
           </select>
         </div>
@@ -357,7 +370,7 @@ const EditarCliente = () => {
             type="text"
             name="cep"
             value={endereco.cep}
-            onChange={(e) => handleCEPChange(e, 'Entrega', index)}
+            onChange={(e) => handleCEPChange(e, "Entrega", index)}
             required
           />
           {loadingCEPEntrega && <span>Buscando CEP...</span>}
@@ -424,7 +437,7 @@ const EditarCliente = () => {
           />
         </div>
       </div>
-    )
+    ),
   }));
 
   return (
@@ -435,11 +448,13 @@ const EditarCliente = () => {
         <h1>Cliente: {formData.nomeCompleto}</h1>
         <AbasFiltro abaAtiva={abaAtiva} setAbaAtiva={setAbaAtiva} abas={abas} />
 
-        {abaAtiva === 'editar' ? (
+        {abaAtiva === "editar" ? (
           <form onSubmit={handleSubmit}>
             {/* Grupo: Informações Pessoais */}
             <fieldset className="editar-cliente-fieldset">
-              <legend className="editar-cliente-legend">Informações Pessoais</legend>
+              <legend className="editar-cliente-legend">
+                Informações Pessoais
+              </legend>
               <div className="editar-cliente-form-group">
                 <div className="form-group-with-label">
                   <label>Nome Completo</label>
@@ -454,9 +469,36 @@ const EditarCliente = () => {
 
                 <div className="form-group-with-label">
                   <label>Data de Nascimento</label>
-                  <DatePicker
+                  {/* <DatePicker
                     selected={formData.dataNascimento}
                     onChange={(date) => setFormData({...formData, dataNascimento: date})}
+                    // dateFormat="dd/MM/yyyy"
+                    showYearDropdown
+                    dropdownMode="select"
+                    required
+                  /> */}
+                  <DatePicker
+                    selected={
+                      formData.dataNascimento
+                        ? new Date(formData.dataNascimento + "T00:00:00")
+                        : null
+                    }
+                    onChange={(date) => {
+                      if (date) {
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(
+                          2,
+                          "0"
+                        );
+                        const day = String(date.getDate()).padStart(2, "0");
+                        setFormData({
+                          ...formData,
+                          dataNascimento: `${year}-${month}-${day}`,
+                        }); // ✅ salva como string
+                      } else {
+                        setFormData({ ...formData, dataNascimento: "" });
+                      }
+                    }}
                     dateFormat="dd/MM/yyyy"
                     showYearDropdown
                     dropdownMode="select"
@@ -517,13 +559,17 @@ const EditarCliente = () => {
 
             {/* Grupo: Endereços de Entrega */}
             <fieldset className="editar-cliente-fieldset">
-              <legend className="editar-cliente-legend">Endereços de Entrega</legend>
+              <legend className="editar-cliente-legend">
+                Endereços de Entrega
+              </legend>
               <Accordion items={accordionItems} />
             </fieldset>
 
             {/* Grupo: Endereço de Cobrança */}
             <fieldset className="editar-cliente-fieldset">
-              <legend className="editar-cliente-legend">Endereço de Cobrança</legend>
+              <legend className="editar-cliente-legend">
+                Endereço de Cobrança
+              </legend>
               <div className="editar-cliente-form-group">
                 <div className="form-group-with-label">
                   <label>Tipo de Endereço</label>
@@ -564,11 +610,13 @@ const EditarCliente = () => {
                     type="text"
                     name="cep"
                     value={formData.enderecoCobranca.cep}
-                    onChange={(e) => handleCEPChange(e, 'Cobranca')}
+                    onChange={(e) => handleCEPChange(e, "Cobranca")}
                     required
                   />
                   {loadingCEPCobranca && <span>Buscando CEP...</span>}
-                  {cepErrorCobranca && <span className="error">{cepErrorCobranca}</span>}
+                  {cepErrorCobranca && (
+                    <span className="error">{cepErrorCobranca}</span>
+                  )}
                 </div>
 
                 <div className="form-group-with-label">
@@ -636,8 +684,6 @@ const EditarCliente = () => {
                     required
                   />
                 </div>
-
-               
               </div>
             </fieldset>
 
@@ -645,15 +691,17 @@ const EditarCliente = () => {
             <div className="status-botoes">
               <button
                 type="button"
-                className={`status-botao ${status === 'ativo' ? 'ativo' : ''}`}
-                onClick={() => setStatus('ativo')}
+                className={`status-botao ${status === "ativo" ? "ativo" : ""}`}
+                onClick={() => setStatus("ativo")}
               >
                 Ativado
               </button>
               <button
                 type="button"
-                className={`status-botao ${status === 'desativado' ? 'desativado' : ''}`}
-                onClick={() => setStatus('desativado')}
+                className={`status-botao ${
+                  status === "desativado" ? "desativado" : ""
+                }`}
+                onClick={() => setStatus("desativado")}
               >
                 Desativado
               </button>
@@ -665,7 +713,6 @@ const EditarCliente = () => {
               <Link to="/consultar-cliente">
                 <button type="button">CANCELAR</button>
               </Link>
-              
             </div>
           </form>
         ) : (
