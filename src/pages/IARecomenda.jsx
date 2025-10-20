@@ -5,12 +5,13 @@ import InfoSection from '../components/InfoSection.jsx';
 import '../styles/IARecomenda.css';
 import iconIA from '../images/img_icon_ia.png';
 import iconUser from '../images/img_icon_user.png';
-import {mockUser, mockPurchaseHistory } from '../services/mockData.js';
 import { getBooks } from '../services/books';
+import { useAuth } from '../context/AuthLogin.jsx';
+import { getCheckout } from '../services/checkout.jsx';
 
 
 async function callGroqAPI(promptText) {
-  const GROQ_API_KEY = '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';
+  const GROQ_API_KEY = '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';
   const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
   try {
     const response = await fetch(GROQ_URL, {
@@ -44,6 +45,7 @@ async function callGroqAPI(promptText) {
 }
 
 const IARecomenda = () => {
+  const { user } = useAuth();
   // Tenta carregar o histórico do chat do sessionStorage ao iniciar.
   // Isso permite que a conversa persista ao navegar entre páginas.
   const [messages, setMessages] = useState(() => {
@@ -65,7 +67,6 @@ const IARecomenda = () => {
 
   // Simula o carregamento de dados do usuário e do catálogo de livros.
   // Em uma aplicação real, estes dados viriam de uma API autenticada.
-  const [currentUser, setCurrentUser] = useState(null);
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [allBooks, setAllBooks] = useState([]);
 
@@ -100,20 +101,34 @@ const IARecomenda = () => {
 
 
   useEffect(() => {
-    setCurrentUser(mockUser);
-    setPurchaseHistory(mockPurchaseHistory);
+    const fetchPurchaseHistory = async () => {
+        if (user && user.id) {
+            try {
+                console.log("user",user)
+                const sales = await getCheckout();
+                const userSales = sales.filter(sale => sale.clientId === user.id);
+                const history = userSales.flatMap(sale => sale.items.map(item => item.book));
+                setPurchaseHistory(history);
+            } catch (error) {
+                console.error("Erro ao buscar histórico de compras:", error);
+            }
+        }
+    };
+
+    fetchPurchaseHistory();
 
     // Se não houver mensagens no histórico, envia a mensagem inicial da IA.
-    if (messages.length === 0) {
+    if (messages.length === 0 && user) {
       setMessages([
         {
-          text: `Olá, ${mockUser.nome}! Sou sua assistente pessoal de livros. Notei que você gosta de ${mockUser.preferencias.join(' e ')}. Como posso ajudar você a encontrar sua próxima leitura hoje?`,
+          text: `Olá! Sou sua assistente pessoal de livros. Como posso ajudar você a encontrar sua próxima leitura hoje?`,
           sender: 'ia',
           produtos: []
         }
       ]);
+
     }
-  }, []);
+  }, [user]);
 
   const handleSendMessage = async () => {
     if (inputValue.trim() === '' || isLoading) return;
@@ -132,8 +147,6 @@ const IARecomenda = () => {
       Você é a MIART, uma IA especialista em recomendação de livros para a nossa livraria. Sua tarefa é agir como uma vendedora pessoal e amigável.
 
       **Contexto do Cliente:**
-      - Nome: ${currentUser.nome}
-      - Gêneros Favoritos: ${currentUser.preferencias.join(', ')}
       - Histórico de Compras:
       ${historyText}
 
@@ -141,7 +154,7 @@ const IARecomenda = () => {
       ${catalogText}
 
       **Instruções IMPORTANTES:**
-      1. Use o histórico e as preferências do cliente para fazer recomendações ALTAMENTE PERSONALIZADAS.
+      1. Use o histórico e as preferências do cliente para fazer recomendações ALTAMENTE PERSONALIZADAS (não cite o nome do cliente de forma alguma).
       2. Responda de forma calorosa e pessoal, seja breve.
       3. Se o cliente pedir algo vago como "um livro bom", sugira algo baseado nas compras passadas dele. Por exemplo, se ele comprou "Duna", sugira "Fundação".
       4. Se o cliente perguntar sobre um livro que não está no catálogo, informe educadamente que não o temos e sugira uma alternativa SIMILAR do catálogo.

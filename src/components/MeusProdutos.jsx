@@ -12,6 +12,8 @@ const MeusProdutos = ({ user }) => {
   const buttonsRef = useRef({});
   const [todosOsPedidos, setTodosOsPedidos] = useState([]);
 
+  const [viewMode, setViewMode] = useState('grouped'); // 'grouped' or 'separated'
+
   useEffect(() => {
     const fetchSales = async () => {
       if (user && user.id) {
@@ -54,8 +56,8 @@ const MeusProdutos = ({ user }) => {
     }
   }, [statusAtivo]);
 
-  const handleOpenModal = (pedido) => {
-    setSelectedPedido(pedido);
+  const handleOpenModal = (pedido, item) => {
+    setSelectedPedido({ ...pedido, selectedItem: item });
     setIsModalOpen(true);
   };
 
@@ -74,6 +76,39 @@ const MeusProdutos = ({ user }) => {
     'Cancelado',
   ];
 
+  const renderGroupedView = () => {
+    return pedidosFiltrados.map(pedido => (
+      <ProdutoCard 
+        key={pedido.id}
+        id={pedido.items[0].book.id}
+        capaUrl={pedido.items[0].book.images.find(img => img.caption === 'Principal').url}
+        titulo={pedido.items[0].book.title}
+        autor={pedido.items[0].book.author}
+        preco={pedido.items[0].unitPrice}
+        estoque={1} // Estoque não é relevante aqui
+        onVerDetalhes={() => handleOpenModal(pedido)}
+        stacked={pedido.items.length > 1}
+      />
+    ));
+  };
+
+  const renderSeparatedView = () => {
+    return pedidosFiltrados.flatMap(pedido => 
+      pedido.items.map(item => (
+        <ProdutoCard 
+          key={`${pedido.id}-${item.book.id}`}
+          id={item.book.id}
+          capaUrl={item.book.images.find(img => img.caption === 'Principal').url}
+          titulo={item.book.title}
+          autor={item.book.author}
+          preco={item.unitPrice}
+          estoque={1} // Estoque não é relevante aqui
+          onVerDetalhes={() => handleOpenModal(pedido, item)}
+        />
+      ))
+    );
+  };
+
   return (
     <div className="meus-produtos-container">
       <div className="status-filtros">
@@ -90,20 +125,14 @@ const MeusProdutos = ({ user }) => {
         <div className="status-indicator" style={indicatorStyle}></div>
       </div>
 
-      <div className='produto-card-meus-produtos'>
+      <div className="view-mode-buttons">
+        <button onClick={() => setViewMode('grouped')} className={viewMode === 'grouped' ? 'ativo' : ''}>Agrupado</button>
+        <button onClick={() => setViewMode('separated')} className={viewMode === 'separated' ? 'ativo' : ''}>Separado</button>
+      </div>
+
+      <div className={`produto-card-meus-produtos ${viewMode === 'grouped' ? 'grouped-view' : 'separated-view'}`}>
         {pedidosFiltrados.length > 0 ? (
-          pedidosFiltrados.map(pedido => (
-            <ProdutoCard 
-              key={pedido.id}
-              id={pedido.items[0].book.id}
-              capaUrl={pedido.items[0].book.images.find(img => img.caption === 'Principal').url}
-              titulo={pedido.items[0].book.title}
-              autor={pedido.items[0].book.author}
-              preco={pedido.items[0].unitPrice}
-              estoque={1} // Estoque não é relevante aqui
-              onVerDetalhes={() => handleOpenModal(pedido)}
-            />
-          ))
+          viewMode === 'grouped' ? renderGroupedView() : renderSeparatedView()
         ) : (
           <div className="no-pedidos">
             <img src="/src/images/image-nenhumProduto.png" alt="Nenhum pedido encontrado" className="no-pedidos-img" />

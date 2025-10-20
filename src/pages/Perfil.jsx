@@ -134,10 +134,6 @@ function Perfil() {
                 <label>Nome Completo</label>
                 <input type="text" name="nomeCompleto" value={formData.nomeCompleto} onChange={handleChange} />
               </div>
-              <div className="perfil-input-group">
-                <label>Nome Social</label>
-                <input type="text" name="nomeSocial" value={formData.nomeSocial} onChange={handleChange} />
-              </div>
               <div className="perfil-input-row">
                 <div className="perfil-input-group">
                   <label>Data Nascimento</label>

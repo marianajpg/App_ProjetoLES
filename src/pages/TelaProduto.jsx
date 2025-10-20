@@ -47,45 +47,56 @@ const TelaProduto = () => {
     }
   }, [id, livro]);
 
-  useEffect(() => {
-    if (livro) {
-      setIsLoading(false);
-      getInventory()
-        .then(data => {
-          const inventoryItem = data.filter(item => item.bookId === livro.id);
-          const totalQuantity = inventoryItem.reduce((total, item) => total + item.quantity, 0);
-          setEstoque(totalQuantity);
-        })
-        .catch(error => {
-          console.error("Erro ao buscar estoque:", error);
-          setEstoque(0);
-        });
-      
-      const fetchBookData = async () => {
-      try {
-            const data_book = await getBookById(id);
-            const data_categories = data_book.categories;
-            setLivro(prev => ({
+ useEffect(() => {
+  if (livro) {
+    setIsLoading(false);
+    
+    // Buscar estoque
+    getInventory()
+      .then(data => {
+        const inventoryItem = data.filter(item => item.bookId === livro.id);
+        const totalQuantity = inventoryItem.reduce((total, item) => total + item.quantity, 0);
+        setEstoque(totalQuantity);
+      })
+      .catch(error => {
+        console.error("Erro ao buscar estoque:", error);
+        setEstoque(0);
+      });
+    
+    // Buscar categorias se não existirem
+    if (!livro.categories) {
+      const fetchCategories = async () => {
+        try {
+          const data_book = await getBookById(id);
+          const data_categories = data_book.categories;
+          setLivro(prev => ({
             ...prev,
             categories: data_categories
           }));
-      } catch (err) {
-          setError('Não foi possível carregar as categorias do livro.');
-          console.error("Erro ao buscar livro:", err);
-        } finally {
-          setIsLoading(false);
+        } catch (err) {
+          console.error("Erro ao buscar categorias:", err);
         }
-      }
-      fetchBookData();
-      // Define a imagem principal quando o livro é carregado
-      const livroComImagens = { ...livro };
-      if (!livroComImagens.images || livroComImagens.images.length === 0) {
-        livroComImagens.images = [{ url: 'https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzsc7phps7xh2d', caption: 'Principal' }];
-      }
-      const imagemCapa = livroComImagens.images.find(img => img.caption === 'Principal') || livroComImagens.images[0];
-      setImagemPrincipal(imagemCapa.url);
+      };
+      fetchCategories();
     }
-  }, [livro]);
+    
+    // Definir imagem principal
+    const imagens = livro.images && livro.images.length > 0 
+      ? livro.images 
+      : [{ url: 'https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzsc7phps7xh2d', caption: 'Principal' }];
+    
+    const imagemCapa = imagens.find(img => img.caption === 'Principal') || imagens[0];
+    setImagemPrincipal(imagemCapa.url);
+    
+    // Atualizar livro com imagens padrão se necessário
+    if (!livro.images || livro.images.length === 0) {
+      setLivro(prev => ({
+        ...prev,
+        images: imagens
+      }));
+    }
+  }
+}, [livro, id]);
 
   if (isLoading) {
     return (

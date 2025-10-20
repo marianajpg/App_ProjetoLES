@@ -433,7 +433,7 @@ const Pagamento = () => {
         payments.push({
           type: "COUPON",
           couponCode: couponCode,
-          amount: availableCupons[couponCode] // Assuming cuponsDisponiveis stores the amount
+          amount: availableCupons[couponCode] 
         });
       });
     }
@@ -695,7 +695,7 @@ const Pagamento = () => {
                     name="cartoes"
                     options={cartoesSalvos.map(card => ({
                       value: card.id,
-                      label: `•••• ${card.numero.slice(-4)} (${card.bandeira}) ${card.preferredCard ? '(Preferencial)' : ''}`
+                      label: `•••• ${card.numero.slice(-4)} (${card.bandeira}) ${card.preferredCard ? ' - Preferencial' : ''}`
                     }))}
                     className="basic-multi-select"
                     classNamePrefix="select"
@@ -703,7 +703,7 @@ const Pagamento = () => {
                     onChange={handleSelecaoCartao}
                     value={cartoesSalvos.filter(card => cartoesSelecionados.includes(card.id)).map(card => ({
                       value: card.id,
-                      label: `•••• ${card.numero.slice(-4)} (${card.bandeira}) ${card.preferredCard ? '(Preferencial)' : ''}`
+                      label: `•••• ${card.numero.slice(-4)} (${card.bandeira}) ${card.preferredCard ? ' - Preferencial' : ''}`
                     }))}
                     styles={customSelectStyles}
                     data-cy="saved-cards-select"

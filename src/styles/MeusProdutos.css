@@ -144,3 +144,60 @@
   height: auto;
   margin-bottom: 20px;
 }
+
+.view-mode-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.view-mode-buttons button {
+  padding: 8px 15px;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+}
+
+.view-mode-buttons button.ativo {
+  background-color: #A73A21;
+  color: #fff;
+  border-color: #A73A21;
+}
+
+/* Stacked card effect */
+.produto-card-meus-produtos.grouped-view .card.stacked {
+  position: relative;
+}
+
+.produto-card-meus-produtos.grouped-view .card.stacked::before,
+.produto-card-meus-produtos.grouped-view .card.stacked::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  z-index: -1;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.produto-card-meus-produtos.grouped-view .card.stacked:hover::before,
+.produto-card-meus-produtos.grouped-view .card.stacked:hover::after {
+  opacity: 1;
+}
+
+.produto-card-meus-produtos.grouped-view .card.stacked:hover::before {
+  transform: rotate(-1deg);
+}
+
+.produto-card-meus-produtos.grouped-view .card.stacked:hover::after {
+  transform: rotate(2deg);
+}

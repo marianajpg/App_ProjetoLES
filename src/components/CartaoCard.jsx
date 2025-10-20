@@ -27,7 +27,10 @@ const CartaoCard = ({ cartao, onDelete, onAmountChange, amount, placeholder }) =
       <div className="cartao-card-content-wrapper">
         <div className="cartao-card-body">
           <p className="card-brand">{cartao.bandeira}</p>
-          <p className="card-number">{censoredCardNumber}</p>
+          <p className="card-number">
+            {censoredCardNumber}
+            {cartao.preferredCard && <span className="preferred-card-label">  Preferencial</span>}
+          </p>
           <p className="card-holder">{cartao.nome}</p>
         </div>
         <div className="cartao-card-actions">

@@ -252,6 +252,27 @@
   flex-wrap: wrap; 
 }
 
+.modal__secondary-action {
+  padding: 12px 28px;
+  font-size: 1rem;
+  margin-left: 35%;
+  display: flex;
+  background-color: var(--color-background-light);
+  color: var(--color-secondary);
+  border: 1px solid var(--color-secondary);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-speed), transform var(--transition-speed);
+  align-items: flex-end;
+
+}
+
+.modal__secondary-action:hover {
+  background-color: #fff2ec;
+
+  transform: translateY(-2px);
+}
+
 .modal__main-action { 
   padding: 12px 28px;
   font-size: 1rem;

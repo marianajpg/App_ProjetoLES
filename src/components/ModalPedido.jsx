@@ -46,7 +46,8 @@ const ModalPedido = ({ pedido, onClose }) => {
     navigate(`/tela-produto/${id}`);
   };
 
-  const handleSolicitarTroca = async () => {
+  const handleSolicitarTroca = async (item) => {
+    console.log("Solicitando troca para o item:", item);
     if (window.confirm('Tem certeza que deseja solicitar a troca deste item?')) {
       try {
         await new Promise(resolve => setTimeout(resolve, 1000)); 
@@ -98,6 +99,11 @@ const ModalPedido = ({ pedido, onClose }) => {
                 </div>
                 <div className="livro-info__footer">
                   <p className="livro-preco">R${(item.unitPrice || 0).toFixed(2).replace('.', ',')}</p>
+                  {/* {mappedStatus === 'Entregue' && ( */}
+                    <button className="modal__secondary-action" onClick={() => handleSolicitarTroca(item)}>
+                      Trocar
+                    </button>
+                  
                   <button className="modal__main-action" onClick={() => handleVerProduto(item.book.id)}>
                     Ver produto
                   </button>
@@ -119,9 +125,7 @@ const ModalPedido = ({ pedido, onClose }) => {
           <div className="help-actions">
             <h5 className="help-actions__title">Ajuda com a compra</h5>
             {/* 4. MELHORIA: Botão de troca só aparece para pedidos entregues */}
-            {mappedStatus === 'Entregue' && (
-              <button className="help-actions__btn" onClick={handleSolicitarTroca}>Solicitar troca →</button>
-            )}
+
             <button className="help-actions__btn">Pedir ajuda →</button>
           </div>
         </footer>

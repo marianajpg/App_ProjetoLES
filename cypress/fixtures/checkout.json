@@ -6,13 +6,13 @@
       },
       "book": [
         {
-          "id": 10,
-          "title": "As Aventuras de Sherlock Holmes",
+          "id": 30,
+          "title": "Watchmen",
           "quantity": 1
         },
         {
-          "id": 15,
-          "title": "Assim Falou Zaratustra",
+          "id": 19,
+          "title": "Matéria Escura",
           "quantity": 1
         }
       ],
@@ -30,13 +30,13 @@
         "observations": "Casa Nova"
       },
       "creditCard": [{
-        "id": 8,
+        "id": 9,
         "numero": "1111222233334444",
         "validade": "12/2025",
         "nomeImpresso": "TESTE COMPRADOR",
         "bandeira": "visa",
         "cvv": "123",
-        "percent": 0.2
+        "percent": 0.5
       },
     {
         "id": 4,
@@ -45,7 +45,7 @@
         "nomeImpresso": "JFNJBFJKWBJFK",
         "bandeira": "visa",
         "cvv": "123",
-        "percent": 0.8
+        "percent": 0.9
       }]
 
     }

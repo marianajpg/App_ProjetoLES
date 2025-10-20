@@ -1,3 +1,13 @@
+:root {
+  --primary-color: #752512;
+  --secondary-color: #A73A21;
+  --tertiary-color: #C65338;
+  --quaternary-color: #FEAA80;
+  --quinary-color: #FDBC9B;
+  --senary-color: #FFEBE1;
+  --septenary-color-vibrant: #ee5e3a;
+}
+
 .cartao-card {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -87,5 +97,11 @@
   background: none;
   border: none;
   cursor: pointer;
+  margin-left: 8px;
+}
+
+.preferred-card-label {
+  font-size: 0.9em;
+  color: var(--primary-color); /* A blue color to indicate preference */
   margin-left: 8px;
 }
