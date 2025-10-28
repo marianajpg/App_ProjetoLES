@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Breadcrumb from '../components/Breadcrumb';
 import FiltrosLivro from '../components/FiltrosLivro';
@@ -21,6 +21,7 @@ const faixasDePrecoMap = [
 const ShopLivros = () => {
   const breadcrumbItems = [{ label: 'Home', link: '/' }, { label: 'Livros', link: '' }];
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [allProdutos, setAllProdutos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +32,16 @@ const ShopLivros = () => {
 
   const [termoPesquisa, setTermoPesquisa] = useState('');
   const [filtros, setFiltros] = useState({ autores: [], editoras: [], anos: [], faixasDePreco: [], categorias: [], ordenacao: '' });
+
+  useEffect(() => {
+    if (location.state && location.state.categoria) {
+      setFiltros(prevFiltros => ({
+        ...prevFiltros,
+        categorias: [location.state.categoria]
+        
+      }));
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const fetchAllBooksAndInventory = async () => {
@@ -145,6 +156,7 @@ const getFilteredAndSearchedItems = () => {
           autorOptions={autorOptions}
           editoraOptions={editoraOptions}
           anoOptions={anoOptions}
+          categoriasSelecionadas={filtros.categorias}
         />
         <div className="cards-container">
           {isLoading ? (

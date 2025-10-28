@@ -82,6 +82,7 @@ function App() {
           }
         />
 
+
         {/* Rotas protegidas Cliente*/}
         <Route 
           path="/perfil" 

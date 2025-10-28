@@ -7,15 +7,20 @@ const FiltrosLivro = ({
   onFiltroChange,
   autorOptions = [],
   editoraOptions = [],
-  anoOptions = []
+  anoOptions = [],
+  categoriasSelecionadas: initialCategoriasSelecionadas = []
 }) => {
   const [autoresSelecionados, setAutoresSelecionados] = useState([]);
   const [editorasSelecionadas, setEditorasSelecionadas] = useState([]);
   const [anosSelecionados, setAnosSelecionados] = useState([]);
   const [faixasDePrecoSelecionadas, setFaixasDePrecoSelecionadas] = useState([]);
   const [categorias, setCategorias] = useState([]);
-  const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
+  const [categoriasSelecionadas, setCategoriasSelecionadas] = useState(initialCategoriasSelecionadas);
   const [ordenacao, setOrdenacao] = useState('');
+
+  useEffect(() => {
+    setCategoriasSelecionadas(initialCategoriasSelecionadas);
+  }, [initialCategoriasSelecionadas]);
 
   useEffect(() => {
     const fetchCategories = async () => {

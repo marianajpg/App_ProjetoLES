@@ -1,45 +1,126 @@
-.dashboard-container {
-  padding: 2rem;
-  background-color: #f9f9f9;
-
-  font-family: Arial, sans-serif;
-  border-radius: 8px;
-
+:root {
+  --primary-color: #752512;
+  --secondary-color: #A73A21;
+  --tertiary-color: #C65338;
+  --quaternary-color: #FEAA80;
+  --background-color: #f9f9f9;
+  --card-background-color: #ffffff;
+  --text-color: #333;
+  --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
-.dashboard-container h1 {
-  font-size: 2rem !important;
-  font-weight: bold !important;
-  color: var(--primary-color) !important;
-  margin-bottom: 20px !important;
+.dashboard-analytics {
+  font-family: 'Poppins', sans-serif;
+}
+
+.dashboard-analytics h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
   text-align: center;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--card-background-color);
+  border-radius: 16px;
+}
+
+.filters label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.filters input[type="date"] {
+  padding: 0.6rem;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.filters input[type="date"]:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+}
+
+.filters button {
+  padding: 0.7rem 1.5rem;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filters button:hover {
+  background-color: var(--tertiary-color);
 }
 
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto auto;
+  grid-template-columns: 2fr 1fr;
   gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  margin: auto 7rem;
 }
 
 .chart-wrapper {
-  padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  background-color: var(--card-background-color);
+  border-radius: 16px;
+  box-shadow: 0 8px 16px var(--shadow-color);
+  transition: transform 0.3s ease;
+}
+
+.chart-wrapper:hover {
+  transform: translateY(-5px);
 }
 
 .main-chart {
-  grid-column: 1 / -1; 
+  grid-column: 1 / 2;
 }
 
 
+/* Aumentando a fonte da legenda do gráfico */
+.chart-wrapper canvas {
+  width: 100% !important;
+  height: auto !important;
+}
 
-/* Para telas menores, os gráficos ficam um abaixo do outro */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .charts-grid {
     grid-template-columns: 1fr;
+  }
+  .main-chart {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters input[type="date"] {
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+
+  .dashboard-analytics h2 {
+    font-size: 1.8rem;
   }
 }
