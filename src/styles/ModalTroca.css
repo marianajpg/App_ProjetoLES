@@ -1,0 +1,123 @@
+.modal-troca {
+  background-color: #fff;
+  padding: 24px 28px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 600px;
+  max-width: 90%;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.modal-troca h4 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--primary-color);
+}
+
+.modal-troca p {
+  margin: 0;
+  color: #444;
+  line-height: 1.4;
+  display: flex;
+}
+
+.quantity-selector {
+  display: flex;
+    font-size: 16px;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap; /* permite que o <p> quebre para a linha de baixo */
+}
+
+.quantity-selector p {
+  flex-basis: 100%; /* força o <p> a ocupar uma linha inteira abaixo */
+  margin: 4px 0 0 0;
+  color: #444;
+  line-height: 1.4;
+}
+
+.quantity-selector label {
+  font-size: 16px;
+  color: #333;
+}
+
+.quantity-selector input {
+  width: 80px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.modal-troca__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: start;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.modal__cancel-action,
+.modal__main-action {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal__cancel-action {
+  background-color: #ddd;
+  color: #333;
+}
+
+.modal__cancel-action:hover {
+  background-color: #ccc;
+}
+
+.modal__main-action {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+
+.modal__main-action:hover {
+  background-color: var(--tertiary-color);
+}
+
+.reason-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.reason-selector label {
+  font-size: 16px;
+  color: #555;
+}
+
+.reason-selector textarea {
+  width: 100%;
+  padding: 5px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.reason-selector textarea:focus{
+  border-color: var(--tertiary-color) !important;
+  box-shadow: 0 0 0 2px rgba(198, 83, 56, 0.2) !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

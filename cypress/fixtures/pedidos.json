@@ -1,0 +1,25 @@
+[{
+    "id": 1,
+    "status": "PROCESSING",
+    "clientId": 1,
+    "total": 100.00,
+    "payments": [{
+        "type": "CARD"
+    }]
+}, {
+    "id": 2,
+    "status": "IN_TRANSIT",
+    "clientId": 2,
+    "total": 200.00,
+    "payments": [{
+        "type": "CARD"
+    }]
+}, {
+    "id": 3,
+    "status": "DELIVERED",
+    "clientId": 3,
+    "total": 300.00,
+    "payments": [{
+        "type": "CARD"
+    }]
+}]

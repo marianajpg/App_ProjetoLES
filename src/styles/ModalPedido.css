@@ -165,7 +165,34 @@
   margin: 0;
 }
 
-.pedido-info__book-details { 
+.exchanged-item {
+  position: relative;
+  border: 1px solid #ff8c00;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.exchange-strong-modal,
+.exchange-badge-modal {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #ff8c00;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.exchange-strong-modal{
+    background-color: #d45f00 !important;
+}
+
+
+
+.pedido-info__book-details {
   display: flex;
   align-items: center;
   gap: var(--spacing-lg);
@@ -173,7 +200,6 @@
   background-color: var(--color-background-light);
   border-radius: 20px;
 }
-
 .livro-info {
   display: flex;
   flex-direction: column;
@@ -353,5 +379,91 @@
   
   .help-actions {
     align-items: center;
+  }
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.quantity-selector label {
+  font-size: 14px;
+  color: #555;
+}
+
+.quantity-selector input {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.exchange-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal__cancel-action {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal__cancel-action:hover {
+  background-color: #ff8b50;
+  color: #ffff
+}
+
+.exchange-confirmation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-md);
+  width: 100%;
+}
+
+.livro-info__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-sm);
+  width: 100%;
+}
+
+/* Botões dentro da confirmação de troca */
+.modal__secondary-action,
+.modal__cancel-action,
+.modal__main-action {
+  flex-shrink: 0; /* evita que os botões fiquem comprimidos */
+  margin: 0;
+}
+
+/* Em telas menores: botões centralizados e empilhados */
+@media (max-width: 700px) {
+  .exchange-confirmation,
+  .livro-info__actions {
+    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
+  }
+
+  .modal__secondary-action,
+  .modal__cancel-action,
+  .modal__main-action {
+    width: 100%;
   }
 }

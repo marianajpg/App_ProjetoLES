@@ -29,6 +29,11 @@
   display: flex;
   margin-bottom: 30px;
   justify-content: center;
+  flex-wrap: wrap; 
+  max-width: 1200px; /* Limita a largura para forçar a quebra de linha */
+  margin-left: auto; /* Centraliza o contêiner */
+  margin-right: auto; /* Centraliza o contêiner */
+  gap: 10px; /* Adiciona um pequeno espaçamento entre as abas */
 }
 
 .abas-filtro button {
@@ -41,7 +46,7 @@
   color: var(--primary-color);
   font-size: 14px;
   transition: background-color 0.3s ease;
-  width: 170px;
+  width: 150px;
 }
 
 .abas-filtro button.ativo {
@@ -76,6 +81,7 @@
 .tabela-pedidos {
   width: 90%;
   margin: 0 auto;
+
   border-collapse: collapse;
   background-color: #fff2eb;
   border-radius: 8px;
@@ -97,7 +103,7 @@
 }
 
 .tabela-pedidos .status-header {
-  text-align: center;
+
 }
 
 .tabela-pedidos tbody tr:hover {
@@ -108,6 +114,14 @@
   border-bottom: none; 
 }
 
+.status-buttons-container {
+  display: flex;
+  gap: 8px; /* Espaçamento entre os botões */
+  flex-wrap: wrap; /* Permite que os botões quebrem a linha se não houver espaço suficiente */
+  justify-content: flex-start; /* Alinha os botões ao início do contêiner */
+  align-items: center;
+}
+
 .status-button {
   padding: 8px 12px;
   border: none;
@@ -116,12 +130,12 @@
   font-weight: bold;
   cursor: pointer;
   text-transform: capitalize;
-  width: 100%;
+  /* Removido width: 100%; para permitir que os botões se ajustem ao conteúdo */
   box-sizing: border-box;
 }
 
 .status-processamento {
-  background-color: #752512; 
+  background-color: #c26750; 
 }
 
 .status-em_transito {
@@ -134,4 +148,16 @@
 
 .status-troca {
   background-color: #ee5e3a;
+}
+
+.status-troca-autorizada {
+  background-color: #fd8b6f;
+}
+
+.status-recebido {
+  background-color: #914937 ;
+}
+
+.status-detalhes {
+  background-color: #8b1c00;
 }

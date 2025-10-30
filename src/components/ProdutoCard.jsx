@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, estoque, onClick, onVerDetalhes, stacked }) => {
+const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, estoque, onClick, onVerDetalhes, stacked, exchangeStatus }) => {
   const navigate = useNavigate();
 
   const handleClick = (e) => {
@@ -24,6 +24,8 @@ const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, estoque, onClick, onVe
 
   return (
     <div className={`card ${estoque === 0 ? 'out-of-stock' : ''} ${stacked ? 'stacked' : ''}`} onClick={handleClick} data-cy={`book-card-${id}`}>
+      {exchangeStatus && <div className="exchange-badge">{exchangeStatus}</div>}
+      {exchangeStatus == "Troca bem sucedida" && <div className="exchange-strong">{exchangeStatus}</div>}
       {estoque === 0 && <div className="out-of-stock-overlay">Produto fora de estoque</div>}
       <img src={capaUrl} alt={titulo} className="card-image" />
       <div className="card-info">

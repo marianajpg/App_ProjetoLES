@@ -28,7 +28,7 @@ export const deleteCheckout = async (id) => {
 
 export const putCheckout = async (id, CheckoutData) => {
     try {
-        const response = await api.put(`/checkout/${id}`, CheckoutData);
+        const response = await api.put(`/sales/${id}`, CheckoutData);
         return response.data;
     } catch (error) {
         console.error('Erro ao tentar atualizar venda:', error);

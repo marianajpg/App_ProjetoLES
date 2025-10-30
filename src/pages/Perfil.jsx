@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/Perfil.css";
 import Header from "../components/Header.jsx";
 import { useAuth } from "../context/AuthLogin.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import MeusProdutos from "../components/MeusProdutos.jsx";
 import AbasFiltro from "../components/AbasFiltro.jsx";
 import InfoSection from "../components/InfoSection.jsx";
@@ -10,8 +10,15 @@ import InfoSection from "../components/InfoSection.jsx";
 function Perfil() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [abaAtiva, setAbaAtiva] = useState("MeusProdutos");
+
+  useEffect(() => {
+    if (location.state && location.state.aba) {
+        setAbaAtiva(location.state.aba);
+    }
+  }, [location.state]);
   
   // Estado para gerenciar todos os campos do formulário de perfil.
   const [formData, setFormData] = useState({

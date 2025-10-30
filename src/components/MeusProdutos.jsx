@@ -3,48 +3,104 @@ import ProdutoCard from './ProdutoCard';
 import ModalPedido from './ModalPedido';
 import '../styles/MeusProdutos.css';
 import { getCheckout } from '../services/checkout';
+import { getExchanges } from '../services/exchanges';
 
 const MeusProdutos = ({ user }) => {
-  const [statusAtivo, setStatusAtivo] = useState('Em trânsito'); // Changed initial state
+  const [statusAtivo, setStatusAtivo] = useState('Em trânsito');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [indicatorStyle, setIndicatorStyle] = useState({});
   const buttonsRef = useRef({});
   const [todosOsPedidos, setTodosOsPedidos] = useState([]);
+  const [exchangedItems, setExchangedItems] = useState(new Set());
+  const [exchangedQuantitiesMap, setExchangedQuantitiesMap] = useState(new Map());
+  const [exchanges, setExchanges] = useState([]);
+  const [viewMode, setViewMode] = useState('grouped');
 
-  const [viewMode, setViewMode] = useState('grouped'); // 'grouped' or 'separated'
+  // Função para buscar dados
+  const fetchSalesAndExchanges = async () => {
+    if (user && user.id) {
+      try {
+        const sales = await getCheckout();
+        const userSales = sales.filter(sale => sale.clientId === user.id);
+        setTodosOsPedidos(userSales);
 
-  useEffect(() => {
-    const fetchSales = async () => {
-      if (user && user.id) {
-        try {
-          const sales = await getCheckout();
-          const userSales = sales.filter(sale => sale.clientId === user.id);
-          setTodosOsPedidos(userSales);
-        } catch (error) {
-          console.error("Erro ao buscar vendas:", error);
-        }
+        const exchangesData = await getExchanges();
+        setExchanges(exchangesData);
+        const newExchangedItems = new Set();
+        const newExchangedQuantitiesMap = new Map();
+        exchangesData.forEach(exchange => {
+          // Filtra apenas trocas que não estejam concluídas ou rejeitadas, se necessário
+          // Ex: if (exchange.status !== 'COMPLETED' && exchange.status !== 'REJECTED') {
+          exchange.items.forEach(item => {
+            newExchangedItems.add(item.vendaItemId);
+            // Acumula quantidades caso haja múltiplas trocas para o mesmo item
+            const currentQty = newExchangedQuantitiesMap.get(item.vendaItemId) || 0;
+            newExchangedQuantitiesMap.set(item.vendaItemId, currentQty + item.quantidade);
+          });
+          // }
+        });
+        setExchangedItems(newExchangedItems);
+        setExchangedQuantitiesMap(newExchangedQuantitiesMap);
+      } catch (error) {
+        console.error("Erro ao buscar vendas ou trocas:", error);
       }
-    };
-    fetchSales();
-  }, [user]);
-
-  const mapStatus = (apiStatus) => {
-    switch (apiStatus) {
-      case 'APPROVED':
-        return 'Em trânsito';
-      case 'PROCESSING':
-        return 'Em processamento';
-      case 'DELIVERED':
-        return 'Entregue';
-      case 'RETURNED':
-        return 'Devoluções/Trocas';
-      case 'CANCELED':
-        return 'Cancelado';
-      default:
-        return apiStatus;
     }
   };
+
+  useEffect(() => {
+    fetchSalesAndExchanges();
+  }, [user]);
+
+  // Lógica de filtragem e transformação dos pedidos
+  const pedidosParaExibir = todosOsPedidos.map(pedido => {
+    let itemsParaExibir = [];
+
+    if (statusAtivo === 'Devoluções/Trocas') {
+          itemsParaExibir = pedido.items
+            .map(item => {
+              const exchangedQuantity = exchangedQuantitiesMap.get(item.id) || 0;
+              if (exchangedQuantity > 0) {
+                const exchange = exchanges.find(ex => ex.items.some(exItem => exItem.vendaItemId === item.id));
+                let exchangeStatus = 'Troca em andamento';
+                if (exchange && typeof exchange.status === 'string' && exchange.status.trim().toUpperCase() === 'EXCHANGE_AUTHORIZED') {
+                  exchangeStatus = 'Troca bem sucedida';
+                }
+                return { ...item, quantity: exchangedQuantity, exchangeStatus: exchangeStatus };
+              }
+              return null;
+            })
+            .filter(Boolean);    } else if (statusAtivo === 'Entregue') {
+      if (pedido.status === 'DELIVERED' || pedido.status === 'EXCHANGE' || pedido.status === 'EM_TROCA') {
+        itemsParaExibir = pedido.items
+          .map(item => {
+            const originalQuantity = item.quantity || 1;
+            const exchangedQuantity = exchangedQuantitiesMap.get(item.id) || 0;
+            const deliveredQuantity = originalQuantity - exchangedQuantity;
+            if (deliveredQuantity > 0) {
+              return { ...item, quantity: deliveredQuantity };
+            }
+            return null;
+          })
+          .filter(Boolean);
+      }
+    } else {
+      const orderStatusMap = {
+        'Em processamento': 'PROCESSING',
+        'Em trânsito': 'APPROVED',
+        'Cancelado': 'CANCELED'
+      };
+      if (orderStatusMap[statusAtivo] === pedido.status) {
+        itemsParaExibir = pedido.items.filter(item => !exchangedQuantitiesMap.has(item.id));
+      }
+    }
+
+    if (itemsParaExibir.length === 0) {
+      return null;
+    }
+
+    return { ...pedido, items: itemsParaExibir };
+  }).filter(Boolean);
 
   useEffect(() => {
     const activeBtn = buttonsRef.current[statusAtivo];
@@ -57,7 +113,9 @@ const MeusProdutos = ({ user }) => {
   }, [statusAtivo]);
 
   const handleOpenModal = (pedido, item) => {
-    setSelectedPedido({ ...pedido, selectedItem: item });
+    // Busca o pedido original completo, sem as quantidades modificadas
+    const fullOrder = todosOsPedidos.find(p => p.id === pedido.id);
+    setSelectedPedido({ ...fullOrder, selectedItem: item });
     setIsModalOpen(true);
   };
 
@@ -66,7 +124,11 @@ const MeusProdutos = ({ user }) => {
     setSelectedPedido(null);
   };
 
-  const pedidosFiltrados = todosOsPedidos.filter(p => mapStatus(p.status) === statusAtivo);
+  const handleExchangeSuccess = () => {
+    handleCloseModal(); // Fecha o modal
+    fetchSalesAndExchanges(); // Refaz o fetch dos dados para atualizar a UI
+  };
+
 
   const statusOptions = [
     'Em processamento',
@@ -77,7 +139,7 @@ const MeusProdutos = ({ user }) => {
   ];
 
   const renderGroupedView = () => {
-    return pedidosFiltrados.map(pedido => (
+    return pedidosParaExibir.map(pedido => (
       <ProdutoCard 
         key={pedido.id}
         id={pedido.items[0].book.id}
@@ -88,12 +150,13 @@ const MeusProdutos = ({ user }) => {
         estoque={1} // Estoque não é relevante aqui
         onVerDetalhes={() => handleOpenModal(pedido)}
         stacked={pedido.items.length > 1}
+        exchangeStatus={pedido.items[0].exchangeStatus}
       />
     ));
   };
-
+ 
   const renderSeparatedView = () => {
-    return pedidosFiltrados.flatMap(pedido => 
+    return pedidosParaExibir.flatMap(pedido => 
       pedido.items.map(item => (
         <ProdutoCard 
           key={`${pedido.id}-${item.book.id}`}
@@ -104,10 +167,12 @@ const MeusProdutos = ({ user }) => {
           preco={item.unitPrice}
           estoque={1} // Estoque não é relevante aqui
           onVerDetalhes={() => handleOpenModal(pedido, item)}
+          exchangeStatus={item.exchangeStatus}
         />
       ))
     );
   };
+
 
   return (
     <div className="meus-produtos-container">
@@ -131,7 +196,7 @@ const MeusProdutos = ({ user }) => {
       </div>
 
       <div className={`produto-card-meus-produtos ${viewMode === 'grouped' ? 'grouped-view' : 'separated-view'}`}>
-        {pedidosFiltrados.length > 0 ? (
+        {pedidosParaExibir.length > 0 ? (
           viewMode === 'grouped' ? renderGroupedView() : renderSeparatedView()
         ) : (
           <div className="no-pedidos">
@@ -142,7 +207,15 @@ const MeusProdutos = ({ user }) => {
       </div>
 
       {isModalOpen && (
-        <ModalPedido pedido={selectedPedido} onClose={handleCloseModal} />
+        <ModalPedido 
+          pedido={selectedPedido} 
+          onClose={handleCloseModal} 
+          // Passa a nova função de callback
+          onExchangeSuccess={handleExchangeSuccess} 
+          exchangedItems={exchangedItems} 
+          exchangedQuantitiesMap={exchangedQuantitiesMap} 
+          exchanges={exchanges} 
+        />
       )}
     </div>
   );
