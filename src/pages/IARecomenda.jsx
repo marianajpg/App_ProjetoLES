@@ -11,37 +11,24 @@ import { getCheckout } from '../services/checkout.jsx';
 
 
 async function callGroqAPI(promptText) {
-  const GROQ_API_KEY = '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';
-  const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
   try {
-    const response = await fetch(GROQ_URL, {
+    const response = await fetch('http://localhost:3000/groq', { // URL do backend 
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${GROQ_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-
-      body: JSON.stringify({
-        model: 'llama-3.1-8b-instant', // Modelo recomendado atualmente pelo Groq
-        messages: [{ role: 'user', content: promptText }],
-        temperature: 0.7,
-      })
-
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: promptText }) // Envia o prompt no body
     });
 
     if (!response.ok) {
       const errorBody = await response.json();
-      throw new Error(`Erro na resposta da API Groq: ${response.status} - ${errorBody.error.message}`);
+      throw new Error(`Erro na resposta do backend: ${response.status} - ${errorBody.error}`);
     }
 
     const data = await response.json();
     return data.choices?.[0]?.message?.content || "Não foi possível obter uma resposta do modelo.";
-
   } catch (error) {
-    console.error("Erro ao chamar a API Groq:", error);
+    console.error("Erro ao chamar a rota Groq:", error);
     return `Desculpe, houve um erro ao conectar com o serviço de IA: ${error.message}`;
   }
-
 }
 
 const IARecomenda = () => {
