@@ -5,7 +5,7 @@ import Breadcrumb from '../components/Breadcrumb.jsx';
 import InfoSection from '../components/InfoSection.jsx';
 import { postCreditcards, deleteCreditcards, getCreditcardsByEmail } from '../services/creditcards.jsx';
 import { postCheckout } from '../services/checkout.jsx';
-import { getCupom } from '../services/cupons.jsx';
+import { getCupom, postCupom } from '../services/cupons.jsx';
 import { postCalculateShipping, postShipping } from '../services/shipping.jsx';
 import CartaoCard from '../components/CartaoCard.jsx';
 import { getAddressById, deleteAddress, putAddress, postAddress } from '../services/addresses.jsx';
@@ -172,7 +172,6 @@ const Pagamento = () => {
 
     try {
       const updatedAddress = await putAddress(editingAddress.id, editedFormData);
-      // Atualiza a lista de endereços local
       const updatedEnderecos = enderecos.map(e => 
         e.id === editingAddress.id ? updatedAddress : e
       );
@@ -193,9 +192,6 @@ const Pagamento = () => {
         alert('Cartão excluído com sucesso!');
         const updatedCartoes = cartoesSalvos.filter(c => c.id !== id);
         setCartoesSalvos(updatedCartoes);
-        if (cartaoSelecionado === id) {
-          setCartaoSelecionado('');
-        }
       } catch (error) {
         console.error("Erro ao excluir cartão:", error);
         alert('Falha ao excluir o cartão.');
@@ -208,7 +204,6 @@ const Pagamento = () => {
       try {
         await deleteAddress(id);
         alert('Endereço excluído com sucesso!');
-        // Atualizar a lista de endereços
         const updatedEnderecos = enderecos.filter(e => e.id !== id);
         setEnderecos(updatedEnderecos);
         if (enderecoSelecionado === id) {
@@ -230,19 +225,17 @@ const Pagamento = () => {
     const addressData = {
       ...novoEndereco,
       costumerId: user.id,
-      type: 'DELIVERY' // Todos os endereços cadastrados aqui são de entrega
+      type: 'DELIVERY'
     };
 
     try {
       const newAddress = await postAddress(addressData);
       alert('Endereço adicionado com sucesso!');
       
-      // Atualiza a lista de endereços e seleciona o novo
       const updatedEnderecos = [...enderecos, newAddress];
       setEnderecos(updatedEnderecos);
       setEnderecoSelecionado(newAddress.id);
 
-      // Limpa o formulário e o fecha
       setNovoEndereco({
         residenceType: 'RESIDENCIAL', streetType: 'RUA', street: '', number: '', complement: '',
         neighborhood: '', city: '', state: '', zipCode: '', observations: ''
@@ -259,11 +252,11 @@ const Pagamento = () => {
     const fetchShippingOptions = async () => {
       if (!enderecoSelecionado || itens.length === 0 || !selectedAddressDetails) {
         setShippingOptions([]);
-        setFrete('padrao'); // Reseta frete 
+        setFrete('padrao');
         return;
       }
 
-      const toPostalCode = selectedAddressDetails.zipCode.replace(/\D/g, ''); // Limpar cep
+      const toPostalCode = selectedAddressDetails.zipCode.replace(/\D/g, '');
 
       const itensData = itens.map(item => ({
           quantity: item.quantity,
@@ -280,17 +273,14 @@ const Pagamento = () => {
         toPostalCode,
         cartItems: itensData
       };
-      console.log("Pagamento: Payload para cálculo de frete:", shippingData);
 
       try {
         const response = await postCalculateShipping(shippingData);
-        console.log("Pagamento: Resposta do cálculo de frete:", response);
         const validShippingOptions = response.services.filter(service => !service.error);
-        console.log("Pagamento: Opções de frete válidas:", validShippingOptions);
         setShippingOptions(validShippingOptions);
         
         if (validShippingOptions.length > 0) {
-          setFrete(validShippingOptions[0].name); // Seleciona o primeiro frete
+          setFrete(validShippingOptions[0].name);
         } else {
           setFrete('padrao');
         }
@@ -317,10 +307,9 @@ const Pagamento = () => {
       alert('Por favor, selecione a data de validade.');
       return;
     }
-    // Pega o último dia do mês selecionado
     const data = new Date(cartao.validade);
     const ultimoDia = new Date(data.getFullYear(), data.getMonth() + 1, 0);
-    const cardExpirationDate = ultimoDia.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    const cardExpirationDate = ultimoDia.toISOString().split('T')[0];
 
     const cardData = {
       costumerId: user.id,
@@ -336,7 +325,6 @@ const Pagamento = () => {
       const newCard = await postCreditcards(cardData);
       alert('Cartão adicionado com sucesso!');
       
-      // Adiciona o novo cartão à lista localmente
       const updatedCartoes = [...cartoesSalvos, {
         id: newCard.id,
         numero: newCard.cardNumber,
@@ -346,13 +334,12 @@ const Pagamento = () => {
         preferredCard: newCard.preferredCard
       }];
       setCartoesSalvos(updatedCartoes);
-      setCartoesSelecionados(prev => [...prev, newCard.id]); // Seleciona o novo cartão
-      setValorPagar(prev => ({ ...prev, [newCard.id]: 0 })); // Inicializa o valor
+      setCartoesSelecionados(prev => [...prev, newCard.id]);
+      setValorPagar(prev => ({ ...prev, [newCard.id]: 0 }));
 
-      // Limpa o formulário
       setCartao({ numero: '', validade: null, nome: '', bandeira: 'visa', cvv: '' });
       setSalvarCartao(false);
-      setMostrarNovoCartao(false); // Esconde o formulário após adicionar
+      setMostrarNovoCartao(false);
 
     } catch (error) {
       console.error("Erro ao adicionar cartão:", error);
@@ -364,14 +351,12 @@ const Pagamento = () => {
     const selectedIds = selectedOptions ? selectedOptions.map(option => option.value) : [];
     setCartoesSelecionados(selectedIds);
 
-    // Inicializa valorPagar para novos cartões selecionados
     const newValorPagar = { ...valorPagar };
     selectedIds.forEach(id => {
       if (!newValorPagar[id]) {
         newValorPagar[id] = 0;
       }
     });
-    // Remove valores de cartões deselecionados
     Object.keys(newValorPagar).forEach(id => {
       if (!selectedIds.includes(Number(id))) {
         delete newValorPagar[id];
@@ -385,67 +370,98 @@ const Pagamento = () => {
   };
 
   const handleFinalizarCompra = async () => {
-    if (!user || !user.id) {
-      alert('Você precisa estar logado para finalizar a compra.');
-      return;
-    }
-    if (!cartId) {
-      alert('Carrinho não encontrado. Por favor, adicione itens ao carrinho.');
-      return;
-    }
-    if (!enderecoSelecionado) {
-      alert('Selecione um endereço de entrega.');
+    // Initial checks for user, cart, address
+    if (!user || !user.id || !cartId || !enderecoSelecionado) {
+      alert('Por favor, verifique se você está logado e se todos os dados de entrega e carrinho estão corretos.');
       return;
     }
 
-    if (cartoesSelecionados.length === 0) {
-      alert('Selecione ao menos um cartão para finalizar a compra.');
-      return;
+    const descontoTotalCupons = calcularDesconto();
+    const orderTotal = total; 
+    let creditAmount = 0;
+
+    // Valida quantidade de desconto pelos cupons
+    if (descontoTotalCupons > orderTotal) {
+      creditAmount = descontoTotalCupons - orderTotal;
+      const allCouponValues = cuponsAplicados.map(code => availableCupons[code]);
+      
+      // A regra só se aplica se NENHUM cupom individual for maior ou igual ao VALOR TOTAL DA COMPRA
+      // Isso evita gerar crédito se um único cupom já cobriria a compra inteira.
+      const shouldCreateCredit = !allCouponValues.some(val => val >= orderTotal);
+
+      if (shouldCreateCredit) {
+        try {
+          const randomString = Math.random().toString(36).substring(2, 10);
+          const exchangeId = 0; // As requested
+          const newCouponCode = `TROCA-${randomString}-${exchangeId}-${user.id}`;
+
+          const validityDate = new Date();
+          validityDate.setMonth(validityDate.getMonth() + 1);
+
+          const creditCouponData = {
+            code: newCouponCode,
+            value: creditAmount,
+            type: 'CREDIT',
+            validity: validityDate.toISOString().split('T')[0],
+            costumerId: user.id
+          };
+          
+          await postCupom(creditCouponData);
+          alert(`Você recebeu um cupom de crédito no valor de R$ ${creditAmount.toFixed(2)}! Código: ${newCouponCode}`);
+        
+        } catch (error) {
+            console.error("Erro ao criar cupom de crédito:", error);
+            alert("Houve um erro ao gerar seu cupom de crédito. Por favor, contate o suporte.");
+        }
+      }
     }
 
-    let totalPago = 0;
-    const payments = [];
-
-    // Pagamento cartão
+    // --- Payment Validation ---
+    const totalAposDesconto = Math.max(0, orderTotal - descontoTotalCupons);
+    let totalPagoComCartao = 0;
     const isUsingCoupons = cuponsAplicados.length > 0;
 
     for (const cardId of cartoesSelecionados) {
       const valor = valorPagar[cardId] || 0;
       
-      // Se não esta usando cupom, o valor terá minimo de 10 reais por cartão
       if (!isUsingCoupons && valor > 0 && valor < 10) {
         alert(`O valor mínimo por cartão é R$10,00. Verifique o cartão ID ${cardId}.`);
         return;
       }
-      totalPago += valor;
-
-      const cardDetails = cartoesSalvos.find(c => c.id === cardId);
-      if (cardDetails) {
-        payments.push({
-          type: "CARD",
-          cardId: cardDetails.id,
-          amount: valor,
-          saveCard: cardDetails.preferredCard 
-        });
-      }
+      totalPagoComCartao += valor;
     }
 
-    // Pagamento de cupom
-    const descontoTotalCupons = calcularDesconto();
-    if (descontoTotalCupons > 0) {
-      cuponsAplicados.forEach(couponCode => {
-        payments.push({
-          type: "COUPON",
-          couponCode: couponCode,
-          amount: availableCupons[couponCode] 
-        });
-      });
-    }
-
-    if (totalPago.toFixed(2) !== totalComDesconto.toFixed(2)) {
-      const diferenca = totalComDesconto- totalPago
-      alert(`O valor total dos pagamentos (R$${totalPago.toFixed(2)}) não corresponde ao valor da compra (R$${totalComDesconto.toFixed(2)}). DIferença de ${diferenca.toFixed(2)}`);
+    if (totalPagoComCartao.toFixed(2) !== totalAposDesconto.toFixed(2)) {
+      alert(`O valor total pago com cartões (R$${totalPagoComCartao.toFixed(2)}) não corresponde ao valor restante da compra (R$${totalAposDesconto.toFixed(2)}).`);
       return;
+    }
+
+    // --- Assemble Checkout Payload ---
+    const payments = [];
+    
+    // Add coupon payments
+    cuponsAplicados.forEach(couponCode => {
+      payments.push({
+        type: "COUPON",
+        couponCode: couponCode,
+        amount: availableCupons[couponCode] 
+      });
+    });
+
+    // Add card payments
+    for (const cardId of cartoesSelecionados) {
+      const valor = valorPagar[cardId] || 0;
+      if (valor > 0) {
+        const cardDetails = cartoesSalvos.find(c => c.id === cardId);
+        if (cardDetails) {
+          payments.push({
+            type: "CARD",
+            cardId: cardDetails.id,
+            amount: valor,
+            saveCard: cardDetails.preferredCard
+          });
+        }
+      }
     }
 
     const checkoutData = {
@@ -454,39 +470,37 @@ const Pagamento = () => {
       clientId: user.id,
       payments: payments
     };
+
     const selectedShippingOption = shippingOptions.find(option => option.name === frete);
       
+    if (selectedShippingOption) {
+      checkoutData.selectedShipping = {
+        serviceId: selectedShippingOption.id || "melhor_envio_123",
+        freightValue: parseFloat(selectedShippingOption.price),
+        carrier: selectedShippingOption.company?.name || "Transportadora X",
+        serviceName: selectedShippingOption.name
+      };
+    } else {
+        alert("Por favor, selecione uma opção de frete.");
+        return;
+    }
+      
+    // --- Finalize Purchase ---
     try {
-      if ( selectedShippingOption) {
+      const response = await postCheckout(checkoutData);
+      alert('Compra finalizada com sucesso!');
+      navigate('/perfil');      
 
-        checkoutData.selectedShipping = {
-          serviceId: selectedShippingOption.id || "melhor_envio_123",
+      if (response.id || response.saleId) {
+        const shippingPayload = {
+          saleId: response.id || response.saleId, 
           freightValue: parseFloat(selectedShippingOption.price),
-          carrier: selectedShippingOption.company?.name || "Transportadora X",
-          serviceName: selectedShippingOption.name
+          carrier: selectedShippingOption.company.name,
+          serviceName: selectedShippingOption.name,
+          trackingCode: "null"
         };
-        
-          const response = await postCheckout(checkoutData);
-          setCheckoutResponse(response); 
-          console.log("Checkout Response:", response); 
-          alert('Compra finalizada com sucesso!');
-          navigate('/perfil');      
-        if (response.id || response.saleId ){
-          const shippingPayload = {
-            saleId: response.id || response.saleId, 
-            freightValue: parseFloat(selectedShippingOption.price),
-            carrier: selectedShippingOption.company.name,
-            serviceName: selectedShippingOption.name,
-            trackingCode: "null" // `TRK-${Math.random().toString(36).substring(2, 10).toUpperCase()}`
-          };
-          await postShipping(shippingPayload);
-          console.log("Shipping registered successfully:", shippingPayload);
-        } else{
-          console.log("Shipping not registered:", shippingPayload);
-        }
+        await postShipping(shippingPayload);
       }
-
-      // navigate('/confirmacao-pedido/' + response.id);
     } catch (error) {
       console.error("Erro ao finalizar compra:", error);
       const errorMessage = error.response?.data?.message || error.message || 'Falha ao finalizar a compra. Verifique os dados e tente novamente.';
@@ -515,30 +529,20 @@ const Pagamento = () => {
   const totalComDesconto = total - calcularDesconto();
 
   const getPlaceholder = (cardId) => {
-    const numberOfSelectedCards = cartoesSelecionados.length;
-    // if (numberOfSelectedCards === 0) {
-    //   return "Valor a pagar";
-    // }
-
     const totalAmount = totalComDesconto;
     const amountAlreadyEntered = Object.keys(valorPagar)
       .filter(key => key !== cardId.toString())
       .reduce((acc, key) => acc + (valorPagar[key] || 0), 0);
 
     const remainingAmount = totalAmount - amountAlreadyEntered;
-
-    if (numberOfSelectedCards === 1) {
-      return `Sugestão: R$${totalAmount.toFixed(2)}`;
-    }
-
-    const numberOfCardsWithoutAmount = cartoesSelecionados.filter(id => !valorPagar[id]).length;
+    const numberOfCardsWithoutAmount = cartoesSelecionados.filter(id => !valorPagar[id] || valorPagar[id] === 0).length;
 
     if (numberOfCardsWithoutAmount > 0) {
         const amountPerCard = remainingAmount / numberOfCardsWithoutAmount;
         return `Sugestão: R$${amountPerCard.toFixed(2)}`;
     }
 
-    return `Sugestão: R$${remainingAmount.toFixed(2)}`;
+    return `Restante: R$${remainingAmount.toFixed(2)}`;
   };
 
   const customSelectStyles = {
@@ -568,9 +572,7 @@ const Pagamento = () => {
         <h1>PAGAMENTO</h1>
 
         <div className="pagamento-layout">
-          {/* Coluna da Esquerda: Formulário de Contato e Pagamento */}
           <div className="coluna-esquerda">
-            {/* Formulário de Contato */}
             <div className="formulario-contato">
               <h2>Contato</h2>
               <input
@@ -596,7 +598,6 @@ const Pagamento = () => {
               />
             </div>
 
-            {/* Endereço de Entrega */}
             <div className="endereco-entrega">
               <h2>Endereço de Entrega</h2>
               <select
@@ -686,10 +687,8 @@ const Pagamento = () => {
               )}
             </div>
 
-            {/* Forma de Pagamento */}
             <div className="forma-pagamento">
               <h2>Forma de Pagamento</h2>
-
 
               {cartoesSalvos.length > 0 ? (
                 <div className="cartoes-existentes">
@@ -724,7 +723,7 @@ const Pagamento = () => {
                         onAmountChange={handleAmountChange}
                         amount={valorPagar[cardId]}
                         placeholder={getPlaceholder(cardId)}
-                        isUsingCoupons={isUsingCoupons} // Pass the prop
+                        isUsingCoupons={isUsingCoupons}
                       />
                     ) : null;
                   })}
@@ -733,7 +732,6 @@ const Pagamento = () => {
                 <p>Nenhum cartão salvo.</p>
               )}
 
-              {/* Botão para Cadastrar Novo Cartão */}
               {!mostrarNovoCartao && (
                 <button
                   className="botao-novo-cartao"
@@ -744,7 +742,6 @@ const Pagamento = () => {
                 </button>
               )}
 
-              {/* Formulário de Cadastro de Novo Cartão */}
               {mostrarNovoCartao && (
                 <div className="cartao-formulario">
                   <h3>Adicionar Cartão</h3>
@@ -765,7 +762,7 @@ const Pagamento = () => {
                         placeholderText="Validade (MM/AAAA)"
                         dateFormat="MM/yyyy"
                         showMonthYearPicker
-                        className="date-picker-full-width" // Adicionando uma classe para estilização
+                        className="date-picker-full-width"
                         data-cy="new-card-validade-datepicker"
                       />
                     </div>
@@ -817,7 +814,6 @@ const Pagamento = () => {
               )}
             </div>
 
-            {/* Frete */}
             <div className="frete">
               <h2>Frete</h2>
               <select
@@ -837,9 +833,7 @@ const Pagamento = () => {
             </div>
           </div>
 
-          {/* Coluna da Direita: Resumo do Carrinho e Cupom */}
           <div className="coluna-direita">
-            {/* Resumo do Carrinho */}
             <div className="resumo-carrinho">
               <h2>Resumo do Carrinho</h2>
               {itens.map((item, index) => (
@@ -862,7 +856,6 @@ const Pagamento = () => {
               </div>
             </div>
 
-            {/* Cupom de Desconto */}
             <div className="cupom">
               <input
                 type="text"
@@ -874,7 +867,6 @@ const Pagamento = () => {
               <button onClick={handleAplicarCupom} data-cy="apply-coupon-button">Aplicar</button>
             </div>
 
-            {/* Botão de Finalizar Compra */}
             <button className="finalizar-compra" onClick={handleFinalizarCompra} data-cy="finalize-checkout-button">
               Finalizar Compra
             </button>

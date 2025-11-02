@@ -4,12 +4,12 @@ import '../styles/ModalAutorizarTroca.css';
 const ModalAutorizarTroca = ({ pedido, exchanges, onClose, onConfirm }) => {
   if (!pedido) return null;
 
-  // Find the specific exchange related to this row
   const exchange = exchanges.find(ex => ex.id === pedido.exchangeId);
   const motivo = exchange ? exchange.motivo : 'Motivo não encontrado';
 
+  const totalTroca = pedido.items.reduce((acc, item) => acc + (item.unitPrice * item.quantity), 0);
+
   const handleConfirm = () => {
-    // The onConfirm prop will be handleAuthorizeExchange, which needs exchangeId and pedido.id
     onConfirm(pedido.exchangeId, pedido.id);
   };
 
@@ -32,7 +32,7 @@ const ModalAutorizarTroca = ({ pedido, exchanges, onClose, onConfirm }) => {
             ))}
           </div>
           <div className="exchange-total">
-            <strong>Valor Total da Troca:</strong> R$ {pedido.total.toFixed(2).replace('.', ',')}
+            <strong>Valor Total da Troca:</strong> R$ {totalTroca.toFixed(2).replace('.', ',')}
           </div>
         </section>
         <footer className="modal__actions">

@@ -159,6 +159,19 @@ const ModalPedido = ({ pedido, onClose, onExchangeSuccess, exchangedItems, excha
               );
             })}
             
+            {/* Seção de Cupons Utilizados */}
+            {(pedido.payments?.filter(p => p.type === 'COUPON').length > 0) && (
+              <div className="coupon-applied-section">
+                <h4 className="coupon-applied-title">Cupons Utilizados</h4>
+                {pedido.payments.filter(p => p.type === 'COUPON').map((coupon, index) => (
+                  <div key={index} className="coupon-applied-item">
+                    <span>{coupon.couponCode}</span>
+                    <span>- R$ {parseFloat(coupon.amount).toFixed(2).replace('.', ',')}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="summary">
               <div className="summary__values">
                 <p><span>Sub-total:</span> <span>R${(pedido.total - pedido.freightValue).toFixed(2).replace('.', ',')}</span></p>

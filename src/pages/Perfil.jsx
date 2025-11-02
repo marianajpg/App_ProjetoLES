@@ -4,6 +4,7 @@ import Header from "../components/Header.jsx";
 import { useAuth } from "../context/AuthLogin.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import MeusProdutos from "../components/MeusProdutos.jsx";
+import MeusCupons from "../components/MeusCupons.jsx";
 import AbasFiltro from "../components/AbasFiltro.jsx";
 import InfoSection from "../components/InfoSection.jsx";
 
@@ -98,7 +99,7 @@ function Perfil() {
   const abas = [
     { id: "Perfil", label: "Perfil" },
     { id: "MeusProdutos", label: "Meus Produtos" },
-    { id: "Comunidade", label: "Comunidade" },
+    { id: "Cupons", label: "Cupons" },
   ];
 
   const handleChange = (e) => {
@@ -254,12 +255,7 @@ function Perfil() {
 
         {abaAtiva === "MeusProdutos" && <MeusProdutos user={user} />}
 
-        {abaAtiva === "Comunidade" && (
-          <div className="perfil-comunidade">
-            <h2>Comunidade</h2>
-            <p>Em breve você poderá interagir com a comunidade.</p>
-          </div>
-        )}
+        {abaAtiva === "Cupons" && <MeusCupons user={user} />}
       </div>
       <InfoSection />
     </div>

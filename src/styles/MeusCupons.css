@@ -1,0 +1,109 @@
+:root {
+  --color-primary: #752512;
+  --color-secondary: #A73A21;
+  --color-tertiary: #C65338;
+  --color-accent: #FEAA80;
+  --color-background-light: #FFEBE1;
+
+  --color-white: #fff;
+  --color-text-primary: #333;
+  --color-text-secondary: #666;
+  --color-text-muted: #999;
+  --color-border: #f0f0f0;
+
+  --spacing-sm: 1px;
+  --spacing-md: 10px;
+  --spacing-lg: 20px;
+  --spacing-xl: 12px;
+  --border-radius-sm: 6px;
+  --border-radius-md: 12px;
+
+  --transition-speed: 0.3s;
+}
+
+.meus-cupons-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md);
+}
+
+.coupon-card-perfil {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+
+.coupon-card-perfil-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coupon-code-perfil {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.coupon-status-perfil.available {
+  color: var(--color-secondary);
+  font-weight: bold;
+}
+
+.coupon-status-perfil.used {
+  color: #999;
+  font-weight: normal;
+}
+
+.coupon-card-perfil-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coupon-value-perfil {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+   gap: 8px;
+}
+
+.coupon-type-perfil,
+.coupon-validity-perfil {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+}
+
+.coupon-card-perfil.used {
+  background-color: #f7f7f7;
+  color: #aaa;
+  border: 1px solid #ddd;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .coupon-card-perfil {
+    padding: var(--spacing-md);
+  }
+
+  .coupon-code-perfil {
+    font-size: 1rem;
+  }
+
+  .coupon-value-perfil {
+    font-size: 0.95rem;
+  }
+
+  .coupon-type-perfil,
+  .coupon-validity-perfil {
+    font-size: 0.9rem;
+  }
+}
