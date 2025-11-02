@@ -11,7 +11,7 @@ import { getCheckout } from '../services/checkout.jsx';
 
 
 async function callGroqAPI(promptText) {
-  const GROQ_API_KEY = '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';
+  const GROQ_API_KEY = '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';
   const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
   try {
     const response = await fetch(GROQ_URL, {
