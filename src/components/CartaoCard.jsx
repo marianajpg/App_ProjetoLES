@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/CartaoCard.css';
 import lixeira from  '../images/image9.png';
 
-const CartaoCard = ({ cartao, onDelete, onAmountChange, amount, placeholder }) => {
+const CartaoCard = ({ cartao, onDelete, onAmountChange, amount, placeholder, isUsingCoupons }) => {
   const [amountError, setAmountError] = useState('');
 
   if (!cartao) {
@@ -14,7 +14,7 @@ const CartaoCard = ({ cartao, onDelete, onAmountChange, amount, placeholder }) =
 
   const handleAmountChangeInternal = (e) => {
     const value = parseFloat(e.target.value);
-    if (value < 10 && value !== 0) {
+    if (!isUsingCoupons && value < 10 && value !== 0) {
       setAmountError('Valor mínimo por cartão é de 10 reais');
     } else {
       setAmountError('');

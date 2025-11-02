@@ -10,6 +10,13 @@ export const postAuthorizeExchanges = async (exchangesData, id) => {
     return data;
 };
 
+export const putExchangesConfirmation = async (id) => {
+    const { data } = await api.put(`/exchanges/${id}`, {
+  "returnToStock": true
+});
+    return data;
+};
+
 export const postReceiveExchange = async (id, itemsToRestock) => {
     const { data } = await api.post(`/exchanges/${id}/receive`, { itemsToRestock });
     return data;

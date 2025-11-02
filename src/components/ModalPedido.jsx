@@ -1,17 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ModalTroca from './ModalTroca';
 import { postExchange } from '../services/exchanges';
+import { getCupom } from '../services/cupons'; // Importar o serviço de cupons
 import '../styles/ModalPedido.css';
 
-// Define os possíveis fluxos de status
-
-
-const ModalPedido = ({ pedido, onClose, onExchangeSuccess, exchangedItems, exchangedQuantitiesMap, exchanges }) => { const navigate = useNavigate();
+const ModalPedido = ({ pedido, onClose, onExchangeSuccess, exchangedItems, exchangedQuantitiesMap, exchanges }) => {
+  const navigate = useNavigate();
   const [showModalTroca, setShowModalTroca] = useState(false);
   const [itemParaTroca, setItemParaTroca] = useState(null);
-  
-  if (!pedido) return null;
+  const [exchangeCoupons, setExchangeCoupons] = useState([]);
+
+  useEffect(() => {
+    if (!pedido || !exchanges) return;
+
+    const fetchAndFilterCoupons = async () => {
+      try {
+        const allCoupons = await getCupom();
+        
+        // Encontra as trocas associadas a este pedido (venda)
+        const relevantExchanges = exchanges.filter(ex => ex.vendaId === pedido.id);
+        const relevantExchangeIds = new Set(relevantExchanges.map(ex => ex.id));
+
+        if (relevantExchangeIds.size === 0) return;
+
+        // Filtra os cupons que correspondem a essas trocas e ao usuário
+        const userId = pedido.clientId;
+        const filteredCoupons = allCoupons.filter(coupon => {
+          if (coupon.type !== 'EXCHANGE') return false;
+          // Formato: TROCA-mhgzree2-{trocaId}-{userId}
+          const parts = coupon.code.split('-');
+          if (parts.length !== 4) return false;
+
+          const trocaId = parseInt(parts[2], 10);
+          const couponUserId = parseInt(parts[3], 10);
+
+          return relevantExchangeIds.has(trocaId) && couponUserId === userId;
+        });
+
+        setExchangeCoupons(filteredCoupons);
+
+      } catch (error) {
+        console.error("Erro ao buscar ou filtrar cupons:", error);
+      }
+    };
+
+        fetchAndFilterCoupons();
+
+      }, [pedido, exchanges]);
+
+    
+
+      const availableCoupons = exchangeCoupons.filter(coupon => !coupon.used);
+
+      const usedCoupons = exchangeCoupons.filter(coupon => coupon.used);
+
+    
+
+      if (!pedido) return null;
 
   const handleVerProduto = (id) => {
     navigate(`/tela-produto/${id}`);
@@ -120,6 +166,43 @@ const ModalPedido = ({ pedido, onClose, onExchangeSuccess, exchangedItems, excha
                 <p className="summary__total"><span>Total:</span> <span>R${(pedido.total || 0).toFixed(2).replace('.', ',')}</span></p>
               </div>
             </div>
+
+            {availableCoupons.length > 0 && (
+              <div className="coupons-section">
+                <h4 className="coupons-section__title">Cupons de Troca Disponíveis</h4>
+                {availableCoupons.map(coupon => (
+                  <div key={coupon.id} className="coupon-card">
+        <div className="coupon-header">
+          <span className="coupon-code">{coupon.code}</span>
+          <span className="coupon-value">R$ {coupon.value}</span>
+        </div>
+        <div className="coupon-validity">
+          {coupon.validity 
+            ? `Válido até ${coupon.validity}` 
+            : 'Sem prazo de validade'}
+        </div>
+      </div>
+                ))}
+              </div>
+            )}
+
+            {usedCoupons.length > 0 && (
+              <div className="coupons-section">
+                <h4 className="coupons-section__title">Cupons de Troca Utilizados (Indisponíveis)</h4>
+                {usedCoupons.map(coupon => (
+                  <div key={coupon.id} className="coupon-card used">
+        <div className="coupon-header">
+          <span className="coupon-code">{coupon.code}</span>
+          <span className="coupon-value">R$ {coupon.value}</span>
+        </div>
+        <div className="coupon-validity">
+          {coupon.used ? "Cupom já utilizado" : ""}
+        </div>
+      </div>
+                ))}
+              </div>
+
+            )}
           </section>
 
           <footer className="modal__actions">

@@ -15,3 +15,13 @@ export const getCupom = async () => {
         throw new Error('Não foi possível consultar os cupons');
     }
 };
+
+
+// exemplo post
+// {
+//   "code": "TESTPROMO30",
+//   "value": 30.00,
+//   "type": "PROMO",
+//   "validity": "2026-12-31", Um mes após a autorização da troca
+//   "minPurchaseValue": 0
+// }

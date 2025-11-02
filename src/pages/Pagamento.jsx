@@ -259,11 +259,11 @@ const Pagamento = () => {
     const fetchShippingOptions = async () => {
       if (!enderecoSelecionado || itens.length === 0 || !selectedAddressDetails) {
         setShippingOptions([]);
-        setFrete('padrao'); // Reset frete selection
+        setFrete('padrao'); // Reseta frete 
         return;
       }
 
-      const toPostalCode = selectedAddressDetails.zipCode.replace(/\D/g, ''); // Clean zip code
+      const toPostalCode = selectedAddressDetails.zipCode.replace(/\D/g, ''); // Limpar cep
 
       const itensData = itens.map(item => ({
           quantity: item.quantity,
@@ -290,7 +290,7 @@ const Pagamento = () => {
         setShippingOptions(validShippingOptions);
         
         if (validShippingOptions.length > 0) {
-          setFrete(validShippingOptions[0].name); // Select the first valid option by default
+          setFrete(validShippingOptions[0].name); // Seleciona o primeiro frete
         } else {
           setFrete('padrao');
         }
@@ -406,10 +406,14 @@ const Pagamento = () => {
     let totalPago = 0;
     const payments = [];
 
-    // Card payments
+    // Pagamento cartão
+    const isUsingCoupons = cuponsAplicados.length > 0;
+
     for (const cardId of cartoesSelecionados) {
       const valor = valorPagar[cardId] || 0;
-      if (valor < 10) {
+      
+      // Se não esta usando cupom, o valor terá minimo de 10 reais por cartão
+      if (!isUsingCoupons && valor > 0 && valor < 10) {
         alert(`O valor mínimo por cartão é R$10,00. Verifique o cartão ID ${cardId}.`);
         return;
       }
@@ -421,12 +425,12 @@ const Pagamento = () => {
           type: "CARD",
           cardId: cardDetails.id,
           amount: valor,
-          saveCard: cardDetails.preferredCard // Assuming preferredCard indicates saving
+          saveCard: cardDetails.preferredCard 
         });
       }
     }
 
-    // Coupon payments
+    // Pagamento de cupom
     const descontoTotalCupons = calcularDesconto();
     if (descontoTotalCupons > 0) {
       cuponsAplicados.forEach(couponCode => {
@@ -463,8 +467,8 @@ const Pagamento = () => {
         };
         
           const response = await postCheckout(checkoutData);
-          setCheckoutResponse(response); // Store the response
-          console.log("Checkout Response:", response); // Log the response
+          setCheckoutResponse(response); 
+          console.log("Checkout Response:", response); 
           alert('Compra finalizada com sucesso!');
           navigate('/perfil');      
         if (response.id || response.saleId ){
@@ -686,7 +690,7 @@ const Pagamento = () => {
             <div className="forma-pagamento">
               <h2>Forma de Pagamento</h2>
 
-              {/* Select de Cartões Existentes */}
+
               {cartoesSalvos.length > 0 ? (
                 <div className="cartoes-existentes">
                   <h3>Cartões Salvos</h3>
@@ -711,6 +715,7 @@ const Pagamento = () => {
 
                   {cartoesSelecionados.map(cardId => {
                     const cartaoDetalhes = cartoesSalvos.find(c => c.id === cardId);
+                    const isUsingCoupons = cuponsAplicados.length > 0;
                     return cartaoDetalhes ? (
                       <CartaoCard 
                         key={cardId}
@@ -719,6 +724,7 @@ const Pagamento = () => {
                         onAmountChange={handleAmountChange}
                         amount={valorPagar[cardId]}
                         placeholder={getPlaceholder(cardId)}
+                        isUsingCoupons={isUsingCoupons} // Pass the prop
                       />
                     ) : null;
                   })}

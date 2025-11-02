@@ -467,3 +467,52 @@
     width: 100%;
   }
 }
+
+/* Card do cupom */
+.coupon-card {
+  background: var(--color-background-light);
+  border: 1px solid var(--color-accent);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+/* Linha com código e valor */
+.coupon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Código */
+.coupon-code {
+  font-weight: 700;
+  color: var(--color-secondary);
+  font-size: 0.95rem;
+}
+
+/* Valor */
+.coupon-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Validade embaixo */
+.coupon-validity {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.coupon-card.used {
+  background: #eee;
+  color: #555;
+}
