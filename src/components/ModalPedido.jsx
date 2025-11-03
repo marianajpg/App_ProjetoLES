@@ -123,12 +123,17 @@ const ModalPedido = ({ pedido, onClose, onExchangeSuccess, exchangedItems, excha
               if (isExchanged) {
                 const exchange = exchanges.find(ex => ex.items.some(exItem => exItem.vendaItemId === item.id));
                 if (exchange && exchange.status.toUpperCase() === 'EXCHANGE_AUTHORIZED') {
-                  exchangeStatus = 'Troca bem sucedida';
+                  exchangeStatus = 'Troca Autorizada';
+                } else if (exchange && exchange.status.toUpperCase() === 'EXCHANGE_COMPLETED') {
+                  exchangeStatus = 'Troca Concluída';
+                } else if (exchange && exchange.status.toUpperCase() === 'EXCHANGE_REJECTED') {
+                  exchangeStatus = 'Troca não autorizada';
                 }
               }
               return (
                 <div key={item.id} className={`pedido-info__book-details ${isExchanged ? 'exchanged-item' : ''}`}>
                   {isExchanged && <div className="exchange-badge-modal">{exchangeStatus}</div>}
+                  {isExchanged && exchangeStatus == "Troca não autorizada" && <div className="exchange-rejected-modal">{exchangeStatus}</div>}
                   {isExchanged && exchangeStatus == "Troca bem sucedida" && <div className="exchange-strong-modal">{exchangeStatus}</div>}
                   <img src={item.book.images.find(img => img.caption === 'Principal').url} alt={item.book.title} className="pedido-info__book-cover" />
                   <div className="livro-info">
@@ -144,7 +149,7 @@ const ModalPedido = ({ pedido, onClose, onExchangeSuccess, exchangedItems, excha
                     <div className="livro-info__footer">
                       <p className="livro-preco">R${(item.unitPrice || 0).toFixed(2).replace('.', ',')}</p>
                       <div className="livro-info__actions">
-                        {(pedido.status === 'DELIVERED' || pedido.status === 'EXCHANGE' || pedido.status === 'EM_TROCA') && !isExchanged && (
+                        {(pedido.status === 'DELIVERED' || pedido.status === 'EXCHANGE' || pedido.status === 'EXCHANGE_COMPLETED' || pedido.status === 'EXCHANGE_REJECTED' || pedido.status === 'EXCHANGE_AUTHORIZED') && !isExchanged && (
                           <button className="modal__secondary-action" onClick={() => handleOpenModalTroca(item)}>
                             Trocar
                           </button>

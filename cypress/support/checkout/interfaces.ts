@@ -24,7 +24,7 @@ export interface AddressData {
 
 export interface CreditCardData {
   id: number;
-  numero: string;
+  numero?: string;
   validade: string;
   nomeImpresso: string;
   bandeira: string;

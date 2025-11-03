@@ -10,10 +10,11 @@ export const postAuthorizeExchanges = async (exchangesData, id) => {
     return data;
 };
 
-export const putExchangesConfirmation = async (id) => {
-    const { data } = await api.put(`/exchanges/${id}`, {
+export const putExchangesConfirmation = async (id, exchangeData={
   "returnToStock": true
-});
+}) => {
+
+    const { data } = await api.put(`/exchanges/${id}`, exchangeData);
     return data;
 };
 

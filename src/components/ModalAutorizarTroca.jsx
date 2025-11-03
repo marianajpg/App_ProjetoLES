@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/ModalAutorizarTroca.css';
 
-const ModalAutorizarTroca = ({ pedido, exchanges, onClose, onConfirm }) => {
+const ModalAutorizarTroca = ({ pedido, exchanges, onClose, onConfirm, onReject }) => {
   if (!pedido) return null;
 
   const exchange = exchanges.find(ex => ex.id === pedido.exchangeId);
@@ -12,6 +12,9 @@ const ModalAutorizarTroca = ({ pedido, exchanges, onClose, onConfirm }) => {
   const handleConfirm = () => {
     onConfirm(pedido.exchangeId, pedido.id);
   };
+const handleReject = ({}) => {
+  onReject(pedido.exchangeId, pedido.id);
+};
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -37,6 +40,8 @@ const ModalAutorizarTroca = ({ pedido, exchanges, onClose, onConfirm }) => {
         </section>
         <footer className="modal__actions">
           <button className="modal__cancel-btn" onClick={onClose}>Cancelar</button>
+          
+          <button className="modal__confirm-btn" onClick={handleReject}>Rejeitar</button>
           <button className="modal__confirm-btn" onClick={handleConfirm}>Autorizar</button>
         </footer>
       </div>

@@ -724,6 +724,7 @@ const Pagamento = () => {
                         amount={valorPagar[cardId]}
                         placeholder={getPlaceholder(cardId)}
                         isUsingCoupons={isUsingCoupons}
+                        data-cy={`card-amount-input-${cartao.id}`}
                       />
                     ) : null;
                   })}

@@ -1,0 +1,99 @@
+{
+  "invalidCoupon": {
+    "user": {
+      "email": "magomesteixeira@gmail.com"
+    },
+    "book": [
+      {
+        "id": 1,
+        "title": "Watchmen",
+        "quantity": 1
+      }
+    ],
+    "creditCard":{},
+    "coupon": {
+      "code": "CUPOMINVALIDO"
+    }
+  },
+  "mismatchedPayment": {
+    "user": {
+      "email": "magomesteixeira@gmail.com"
+    },
+    "book": [
+      {
+        "id": 1,
+        "title": "Watchmen",
+        "quantity": 1
+      }
+    ],
+    "address": {
+      "id": 8
+    },
+    "creditCard": [
+      {
+        "id": 9,
+        
+        "numero": "1111222233334444",
+        "amount": "1.00"
+      }
+    ]
+  },
+  "incompleteAddress": {
+    "user": {
+      "email": "magomesteixeira@gmail.com"
+    },
+    "book": [
+      {
+        "id": 1,
+        "title": "Watchmen",
+        "quantity": 1
+      }
+    ],
+    "creditCard":{},
+    "address": {
+      "zipCode": "12345678",
+      "street": "Rua Teste"
+    }
+  },
+  "incompleteCreditCard": {
+    "user": {
+      "email": "magomesteixeira@gmail.com"
+    },
+    "book": [
+      {
+        "id": 1,
+        "title": "Watchmen",
+        "quantity": 1
+      }
+    ],
+    "creditCard": {
+      "numero": "1234123412341234",
+      
+        "validade": "10/30",
+      "name": "Teste"
+    }
+  },
+  "belowMinimumCardAmount": {
+    "user": {
+      "email": "magomesteixeira@gmail.com"
+    },
+    "book": [
+      {
+        "id": 1,
+        "title": "Watchmen",
+        "quantity": 1
+      }
+    ],
+    "address": {
+      "id": 8
+    },
+    "creditCard": [
+      {
+        "id": 9,
+        "numero": "1111222233334444",
+        "amount": "9.99",
+        "validade": "10/30"
+      }
+    ]
+  }
+}

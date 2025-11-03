@@ -1,0 +1,16 @@
+{
+  "customer": {
+    "email": "magomesteixeira@gmail.com"
+  },
+  "collaborator": {
+    "email": "admin@teste.com"
+  },
+  "item1": {
+    "title": "O Problema dos Três Corpos",
+    "quantity": "1",
+    "reason": "Cypress Test: Veio com defeito."
+  },
+  "fullOrder": {
+    "reason": "Cypress Test: Troca completa do pedido."
+  }
+}

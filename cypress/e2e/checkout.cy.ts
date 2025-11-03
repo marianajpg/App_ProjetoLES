@@ -1,7 +1,6 @@
 import CheckoutListing from '../support/checkout/listing';
 import { CheckoutFixture, UserData, BookData, AddressData, CreditCardData, CouponData } from '../support/checkout/interfaces';
 
-
 import * as checkoutScenarios from '../fixtures/checkout.json';
 
 describe('Fluxo de Checkout Completo - Orientado a Dados', () => {

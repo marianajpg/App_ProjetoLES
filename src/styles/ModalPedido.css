@@ -173,6 +173,7 @@
   margin-bottom: 10px;
 }
 
+.exchange-rejected-modal,
 .exchange-strong-modal,
 .exchange-badge-modal {
   position: absolute;
@@ -190,6 +191,9 @@
     background-color: #d45f00 !important;
 }
 
+.exchange-rejected-modal{
+    background-color: #824d21 !important;
+}
 
 
 .pedido-info__book-details {

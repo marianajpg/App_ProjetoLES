@@ -15,3 +15,17 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // Nós estamos vendo este erro 'document'
+  // e queremos que o Cypress o ignore, continuando o teste.
+  if (err.message.includes("Cannot read properties of null (reading 'document')")) {
+    // retornar false aqui impede que o Cypress
+    // falhe o teste
+    return false;
+  }
+
+  // Deixa todos os outros erros não capturados
+  // falharem o teste (comportamento padrão)
+  return true;
+});

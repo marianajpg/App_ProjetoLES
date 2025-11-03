@@ -6,6 +6,7 @@ import { getCheckout, putCheckout } from '../../services/checkout';
 import { getExchanges } from '../../services/exchanges';
 import { postAuthorizeExchanges, postReceiveExchange, putExchangesConfirmation } from '../../services/exchanges';
 import ModalAutorizarTroca from '../../components/ModalAutorizarTroca';
+import ModalConfirmarRecebimento from '../../components/ModalConfirmarRecebimento';
 import ModalPedido from '../../components/ModalPedido';
 import '../../styles/colaborador/ConsultaPedidos.css';
 
@@ -24,6 +25,8 @@ const ConsultaPedidos = () => {
     { id: 'delivered', label: 'Entregue' },
     { id: 'exchange', label: 'Troca' },
     { id: 'exchange_authorized', label: 'Troca Autorizada' },
+    { id: 'exchange_rejected', label: 'Troca Rejeitada' },
+    { id: 'exchange_completed', label: 'Troca Concluída' },
     { id: 'canceled', label: 'Cancelada' },
   ];
 
@@ -36,11 +39,12 @@ const ConsultaPedidos = () => {
         { id: 'geral', label: 'Geral' },
         { id: 'processing', label: 'Processando' },
         { id: 'approved', label: 'Aprovada' },
-        { id: 'rejected', label: 'Reprovada' },
+        { id: 'exchange_rejected', label: 'Troca Reprovada' },
         { id: 'in_transit', label: 'Em Trânsito' },
         { id: 'delivered', label: 'Entregue' },
         { id: 'exchange', label: 'Troca' },
         { id: 'exchange_authorized', label: 'Troca Autorizada' },
+        { id: 'exchange_completed', label: 'Troca Concluída' },
       ],
     },
   ];
@@ -196,17 +200,21 @@ const ConsultaPedidos = () => {
           return itemDisplayStatus === 'EXCHANGE' || itemDisplayStatus === 'PENDING';
         case 'exchange_authorized':
           return itemDisplayStatus === 'EXCHANGE_AUTHORIZED';
+        case 'exchange_completed':
+          return itemDisplayStatus === 'EXCHANGE_COMPLETED';
+          case 'exchange_rejected':
+          return itemDisplayStatus === 'EXCHANGE_REJECTED';
         default:
           return false;
       }
     }
 
-    if (['exchange', 'exchange_authorized'].includes(abaAtiva)) {
+    if (['exchange', 'exchange_authorized', 'exchange_completed'].includes(abaAtiva)) {
         return false;
     }
 
     if (abaAtiva === 'delivered') {
-        const validStatusForDelivered = ['DELIVERED', 'EXCHANGE', 'EXCHANGE_AUTHORIZED'];
+        const validStatusForDelivered = ['DELIVERED', 'EXCHANGE', 'EXCHANGE_AUTHORIZED', 'EXCHANGE_COMPLETED'];
         return validStatusForDelivered.includes(p.status.toUpperCase()); 
     }
 
@@ -267,6 +275,23 @@ const ConsultaPedidos = () => {
           );
         
         case 'EXCHANGE_AUTHORIZED': 
+          return (
+            <div className="status-buttons-container">
+              <button
+                className="status-button status-detalhes"
+                onClick={() => handleOpenPedidoModal(pedido)}
+              >
+                Ver Detalhes
+              </button>
+              <button
+                className="status-button status-recebido"
+                onClick={() => handleOpenReceiveModal(pedido)}
+              >
+                Confirmar Recebimento
+              </button>
+            </div>
+          );
+        case 'EXCHANGE_COMPLETED':
           return (
             <div className="status-buttons-container">
               <button
@@ -344,14 +369,6 @@ const handleAuthorizeExchange = async (exchangeId, idCompra) => {
 
   try {
     await postAuthorizeExchanges({}, exchangeId);
-    const responseAuthorize = await putExchangesConfirmation(exchangeId);
-
-    if (responseAuthorize?.couponCode) {
-      setCodCoupon(responseAuthorize.couponCode);
-      alert(`Troca autorizada com sucesso! Cupom gerado: ${responseAuthorize.couponCode}`);
-    }
-
-    console.log("retorno", responseAuthorize);
     
     setIsAuthorizeModalOpen(false); // Close the modal on success
     fetchAllData();
@@ -360,29 +377,40 @@ const handleAuthorizeExchange = async (exchangeId, idCompra) => {
   }
 };
 
+const handleRejectExchange = async (exchangeId, idCompra) => {
+  if (!exchangeId) {
+    console.error('ID da troca não encontrado.');
+    alert('Erro: ID da troca não associado a este pedido.');
+    return;
+  }
 
-  const handleConfirmReceive = async (itemsToRestock) => {
-    if (!selectedPedidoParaRecebimento) return;
+  try {
+    const response = await putExchangesConfirmation(exchangeId, {
+  "returnToStock": false, "status": "EXCHANGE_REJECTED"
+});
+    fetchAllData();
+    return response;
+  } catch (error) {
+    console.error('Erro ao rejeitar a troca:', error);
+  }
+}
 
-    const exchangeId = selectedPedidoParaRecebimento.exchangeId;
 
-    if (!exchangeId) {
-      console.error('Erro fatal: ID da Troca não encontrado no pedido selecionado para recebimento.');
-      alert('Erro: ID da Troca não encontrado.');
-      return;
-    }
+  const handleConfirmReceive = async (exchangeId) => {
+  if (!exchangeId) {
+    console.error('ID da troca não encontrado.');
+    alert('Erro: ID da troca não associado a este pedido.');
+    return;
+  }
 
-    try {
-      await postReceiveExchange(exchangeId, itemsToRestock);
-      
-      fetchAllData();
-      
-      setIsReceiveModalOpen(false);
-      setSelectedPedidoParaRecebimento(null);
-    } catch (error) {
-      console.error('Erro ao confirmar recebimento:', error);
-    }
-  };
+  try {
+    const response = await putExchangesConfirmation(exchangeId);
+    fetchAllData();
+    return response;
+  } catch (error) {
+    console.error('Erro ao confirmar recebimento da troca:', error);
+  }
+};
 
   return (
     <div>
@@ -450,11 +478,12 @@ const handleAuthorizeExchange = async (exchangeId, idCompra) => {
           exchanges={exchanges}
           onClose={() => setIsAuthorizeModalOpen(false)}
           onConfirm={handleAuthorizeExchange}
+          onReject={handleRejectExchange}
         />
       )}
 
       {isReceiveModalOpen && (
-        <ModalAutorizarTroca
+        <ModalConfirmarRecebimento
           pedido={selectedPedidoParaRecebimento}
           onClose={() => setIsReceiveModalOpen(false)}
           onConfirm={handleConfirmReceive}

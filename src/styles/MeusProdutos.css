@@ -63,6 +63,7 @@
   background-color: #fff;
 }
 
+.exchange-rejected,
 .exchange-strong,
 .exchange-badge {
   position: absolute;
@@ -81,6 +82,9 @@
       background-color: #d45f00 !important;
 }
 
+.exchange-rejected{
+   background-color: #824d21 !important;
+}
 .produto-card-meus-produtos .card-image {
   width: 80px;
   height: 120px;

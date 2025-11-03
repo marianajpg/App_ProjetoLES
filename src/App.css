@@ -148,6 +148,17 @@ body {
   padding: 0;
 }
 
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
 
 @media (max-width: 800px) {
@@ -161,4 +172,3 @@ body {
     gap: 10px;
   }
 }
-
