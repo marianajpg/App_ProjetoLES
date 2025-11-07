@@ -1,31 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 
-const TransacoesCliente = ({ clienteId }) => {
-  const [transacoes, setTransacoes] = useState([]);
-
-  // Busca as transações do cliente
-  useEffect(() => {
-    axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${clienteId}`)
-      .then((response) => {
-        const transacoesFormatadas = response.data.map((post) => ({
-          id: post.id,
-          data: new Date().toLocaleDateString(), 
-          desconto: `R$ ${(Math.random() * 50).toFixed(2)}`,  
-          valorTotal: `R$ ${(Math.random() * 500).toFixed(2)}`, 
-          formaPagamento: Math.random() > 0.5 ? 'Cartão Único' : 'Múltiplos Cartões', 
-          detalhes: 'Ver detalhes',  
-        }));
-        setTransacoes(transacoesFormatadas);
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar transações:', error);
-      });
-  }, [clienteId]);
-
+const TabelaTransacoes = ({ transacoes, onVerDetalhes }) => {
   return (
     <div className="transacoes-cliente">
-      <h2>Transações do Cliente</h2>
       <table className="tabela-transacoes">
         <thead>
           <tr>
@@ -33,6 +10,7 @@ const TransacoesCliente = ({ clienteId }) => {
             <th>Desconto</th>
             <th>Valor Total</th>
             <th>Forma de Pagamento</th>
+            <th>Status</th>
             <th>Detalhes</th>
           </tr>
         </thead>
@@ -43,8 +21,9 @@ const TransacoesCliente = ({ clienteId }) => {
               <td>{transacao.desconto}</td>
               <td>{transacao.valorTotal}</td>
               <td>{transacao.formaPagamento}</td>
+              <td>{transacao.status}</td>
               <td>
-                <button className="detalhes-botao">{transacao.detalhes}</button>
+                <button className="detalhes-botao" onClick={() => onVerDetalhes(transacao.id)}>{transacao.detalhes}</button>
               </td>
             </tr>
           ))}
@@ -54,4 +33,4 @@ const TransacoesCliente = ({ clienteId }) => {
   );
 };
 
-export default TransacoesCliente;
+export default TabelaTransacoes;

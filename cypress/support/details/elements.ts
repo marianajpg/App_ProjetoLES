@@ -8,7 +8,6 @@ export const PersonalDataEdit = {
 };
 
 export const EnderecoEntregaEdit = {
-  // Selectors for the delivery address accordion
   accordion: '.accordion-content',
   apelido: 'input[name="observacoes"]',
   tipo: 'select[name="tipo"]',
@@ -23,7 +22,6 @@ export const EnderecoEntregaEdit = {
 };
 
 export const EnderecoCobrancaEdit = {
-  // Selectors for the billing address
   tipo: 'fieldset.editar-cliente-fieldset:nth-of-type(3) select[name="tipo"]',
   streetType: 'fieldset.editar-cliente-fieldset:nth-of-type(3) select[name="streetType"]',
   cep: 'fieldset.editar-cliente-fieldset:nth-of-type(3) input[name="cep"]',

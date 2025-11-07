@@ -10,12 +10,11 @@
 }
 
 .dashboard-analytics {
-  font-family: 'Poppins', sans-serif;
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
 .dashboard-analytics h2 {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--primary-color);
   margin-bottom: 1.5rem;

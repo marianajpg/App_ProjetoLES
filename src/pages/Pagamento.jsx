@@ -415,8 +415,7 @@ const Pagamento = () => {
         }
       }
     }
-
-    // --- Payment Validation ---
+ 
     const totalAposDesconto = Math.max(0, orderTotal - descontoTotalCupons);
     let totalPagoComCartao = 0;
     const isUsingCoupons = cuponsAplicados.length > 0;
@@ -435,11 +434,9 @@ const Pagamento = () => {
       alert(`O valor total pago com cartões (R$${totalPagoComCartao.toFixed(2)}) não corresponde ao valor restante da compra (R$${totalAposDesconto.toFixed(2)}).`);
       return;
     }
-
-    // --- Assemble Checkout Payload ---
+ 
     const payments = [];
-    
-    // Add coupon payments
+     
     cuponsAplicados.forEach(couponCode => {
       payments.push({
         type: "COUPON",
@@ -447,8 +444,7 @@ const Pagamento = () => {
         amount: availableCupons[couponCode] 
       });
     });
-
-    // Add card payments
+ 
     for (const cardId of cartoesSelecionados) {
       const valor = valorPagar[cardId] || 0;
       if (valor > 0) {
@@ -484,8 +480,7 @@ const Pagamento = () => {
         alert("Por favor, selecione uma opção de frete.");
         return;
     }
-      
-    // --- Finalize Purchase ---
+       
     try {
       const response = await postCheckout(checkoutData);
       alert('Compra finalizada com sucesso!');

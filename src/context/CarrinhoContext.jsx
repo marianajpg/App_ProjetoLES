@@ -106,7 +106,6 @@ const fetchInitialCart = useCallback(async () => {
   }
 }, [user]);
 
-// useEffect apenas chama a função
 useEffect(() => {
   fetchInitialCart();
 }, [fetchInitialCart]);

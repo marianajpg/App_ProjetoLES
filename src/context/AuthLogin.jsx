@@ -39,17 +39,15 @@ export const AuthProvider = ({ children }) => {
 
   
 
-  // identifyUserByEmail: busca no backend e seta o user no contexto (login somente por email)
-  const identifyUserByEmail = async (email, tipoUsuario = 'cliente') => {
+   const identifyUserByEmail = async (email, tipoUsuario = 'cliente') => {
     if (!email) throw new Error('E-mail é obrigatório para login');
-    // chama o serviço que usamos acima
     const costumer = await getCustomerByEmail(email);
     if (!costumer) {
       throw new Error('E-mail não cadastrado');
     }
     // Anexa o tipoUsuario para compatibilidade com RotaProtegida
     const userObj = { ...costumer, tipoUsuario };
-    // cria um token simples (apenas para isAuthenticated) — você pode substituir por JWT real no futuro
+    // cria um token simples (apenas para isAuthenticated)
     const newToken = btoa(email);
     // salva no localStorage
     localStorage.setItem('user', JSON.stringify(userObj));

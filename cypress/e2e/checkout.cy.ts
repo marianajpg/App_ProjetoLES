@@ -58,8 +58,6 @@ describe('Fluxo de Checkout Completo - Orientado a Dados', () => {
       CheckoutListing.finalizeCheckout();
       // cy.visit('/perfil');
 
-
-      // Assertiva Opcional: Verificar se o carrinho está vazio após a compra
       // cy.visit('/carrinho');
       // cy.contains('Seu carrinho está vazio').should('be.visible');
     });

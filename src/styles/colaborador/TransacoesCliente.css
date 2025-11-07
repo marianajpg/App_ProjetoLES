@@ -1,28 +1,29 @@
-.transacoes-colaborador {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
+.transacoes-cliente-scope h1 {
   font-size: 24px;
   color: #752512;
   margin-bottom: 20px;
   text-align: center;
 }
 
-/* Estilos da tabela */
-.tabela-container {
+.transacoes-cliente-scope .transacoes-colaborador {
   display: flex;
-  justify-content: center;
-  width: 100%;
+  flex-direction: column;
+  align-items: center;
   margin: 0 auto;
+  padding: 0 20px;
 }
 
-.tabela-transacoes {
-  width: 90%;
+/* Estilos da tabela */
+.transacoes-cliente-scope .tabela-container {
+  display: flex;
+  justify-content: center; /* Corrigido de justify-items para justify-content */
+  width: 100%; /* Adicionado max-width */
+  margin: 0 auto;
+  padding: 0 20px; /* Adicionado padding para evitar que encoste nas bordas */
+}
+
+.transacoes-cliente-scope .tabela-transacoes {
+  width: 100%; /* Alterado para 100% */
   border-collapse: collapse;
   background-color: #fff2eb;
   border-radius: 8px;
@@ -30,29 +31,30 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.tabela-transacoes th,
-.tabela-transacoes td {
+/* Mantenha o restante do CSS da tabela igual */
+.transacoes-cliente-scope .tabela-transacoes th,
+.transacoes-cliente-scope .tabela-transacoes td {
   padding: 15px 20px;
   text-align: left;
   border-bottom: 1px solid #ffceb6;
 }
 
-.tabela-transacoes th {
+.transacoes-cliente-scope .tabela-transacoes th {
   background-color: #ffceb6;
   color: #752512;
   font-weight: bold;
 }
 
-.tabela-transacoes tbody tr:hover {
+.transacoes-cliente-scope .tabela-transacoes tbody tr:hover {
   background-color: #ffddcc;
 }
 
-.tabela-transacoes tbody tr:last-child td {
+.transacoes-cliente-scope .tabela-transacoes tbody tr:last-child td {
   border-bottom: none;
 }
 
 /* Estilos do botão de detalhes */
-.detalhes-botao {
+.transacoes-cliente-scope .detalhes-botao {
   background-color: #752512;
   color: white;
   border: none;
@@ -62,6 +64,9 @@ h1 {
   transition: background-color 0.3s ease;
 }
 
-.detalhes-botao:hover {
+.transacoes-cliente-scope .detalhes-botao:hover {
   background-color: #a73a21;
+}
+
+.transacoes-cliente-scope .campo-pesquisa{
 }

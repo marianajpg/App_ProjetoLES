@@ -1,67 +1,19 @@
 {
   "checkouts": [
-    {
-      "user": {
-        "email": "magomesteixeira@gmail.com"
-      },
-      "book": [
-        {
-          "id": 30,
-          "title": "Watchmen",
-          "quantity": 1
-        },
-        {
-          "id": 19,
-          "title": "Matéria Escura",
-          "quantity": 1
-        }
-      ],
-      "address": {
-        "id": 8,
-        "residenceType": "RESIDENCIAL",
-        "streetType": "RUA",
-        "street": "Rua Nova Teste",
-        "number": "456",
-        "complement": "Casa",
-        "neighborhood": "Bairro Novo",
-        "city": "Cidade Nova",
-        "state": "RJ",
-        "zipCode": "98765-432",
-        "observations": "Casa Nova"
-      },
-      "creditCard": [{
-        "id": 9,
-        "numero": "1111222233334444",
-        "validade": "12/2025",
-        "nomeImpresso": "TESTE COMPRADOR",
-        "bandeira": "visa",
-        "cvv": "123",
-        "percent": 0.5
-      },
-    {
-        "id": 4,
-        "numero": "454352334534",
-        "validade": "05/2025",
-        "nomeImpresso": "JFNJBFJKWBJFK",
-        "bandeira": "visa",
-        "cvv": "123",
-        "percent": 0.9
-      }]
 
-    },
-    {
+     {
       "user": {
         "email": "magomesteixeira@gmail.com"
       },
       "book": [
         {
-          "id": 29,
-          "title": "Watchmen",
+          "id": 2,
+          "title": "",
           "quantity": 1
         },
         {
-          "id": 3,
-          "title": "Matéria Escura",
+          "id": 18,
+          "title": "",
           "quantity": 1
         }
       ],

@@ -41,7 +41,6 @@ it('1. Deve solicitar, autorizar e completar a troca de UM item', () => {
         expect(text).to.include('Solicitação de troca enviada com sucesso');
       });
 
-      // Chama a nova função única. Ela faz tudo:
       // encontra o card, abre o modal, acha o item e solicita a troca.
       ExchangePage.customer.requestExchangeForFirstAvailableItem(Number(item.quantity), item.reason);
       

@@ -101,7 +101,7 @@ const ModalPedido = ({ pedido, onClose, onExchangeSuccess, exchangedItems, excha
 
   return (
     <>
-      <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-overlay modal-pedido-scope" onClick={onClose}>
         <div className="modal" onClick={(e) => e.stopPropagation()}>
           <header className="modal__header">
             <h3 className="modal__title">

@@ -24,13 +24,6 @@ const TabelaClientes = ({ clientes, setClientes }) => {
     }
   };
 
-  // Função para formatar a data
-  // const formatarData = (dataString) => {
-  //   if (!dataString) return '-';
-  //   const data = new Date(dataString);
-  //   return data.toLocaleDateString('pt-BR');
-  // };
-  // Função para formatar a data no formato DD/MM/AAAA - Nova (antiga em ISO acima)
   const formatarData = (dataString) => {
     if (!dataString) return "-";
     const [ano, mes, dia] = dataString.split("-");

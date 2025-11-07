@@ -41,7 +41,6 @@ class CheckoutListing {
     cy.get(Checkout.newAddress.saveButton).click();
   }
 
-  // --- Credit Card Functions ---
   selectCreditCard(cardData: any) {
     cy.get(Checkout.savedCardsSelect).click();
     cy.contains(`•••• ${cardData.numero.slice(-4)}`).click();
@@ -59,7 +58,7 @@ class CheckoutListing {
     cy.get(Checkout.newCard.name).type(cardData.nomeImpresso);
     cy.get(Checkout.newCard.cvv).type(cardData.cvv);
     cy.get(Checkout.newCard.brand).select(cardData.bandeira);
-    cy.get(Checkout.newCard.expiry).type(cardData.validade); // Simplified for now
+    cy.get(Checkout.newCard.expiry).type(cardData.validade);
     cy.get(Checkout.newCard.saveButton).click();
   }
 

@@ -42,7 +42,6 @@ const FiltrosLivro = ({
     { label: 'R$100–R$150', min: 100, max: 150 },
   ];
 
-  // Handler genérico para os componentes react-select
   const handleSelectChange = (selectedOptions, name) => {
     const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
     let newAutores = autoresSelecionados, newEditoras = editorasSelecionadas, newAnos = anosSelecionados;

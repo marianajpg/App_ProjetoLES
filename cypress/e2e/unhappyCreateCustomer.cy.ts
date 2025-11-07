@@ -20,7 +20,7 @@ describe('Unhappy create customer path', () => {
     const customerComSenhaErrada = {
       ...baseCustomer,
       password: 'Senha123',
-      passwordConfirmation: 'Senha321', // Senha diferente
+      passwordConfirmation: 'Senha321', 
     };
 
     cy.on('window:alert', (text) => {

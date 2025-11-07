@@ -11,8 +11,7 @@ import '../styles/Home.css';
 
 // Página principal da aplicação, exibe livros em destaque e categorias.
 const Home = () => {
-  const navigate = useNavigate();
-  // Dados mockados para a seção de categorias.
+  const navigate = useNavigate(); 
   const categories = [
     { id: 1, name: 'Ficção Científica', color: 'var(--primary-color)' },
     { id: 2, name: 'Fantasia', color: 'var(--secondary-color)' },

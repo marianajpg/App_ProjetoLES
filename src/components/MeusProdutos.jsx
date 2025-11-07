@@ -70,16 +70,15 @@ const MeusProdutos = ({ user }) => {
     const allowedStatusesForTab = statusMap[statusAtivo];
 
     if (!allowedStatusesForTab || !allowedStatusesForTab.includes(pedido.status)) {
-      return null; // Filter out orders whose status doesn't match the active tab
+      return null; 
     }
 
-    // Now, process items based on the active tab
     if (statusAtivo === 'Devoluções/Trocas') {
       itemsParaExibir = pedido.items
         .map(item => {
           const exchange = exchanges.find(ex => ex.items.some(exItem => exItem.vendaItemId === item.id));
 
-          if (exchange) { // If the item is part of any exchange
+          if (exchange) { 
             let exchangeStatus = 'Troca em andamento';
             if (typeof exchange.status === 'string') {
               const upperCaseStatus = exchange.status.trim().toUpperCase();
@@ -91,7 +90,6 @@ const MeusProdutos = ({ user }) => {
                 exchangeStatus = 'Troca não autorizada';
               }
             }
-            // Get the quantity from the exchange item itself, not the map, as the map might be for active exchanges
             const exchangedItemInExchange = exchange.items.find(exItem => exItem.vendaItemId === item.id);
             const quantityInExchange = exchangedItemInExchange ? exchangedItemInExchange.quantidade : 0;
 
@@ -112,7 +110,7 @@ const MeusProdutos = ({ user }) => {
           return null;
         })
         .filter(Boolean);
-    } else { // For 'Em processamento', 'Em trânsito', 'Cancelado'
+    } else { // Para 'Em processamento', 'Em trânsito', 'Cancelado'
       itemsParaExibir = pedido.items.filter(item => !exchangedQuantitiesMap.has(item.id));
     }
 
@@ -181,7 +179,7 @@ const MeusProdutos = ({ user }) => {
 
   const handleExchangeSuccess = () => {
     handleCloseModal(); // Fecha o modal
-    fetchSalesAndExchanges(); // Refaz o fetch dos dados para atualizar a UI
+    fetchSalesAndExchanges(); 
   };
 
 
@@ -202,7 +200,7 @@ const MeusProdutos = ({ user }) => {
         titulo={pedido.items[0].book.title}
         autor={pedido.items[0].book.author}
         preco={pedido.items[0].unitPrice}
-        estoque={1} // Estoque não é relevante aqui
+        estoque={1}
         onVerDetalhes={() => handleOpenModal(pedido)}
         onTrocarTodos={(
           pedido.status === 'DELIVERED'
@@ -223,7 +221,7 @@ const MeusProdutos = ({ user }) => {
           titulo={item.book.title}
           autor={item.book.author}
           preco={item.unitPrice}
-          estoque={1} // Estoque não é relevante aqui
+          estoque={1} 
           onVerDetalhes={() => handleOpenModal(pedido, item)}
           onTrocarItem={(
             (pedido.status === 'EXCHANGE_COMPLETED' || 
@@ -275,7 +273,6 @@ const MeusProdutos = ({ user }) => {
         <ModalPedido 
           pedido={selectedPedido} 
           onClose={handleCloseModal} 
-          // Passa a nova função de callback
           onExchangeSuccess={handleExchangeSuccess} 
           exchangedItems={exchangedItems} 
           exchangedQuantitiesMap={exchangedQuantitiesMap} 

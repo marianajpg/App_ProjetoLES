@@ -2,10 +2,8 @@ import CreateCustomer from '../support/listing/createCustomer';
 import { customersToCreate } from '../fixtures/happyCustomers.json';
 
 describe('Happy create customer', () => {
-  // Configura o event listener UMA VEZ no before each
   beforeEach(() => {
     cy.on('window:alert', (str) => {
-      // Apenas log, sem expectativas complicadas
       Cypress.log({
         name: 'alert',
         message: str
@@ -21,7 +19,6 @@ describe('Happy create customer', () => {
       // Intercepta a chamada POST para a API
       cy.intercept('POST', '**/costumers').as('createCustomer');
 
-      // Preenche o formulário SEM envolver em promises
       CreateCustomer.fillDadosPessoaisEEndereco(customerData);
 
       if (customerData.billingAddress) {

@@ -15,15 +15,12 @@ fillDeliveryAddress(deliveryAddress: any) {
     throw new Error('deliveryAddress with id must be provided');
   }
 
-  // Click the accordion header to expand it
   const accordionHeader = cy.get(`[data-cy=delivery-address-accordion-${deliveryAddress.id}] .accordion-header`);
   accordionHeader.click();
   
-  // Wait for the accordion content to be visible
   cy.get(`[data-cy=delivery-address-accordion-${deliveryAddress.id}] .accordion-content`, { timeout: 5000 })
     .should('be.visible');
   
-  // Use within to scope all subsequent commands to the accordion
   cy.get(`[data-cy=delivery-address-accordion-${deliveryAddress.id}]`).within(() => {
     if (deliveryAddress.observations) {
       cy.get('input[name="observacoes"]', { timeout: 5000 })

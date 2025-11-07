@@ -17,8 +17,7 @@ function CadastroCliente() {
   const [activeTab, setActiveTab] = useState("dadosPessoais");
   const [loadingCEP, setLoadingCEP] = useState(false);
   const [cepError, setCepError] = useState(null);
-
-  // Estado unificado para gerenciar todos os campos do formulário de cadastro.
+ 
   const [formData, setFormData] = useState({
     nomeCompleto: "",
     // dataNascimento: null,
@@ -52,7 +51,7 @@ function CadastroCliente() {
     confirmacaoSenha: "",
     numeroCartao: "",
     nomeImpresso: "",
-    validadeCartao: null, // Changed to null
+    validadeCartao: null,  
     cvv: "",
     bandeiraCartao: "",
     preferencialCartao: false,
@@ -124,8 +123,7 @@ function CadastroCliente() {
       buscarCEP(value, tipoEndereco);
     }
   };
-
-  // Manipulador genérico para atualizar o estado do formulário conforme o usuário digita.
+ 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({

@@ -2,16 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import CampoPesquisa from '../../components/CampoPesquisa.jsx';
 import TabelaTransacoes from '../../components/TabelaTransacoes.jsx';
+import ModalPedido from '../../components/ModalPedido.jsx'; 
 import '../../styles/colaborador/TransacoesCliente.css';
-import axios from 'axios';
+import { getCheckout } from '../../services/checkout.jsx';
 
 // Componente para exibir as transações de um cliente específico.
 function TransacoesCliente({ clienteId }) { // Recebe o ID do cliente como propriedade.
   const [abaAtiva, setAbaAtiva] = useState('todas');
   const [termoPesquisa, setTermoPesquisa] = useState('');
   const [valoresFiltro, setValoresFiltro] = useState({});
-  const [transacoes, setTransacoes] = useState([]); 
-
+  const [transacoes, setTransacoes] = useState([]);
+  const [transacoesOriginais, setTransacoesOriginais] = useState([]); 
+  const [pedidoSelecionado, setPedidoSelecionado] = useState(null); 
+  const [modalAberto, setModalAberto] = useState(false); 
   const abas = [
     { id: 'todas', label: 'Todas' },
     { id: 'Cartão Único', label: 'Cartão Único' },
@@ -24,36 +27,64 @@ function TransacoesCliente({ clienteId }) { // Recebe o ID do cliente como propr
     ]},
   ];
 
-  // Busca as transações de uma API (usando JSONPlaceholder como exemplo).
   useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/posts')
-      .then((response) => {
-        // Formata os dados recebidos para o formato esperado pela tabela.
-        const transacoesFormatadas = response.data.map((post) => ({
-          id: post.id,
-          data: new Date().toLocaleDateString(),
-          desconto: `R$ ${(Math.random() * 50).toFixed(2)}`,
-          valorTotal: `R$ ${(Math.random() * 500).toFixed(2)}`,
-          formaPagamento: Math.random() > 0.5 ? 'Cartão Único' : 'Múltiplos Cartões',
+    const fetchTransacoes = async () => {
+      try {
+        const response = await getCheckout();
+        const transacoesCliente = response.filter(
+          (transacao) => transacao.clientId === clienteId
+        );
+        setTransacoesOriginais(transacoesCliente); 
+
+        const transacoesFormatadas = transacoesCliente.map((transacao) => ({
+          id: transacao.id,
+          data: new Date(transacao.created_at).toLocaleDateString(),
+          desconto: `R$ ${transacao.appliedDiscount.toFixed(2)}`,
+          valorTotal: `R$ ${transacao.total.toFixed(2)}`,
+          formaPagamento: transacao.payments.length > 1 ? 'Múltiplos Cartões' : 'Cartão Único',
+          status: transacao.status,
           detalhes: 'Ver detalhes',
         }));
         setTransacoes(transacoesFormatadas);
-      })
-      .catch((error) => console.error('Erro ao buscar transações:', error));
-  }, [clienteId]); // Adiciona clienteId como dependência para buscar novas transações se o cliente mudar.
+      } catch (error) {
+        console.error('Erro ao buscar transações:', error);
+      }
+    };
+
+    if (clienteId) {
+      fetchTransacoes();
+    }
+  }, [clienteId]);
+
+  const handleVerDetalhes = (id) => {
+    const pedido = transacoesOriginais.find(t => t.id === id);
+    setPedidoSelecionado(pedido);
+    setModalAberto(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalAberto(false);
+    setPedidoSelecionado(null);
+  };
 
   // Filtra as transações com base na aba e na pesquisa.
   const transacoesFiltradas = transacoes.filter((transacao) => {
     const correspondeAba = abaAtiva === 'todas' || transacao.formaPagamento === abaAtiva;
-    const correspondePesquisa = transacao.formaPagamento.toLowerCase().includes(termoPesquisa.toLowerCase()) || transacao.valorTotal.toLowerCase().includes(termoPesquisa.toLowerCase());
+    const correspondePesquisa = 
+      transacao.formaPagamento.toLowerCase().includes(termoPesquisa.toLowerCase()) || 
+      transacao.valorTotal.toLowerCase().includes(termoPesquisa.toLowerCase()) ||
+      transacao.status.toLowerCase().includes(termoPesquisa.toLowerCase());
     const correspondeFiltro = !valoresFiltro.formaPagamento || transacao.formaPagamento === valoresFiltro.formaPagamento;
     return correspondeAba && correspondePesquisa && correspondeFiltro;
   });
 
   return (
-    <div className="transacoes-colaborador">
+    <div className="transacoes-colaborador transacoes-cliente-scope">
       <CampoPesquisa termoPesquisa={termoPesquisa} setTermoPesquisa={setTermoPesquisa} filtros={filtros} valoresFiltro={valoresFiltro} setValoresFiltro={setValoresFiltro} />
-      <TabelaTransacoes transacoes={transacoesFiltradas} />
+      <TabelaTransacoes transacoes={transacoesFiltradas} onVerDetalhes={handleVerDetalhes} />
+      {modalAberto && pedidoSelecionado && (
+        <ModalPedido pedido={pedidoSelecionado} onClose={handleCloseModal} />
+      )}
     </div>
   );
 }

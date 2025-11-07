@@ -48,7 +48,7 @@
 /* ============================================= */
 /* 3. ESTILOS DO MODAL (BEM)           */
 /* ============================================= */
-.modal-overlay {
+.modal-pedido-scope .modal-overlay {
   position: fixed;
   inset: 0; 
   background-color: rgba(0, 0, 0, 0.6);
@@ -59,7 +59,7 @@
   animation: fadeIn var(--transition-speed) ease-out;
 }
 
-.modal { 
+.modal-pedido-scope .modal { 
   background-color: var(--color-white);
   border-radius: var(--border-radius-md);
   width: 100%;
@@ -77,7 +77,7 @@
 }
 
 
-.modal__header {
+.modal-pedido-scope .modal__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -85,20 +85,20 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.modal__title {
+.modal-pedido-scope .modal__title {
   font-size: 1.4rem;
   color: var(--color-primary);
   font-weight: 700;
   margin: 0;
 }
 
-.modal__delivery-date { 
+.modal-pedido-scope .modal__delivery-date { 
   margin-left: var(--spacing-sm);
   font-weight: 600;
   color: var(--color-secondary);
 }
 
-.modal__close-btn { 
+.modal-pedido-scope .modal__close-btn { 
   background: none;
   border: none;
   font-size: 2rem;
@@ -110,20 +110,20 @@
   transition: color var(--transition-speed);
 }
 
-.modal__close-btn:hover {
+.modal-pedido-scope .modal__close-btn:hover {
   color: var(--color-secondary);
   transform: rotate(90deg);
 }
 
 /* Status Bar */
-.status-bar {
+.modal-pedido-scope .status-bar {
   display: flex;
   justify-content: space-around;
   padding-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--color-border);
 }
 
-.status-bar__step { 
+.modal-pedido-scope .status-bar__step { 
   color: var(--color-text-muted);
   font-size: 0.95rem;
   position: relative;
@@ -133,12 +133,12 @@
   transition: color var(--transition-speed);
 }
 
-.status-bar__step--active { 
+.modal-pedido-scope .status-bar__step--active { 
   color: var(--color-secondary);
   font-weight: bold;
 }
 
-.status-bar__step--active::after {
+.modal-pedido-scope .status-bar__step--active::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -151,13 +151,13 @@
 }
 
 /* Pedido Info */
-.pedido-info {
+.modal-pedido-scope .pedido-info {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
 }
 
-.pedido-info__id { 
+.modal-pedido-scope .pedido-info__id { 
   font-size: 1rem;
   color: var(--color-primary);
   font-weight: 600;
@@ -165,7 +165,7 @@
   margin: 0;
 }
 
-.exchanged-item {
+.modal-pedido-scope .exchanged-item {
   position: relative;
   border: 1px solid #ff8c00;
   border-radius: 8px;
@@ -173,9 +173,9 @@
   margin-bottom: 10px;
 }
 
-.exchange-rejected-modal,
-.exchange-strong-modal,
-.exchange-badge-modal {
+.modal-pedido-scope .exchange-rejected-modal,
+.modal-pedido-scope .exchange-strong-modal,
+.modal-pedido-scope .exchange-badge-modal {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -187,16 +187,16 @@
   font-weight: bold;
 }
 
-.exchange-strong-modal{
+.modal-pedido-scope .exchange-strong-modal{
     background-color: #d45f00 !important;
 }
 
-.exchange-rejected-modal{
+.modal-pedido-scope .exchange-rejected-modal{
     background-color: #824d21 !important;
 }
 
 
-.pedido-info__book-details {
+.modal-pedido-scope .pedido-info__book-details {
   display: flex;
   align-items: center;
   gap: var(--spacing-lg);
@@ -204,21 +204,21 @@
   background-color: var(--color-background-light);
   border-radius: 20px;
 }
-.livro-info {
+.modal-pedido-scope .livro-info {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   justify-content: space-between;
 }
 
-.livro-info__footer {
+.modal-pedido-scope .livro-info__footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
 }
 
-.pedido-info__book-cover { 
+.modal-pedido-scope .pedido-info__book-cover { 
   width: 80px;
   height: 120px;
   object-fit: cover;
@@ -227,7 +227,7 @@
 }
 
 /* Resumo de Valores */
-.summary {
+.modal-pedido-scope .summary {
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--color-border);
   display: flex;
@@ -235,44 +235,44 @@
   gap: var(--spacing-md);
 }
 
-.summary__quantity { 
+.modal-pedido-scope .summary__quantity { 
   font-size: 0.95rem;
   color: var(--color-text-secondary);
   text-align: end;
   padding-right: 5%;
 }
 
-.summary__values { 
+.modal-pedido-scope .summary__values { 
   display: grid;
   grid-template-columns: 1fr auto;
   gap: var(--spacing-sm);
   font-size: 1rem;
 }
 
-.summary__values p {
+.modal-pedido-scope .summary__values p {
   grid-column: 1 / -1; 
   display: contents; 
   margin: 0;
 }
 
-.summary__values span:first-child {
+.modal-pedido-scope .summary__values span:first-child {
   color: var(--color-text-secondary);
   text-align: left;
 }
 
-.summary__values span:last-child {
+.modal-pedido-scope .summary__values span:last-child {
   font-weight: bold;
   color: var(--color-primary);
   text-align: right;
 }
 
-.summary__total { 
+.modal-pedido-scope .summary__total { 
   font-weight: 700;
   font-size: 1.1rem;
   color: var(--color-secondary);
 }
 
-.modal__actions {
+.modal-pedido-scope .modal__actions {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -282,7 +282,7 @@
   flex-wrap: wrap; 
 }
 
-.modal__secondary-action {
+.modal-pedido-scope .modal__secondary-action {
   padding: 12px 28px;
   font-size: 1rem;
   margin-left: 35%;
@@ -297,13 +297,13 @@
 
 }
 
-.modal__secondary-action:hover {
+.modal-pedido-scope .modal__secondary-action:hover {
   background-color: #fff2ec;
 
   transform: translateY(-2px);
 }
 
-.modal__main-action { 
+.modal-pedido-scope .modal__main-action { 
   padding: 12px 28px;
   font-size: 1rem;
   background-color: var(--color-secondary);
@@ -315,25 +315,25 @@
   align-items: flex-end;
 }
 
-.modal__main-action:hover {
+.modal-pedido-scope .modal__main-action:hover {
   background-color: var(--color-primary);
   transform: translateY(-2px);
 }
 
-.help-actions {
+.modal-pedido-scope .help-actions {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
   align-items: flex-start;
 }
 
-.help-actions__title {
+.modal-pedido-scope .help-actions__title {
   font-size: 1rem;
   color: var(--color-primary);
   margin: 0;
 }
 
-.help-actions__btn { 
+.modal-pedido-scope .help-actions__btn { 
   background: none;
   border: none;
   color: var(--color-text-secondary);
@@ -346,7 +346,7 @@
   transition: color var(--transition-speed);
 }
 
-.help-actions__btn:hover {
+.modal-pedido-scope .help-actions__btn:hover {
   color: var(--color-secondary);
 }
 
@@ -354,51 +354,51 @@
 /* 4. RESPONSIVIDADE                    */
 /* ============================================= */
 @media (max-width: 600px) {
-  .modal {
+  .modal-pedido-scope .modal {
     padding: var(--spacing-lg) var(--spacing-md);
     gap: var(--spacing-md);
   }
 
-  .modal__header {
+  .modal-pedido-scope .modal__header {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-sm);
   }
   
-  .modal__title {
+  .modal-pedido-scope .modal__title {
     font-size: 1.2rem;
   }
   
-  .pedido-info__book-details {
+  .modal-pedido-scope .pedido-info__book-details {
     flex-direction: column;
     
     text-align: center;
   }
 
-  .modal__actions {
+  .modal-pedido-scope .modal__actions {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
   }
   
-  .help-actions {
+  .modal-pedido-scope .help-actions {
     align-items: center;
   }
 }
 
-.quantity-selector {
+.modal-pedido-scope .quantity-selector {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 10px;
 }
 
-.quantity-selector label {
+.modal-pedido-scope .quantity-selector label {
   font-size: 14px;
   color: #555;
 }
 
-.quantity-selector input {
+.modal-pedido-scope .quantity-selector input {
   width: 60px;
   padding: 5px;
   border: 1px solid #ccc;
@@ -406,13 +406,13 @@
   text-align: center;
 }
 
-.exchange-confirmation {
+.modal-pedido-scope .exchange-confirmation {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.modal__cancel-action {
+.modal-pedido-scope .modal__cancel-action {
   background-color: transparent;
   color: var(--color-primary);
   border: none;
@@ -422,12 +422,12 @@
   transition: background-color 0.3s ease;
 }
 
-.modal__cancel-action:hover {
+.modal-pedido-scope .modal__cancel-action:hover {
   background-color: #ff8b50;
   color: #ffff
 }
 
-.exchange-confirmation {
+.modal-pedido-scope .exchange-confirmation {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -437,7 +437,7 @@
   width: 100%;
 }
 
-.livro-info__actions {
+.modal-pedido-scope .livro-info__actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -448,32 +448,32 @@
 }
 
 /* Botões dentro da confirmação de troca */
-.modal__secondary-action,
-.modal__cancel-action,
-.modal__main-action {
+.modal-pedido-scope .modal__secondary-action,
+.modal-pedido-scope .modal__cancel-action,
+.modal-pedido-scope .modal__main-action {
   flex-shrink: 0; /* evita que os botões fiquem comprimidos */
   margin: 0;
 }
 
 /* Em telas menores: botões centralizados e empilhados */
 @media (max-width: 700px) {
-  .exchange-confirmation,
-  .livro-info__actions {
+  .modal-pedido-scope .exchange-confirmation,
+  .modal-pedido-scope .livro-info__actions {
     justify-content: center;
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacing-sm);
   }
 
-  .modal__secondary-action,
-  .modal__cancel-action,
-  .modal__main-action {
+  .modal-pedido-scope .modal__secondary-action,
+  .modal-pedido-scope .modal__cancel-action,
+  .modal-pedido-scope .modal__main-action {
     width: 100%;
   }
 }
 
 /* Card do cupom */
-.coupon-card {
+.modal-pedido-scope .coupon-card {
   background: var(--color-background-light);
   border: 1px solid var(--color-accent);
   border-radius: 10px;
@@ -489,34 +489,34 @@
 
 
 /* Linha com código e valor */
-.coupon-header {
+.modal-pedido-scope .coupon-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 /* Código */
-.coupon-code {
+.modal-pedido-scope .coupon-code {
   font-weight: 700;
   color: var(--color-secondary);
   font-size: 0.95rem;
 }
 
 /* Valor */
-.coupon-value {
+.modal-pedido-scope .coupon-value {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--color-primary);
 }
 
 /* Validade embaixo */
-.coupon-validity {
+.modal-pedido-scope .coupon-validity {
   font-size: 0.85rem;
   color: var(--color-text-secondary);
   margin-top: 2px;
 }
 
-.coupon-card.used {
+.modal-pedido-scope .coupon-card.used {
   background: #eee;
   color: #555;
 }

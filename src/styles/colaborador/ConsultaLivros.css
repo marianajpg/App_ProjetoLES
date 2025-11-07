@@ -16,13 +16,12 @@
 
 .abas-filtro {
   display: flex;
-  margin-bottom: 30px;
+  gap: 10px; 
   justify-content: center;
 }
 
 .abas-filtro button {
   padding: 10px 20px;
-  margin-right: 10px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -79,14 +78,16 @@
   display: flex;
   justify-content: center;  
   margin-bottom: 30px;  
-  gap: 10px;  
+  gap: 5px;  
+  max-width: 650px; 
+  margin: 0 auto;   
 }
 
 .botao-criar {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 44px;  
+  justify-content: center !important;
+  align-items: center !important;
+  width: 50px;  
   height: 35px;
   padding: 0;
   background-color: #ffddcc; 
