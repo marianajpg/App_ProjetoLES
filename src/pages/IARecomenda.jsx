@@ -50,7 +50,9 @@ const IARecomenda = () => {
   const [error, setError] = useState(null);
   const [allProdutos, setAllProdutos] = useState([]);
   const navigate = useNavigate();
-  const messagesEndRef = useRef(null);
+  const chatMessagesRef = useRef(null);
+  const userDisplayName = (user?.name || user?.nome || user?.fullName || '').trim();
+  const clientFirstName = userDisplayName ? userDisplayName.split(' ')[0] : '';
 
   // Simula o carregamento de dados do usuário e do catálogo de livros.
   // Em uma aplicação real, estes dados viriam de uma API autenticada.
@@ -108,14 +110,16 @@ const IARecomenda = () => {
     if (messages.length === 0 && user) {
       setMessages([
         {
-          text: `Olá! Sou sua assistente pessoal de livros. Como posso ajudar você a encontrar sua próxima leitura hoje?`,
+          text: clientFirstName
+            ? `Olá, ${clientFirstName}! Sou sua assistente pessoal de livros. Como posso ajudar você a encontrar sua próxima leitura hoje?`
+            : `Olá! Sou sua assistente pessoal de livros. Como posso ajudar você a encontrar sua próxima leitura hoje?`,
           sender: 'ia',
           produtos: []
         }
       ]);
 
     }
-  }, [user]);
+  }, [user, clientFirstName]);
 
   const handleSendMessage = async () => {
     if (inputValue.trim() === '' || isLoading) return;
@@ -132,6 +136,8 @@ const IARecomenda = () => {
     const promptParaIA = `
       Você é a MIART, uma IA especialista em recomendação de livros para a nossa livraria. 
 
+      O cliente se chama ${clientFirstName || userDisplayName || 'cliente'}.
+
       **Contexto do Cliente:**
       - Histórico de Compras:
       ${historyText}
@@ -145,8 +151,9 @@ const IARecomenda = () => {
       3. Se o cliente pedir algo vago como "um livro bom", sugira algo baseado nas compras passadas dele. Por exemplo, se ele comprou "Duna", sugira "Fundação".
       4. Se o cliente perguntar sobre um livro ou um TEMA (ex: "livro sobre rock") que não está no catálogo, informe educadamente que não temos essa especialidade ou título, e ENTÃO sugira uma alternativa do catálogo baseada no histórico do cliente.
       5. Ao recomendar um livro do catálogo, coloque o título EXATO em negrito, usando asteriscos duplos. Exemplo: **O Nome do Vento**. Isso é crucial.
-      6. **REGRA DE OURO (FORA DO TÓPICO): Se a pergunta do usuário for claramente fora do tópico de livros (ex: "qual carro comprar?", "como construir uma casa?"), sua ÚNICA ação deve ser dar uma resposta genérica e educada. NÃO FAÇA uma recomendação de livro nesta mesma resposta. Apenas se recuse a comentar o assunto e convide o usuário a voltar a falar sobre livros. Exemplo de resposta (e nada mais): 'Como uma especialista em livros, não tenho conhecimento sobre isso. Que tal voltarmos a falar sobre leituras? Posso te ajudar a encontrar um novo livro.'**
-      7. **REGRA DE CONTEXTO ABSURDO/INSEGURO:** Se a pergunta do usuário mencionar livros, mas em um contexto que seja impossível, perigoso ou claramente sem sentido (ex: "ler no chuveiro", "ler enquanto dirijo"), NÃO recomende um livro. Aponte a impossibilidade ou o perigo de forma amigável e convide-o a falar sobre leituras em um contexto normal. **NÃO FAÇA uma recomendação de livro nesta mesma resposta.**
+  6. Sempre inicie a resposta cumprimentando o cliente pelo nome ${clientFirstName ? `"${clientFirstName}"` : 'disponível'}, para reforçar o atendimento personalizado. Exemplo: "Olá, ${clientFirstName || 'cliente'}!"
+  7. **REGRA DE OURO (FORA DO TÓPICO): Se a pergunta do usuário for claramente fora do tópico de livros (ex: "qual carro comprar?", "como construir uma casa?"), sua ÚNICA ação deve ser dar uma resposta genérica e educada. NÃO FAÇA uma recomendação de livro nesta mesma resposta. Apenas se recuse a comentar o assunto e convide o usuário a voltar a falar sobre livros. Exemplo de resposta (e nada mais): 'Como uma especialista em livros, não tenho conhecimento sobre isso. Que tal voltarmos a falar sobre leituras? Posso te ajudar a encontrar um novo livro.'**
+  8. **REGRA DE CONTEXTO ABSURDO/INSEGURO:** Se a pergunta do usuário mencionar livros, mas em um contexto que seja impossível, perigoso ou claramente sem sentido (ex: "ler no chuveiro", "ler enquanto dirijo"), NÃO recomende um livro. Aponte a impossibilidade ou o perigo de forma amigável e convide-o a falar sobre leituras em um contexto normal. **NÃO FAÇA uma recomendação de livro nesta mesma resposta.**
         - *Exemplo para "ler no chuveiro":* 'Opa! Admiro a vontade de ler em todo lugar, mas ler no chuveiro vai estraga o livro! Que tal uma sugestão para ler quando estiver seco e confortável?'
         - *Exemplo para "ler dirigindo":* 'Por favor, não faça isso! Ler dirigindo é muito perigoso. Que tal conversarmos sobre um audiolivro ou um livro para você ler quando chegar ao seu destino?'
 
@@ -184,14 +191,19 @@ const IARecomenda = () => {
   const handleKeyPress = (e) => { if (e.key === 'Enter') handleSendMessage(); };
 
 
-  // useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  useEffect(() => {
+    const container = chatMessagesRef.current;
+    if (!container) return;
+    // Garante que apenas a área de mensagens role até o final.
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+  }, [messages, isLoading]);
 
   return (
     <div className="ia-recomenda-page">
       <Header />
       <main className="chat-main-content">
         <div className="chat-container">
-          <div className="chat-messages">
+          <div className="chat-messages" ref={chatMessagesRef}>
             {messages.map((message, index) => (
               <div key={index} className={`message-container ${message.sender}`}>
                 <img src={message.sender === 'ia' ? iconIA : iconUser} alt="Ícone" className="message-icon" />
@@ -221,7 +233,6 @@ const IARecomenda = () => {
                 <div className="message ia typing-indicator"><span></span><span></span><span></span></div>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </div>
           <div className="chat-input-container">
             <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyPress={handleKeyPress} placeholder="Me recomende um livro..." disabled={isLoading} />
