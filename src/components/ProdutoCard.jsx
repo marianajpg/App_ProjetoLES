@@ -1,9 +1,30 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, estoque, onClick, onVerDetalhes, onTrocarTodos, onTrocarItem, stacked, exchangeStatus }) => {
+const formatCurrency = (value) => {
+  if (value === null || value === undefined) {
+    return 'R$0,00';
+  }
+
+  if (typeof value === 'number') {
+    return `R$${value.toFixed(2).replace('.', ',')}`;
+  }
+
+  const raw = String(value).replace(/[\sR$]/g, '');
+  const normalized = raw.includes(',') ? raw.replace(/\./g, '').replace(',', '.') : raw;
+  const numeric = Number(normalized);
+  if (!Number.isNaN(numeric)) {
+    return `R$${numeric.toFixed(2).replace('.', ',')}`;
+  }
+
+  return String(value);
+};
+
+const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, totalCompra, estoque, onClick, onVerDetalhes, onTrocarTodos, onTrocarItem, stacked, exchangeStatus }) => {
   const navigate = useNavigate();
   const isExchanged = !!exchangeStatus;
+  const priceToDisplay = totalCompra ?? preco;
+  const formattedPrice = formatCurrency(priceToDisplay);
 
   const handleClick = (e) => {
     if (onVerDetalhes) {
@@ -37,7 +58,7 @@ const ProdutoCard = ({ id, capaUrl, titulo, autor, preco, estoque, onClick, onVe
           <p className="card-author">{autor}</p>
         </div>
         <div className="card-footer">
-          <p className="card-price">R${preco}</p>
+          <p className="card-price">{formattedPrice}</p>
           <div className="card-buttons-container">
             {onTrocarItem && (
               <button className="detalhes-btn" onClick={onTrocarItem}>

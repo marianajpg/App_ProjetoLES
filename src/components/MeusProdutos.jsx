@@ -199,7 +199,7 @@ const MeusProdutos = ({ user }) => {
         capaUrl={pedido.items[0].book.images.find(img => img.caption === 'Principal').url}
         titulo={pedido.items[0].book.title}
         autor={pedido.items[0].book.author}
-        preco={pedido.items[0].unitPrice}
+        totalCompra={pedido.total}
         estoque={1}
         onVerDetalhes={() => handleOpenModal(pedido)}
         onTrocarTodos={(
