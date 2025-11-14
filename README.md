@@ -27,7 +27,7 @@ Este repositório contém o **frontend** da plataforma de e-commerce de livros d
 - ✅ **Proteção de rotas** por tipo de usuário (`cliente` x `colaborador`) e persistência de sessão (localStorage + context APIs).
 - ✅ **Testes end-to-end** com Cypress cobrindo jornada de compra, cadastros e fluxos de troca.
 
-> O backend oficial com todas as regras de negócio está descrito no repositório [App_ProjetoLES (API)](https://github.com/marianajpg/App_ProjetoLES). Este frontend assume a API em execução em `http://localhost:3000`.
+> O backend oficial com todas as regras de negócio está descrito no repositório [App_ProjetoLES (API)](https://github.com/marianajpg/App_ProjetoLES). A versão mantida neste projeto consome o backend disponível em [claudiohpo/Livraria](https://github.com/claudiohpo/Livraria). Este frontend assume a API em execução em `http://localhost:3000`.
 
 ---
 
