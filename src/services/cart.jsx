@@ -21,7 +21,7 @@ export const getAllCartsByClientId = async (clientId) => {
     if (!clientId) return [];
 
     try {
-        const response = await api.get(`/cart/costumer/${encodeURIComponent(clientId)}`);
+        const response = await api.get(`/cart/costumer/${encodeURIComponent(clientId)}?active=false`);
         return response.data;
     } catch (error) {
         console.error('Erro ao consultar carrinhos do cliente: ', error);
@@ -29,6 +29,17 @@ export const getAllCartsByClientId = async (clientId) => {
     }
 };
 
+export const getCartsInatives = async(clientId) => {
+    if (!clientId) return [];
+
+    try {
+        const response = await api.get(`/cart/costumer/${encodeURIComponent(clientId)}?active=false`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao consultar carrinhos do cliente: ', error);
+        throw new Error('Não foi possível consultar os carrinhos do cliente');
+    }
+};
 
 
 // exemplo GET
