@@ -39,8 +39,8 @@ export const EnderecoCobranca = {
 export const Cartao = {
   numeroCartao: 'input[name="numeroCartao"]',
   nomeImpresso: 'input[name="nomeImpresso"]',
-  validade: 'input[name="validadeCartao"]',
-  cvv: 'input[name="cvv"]',
+  validade: 'input[placeholder="Validade (MM/AAAA)"]',
+  cvv: 'input[placeholder="CVV"]',
   bandeira: 'select[name="bandeiraCartao"]',
 };
 

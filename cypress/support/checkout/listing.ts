@@ -6,6 +6,7 @@ class CheckoutListing {
     cy.visit(`/tela-produto/${bookId}`);
     if (quantity>1)
    { cy.get('[data-cy="product-quantity-input"]').clear().type(quantity.toString());}
+          cy.wait(1000);
     cy.get('[data-cy="add-to-cart-button"]').click();
   } 
 

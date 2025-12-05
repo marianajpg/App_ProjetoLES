@@ -30,7 +30,7 @@ ChartJS.register(
   ArcElement
 );
 
-const Dashboard = () => { // Renamed from DashboardAnalytics
+const Dashboard = () => { 
   const [db, setDb] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [pieChartData, setPieChartData] = useState(null);
@@ -84,7 +84,7 @@ const Dashboard = () => { // Renamed from DashboardAnalytics
 
 const getRandomColor = (index) => {
   const baseColors = [
-    '#752512', '#A73A21', '#C65338', '#ee5e3a', '#FEAA80', '#FDBC9B', '#FFCEB6'
+    '#320f07ff','#752512', '#A73A21', '#C65338', '#ee5e3a', '#FEAA80', '#FDBC9B', '#FFCEB6', '#ffe8ddff'
   ];
   
   const baseColor = baseColors[index % baseColors.length];
@@ -126,97 +126,101 @@ const generateColorVariations = (baseColor) => {
   return variations;
 };
 
-  const fetchChartData = async () => {
-    if (!db) return;
+const fetchChartData = async () => {
+  if (!db) return;
 
-    const conn = await db.connect();
+  const conn = await db.connect();
 
-    let query = `
-      SELECT
-        strftime(CAST(c.created_at AS TIMESTAMP), '%Y-%m-%d') as date,
-        cat.name as category_name,
-        SUM(ci.quantity * ci.unitPrice) as sales
-      FROM checkouts c
-      CROSS JOIN UNNEST(c.items) as t(ci)
-      JOIN books b ON ci.bookId = b.id
-      CROSS JOIN UNNEST(b.categories) as u(bc)
-      JOIN categories cat ON bc.id = cat.id
-    `;
+  let query = `
+    SELECT
+    strftime(CAST(c.created_at AS TIMESTAMP), '%Y-%m-%d') as date,
+    cat.name as category_name,
+    SUM(ci.quantity * ci.unitPrice) as sales
+    FROM checkouts c
+    CROSS JOIN UNNEST(c.items) as t(ci)
+    JOIN books b ON ci.bookId = b.id
+    CROSS JOIN UNNEST(b.categories) as u(bc)
+    JOIN categories cat ON bc.id = cat.id
+  `;
 
-    if (startDate && endDate) {
-      query += ` WHERE c.created_at BETWEEN '${startDate}' AND '${endDate}'`;
-    }
+  if (startDate && endDate) {
+    query += ` WHERE c.created_at BETWEEN '${startDate}' AND '${endDate}'`;
+  }
 
-    query += `
-      GROUP BY date, category_name
-      ORDER BY date, category_name
-    `;
+  query += `
+    GROUP BY date, category_name
+    ORDER BY date, category_name
+  `;
 
-    const result = await conn.query(query);
-    
+  const result = await conn.query(query);
+  const data = result.toArray().map(row => row.toJSON());
 
-    const data = result.toArray().map(row => row.toJSON());
+  const categoryNames = [...new Set(data.map(row => row.category_name))].sort();
 
-    // Process data for charting
-    const dates = [...new Set(data.map(row => row.date))].sort();
-    const categoryNames = [...new Set(data.map(row => row.category_name))].sort();
-
-    const datasets = categoryNames.map((categoryName, index) => {
-      const categoryData = dates.map(date => {
-        const row = data.find(d => d.date === date && d.category_name === categoryName);
-        return row ? row.sales : 0;
-      });
-      return {
-        label: categoryName,
-        data: categoryData,
-        fill: false,
-        borderColor: getRandomColor(index),
-        tension: 0.1,
-      };
+    const colorMap = new Map();
+    categoryNames.forEach((categoryName, index) => {
+        colorMap.set(categoryName, getRandomColor(index));
     });
 
-    const chartData = {
-      labels: dates,
-      datasets: datasets,
+
+  const dates = [...new Set(data.map(row => row.date))].sort();
+
+  const datasets = categoryNames.map((categoryName) => {
+    const categoryData = dates.map(date => {
+    const row = data.find(d => d.date === date && d.category_name === categoryName);
+    return row ? row.sales : 0;
+    });
+    return {
+    label: categoryName,
+    data: categoryData,
+    fill: false,
+    borderColor: colorMap.get(categoryName), // Usa a cor do mapa
+    tension: 0.1,
     };
+  });
 
-    setChartData(chartData);
+  const chartData = {
+    labels: dates,
+    datasets: datasets,
+  };
 
-    // Process data for pie chart
-    let pieQuery = `
-      SELECT
-        cat.name as category_name,
-        SUM(ci.quantity * ci.unitPrice) as sales
-      FROM checkouts c
-      CROSS JOIN UNNEST(c.items) as t(ci)
-      JOIN books b ON ci.bookId = b.id
-      CROSS JOIN UNNEST(b.categories) as u(bc)
-      JOIN categories cat ON bc.id = cat.id
-    `;
+  setChartData(chartData);
 
-    if (startDate && endDate) {
-      pieQuery += ` WHERE c.created_at BETWEEN '${startDate}' AND '${endDate}'`;
-    }
+  let pieQuery = `
+    SELECT
+    cat.name as category_name,
+    SUM(ci.quantity * ci.unitPrice) as sales
+    FROM checkouts c
+    CROSS JOIN UNNEST(c.items) as t(ci)
+    JOIN books b ON ci.bookId = b.id
+    CROSS JOIN UNNEST(b.categories) as u(bc)
+    JOIN categories cat ON bc.id = cat.id
+  `;
 
-    pieQuery += `
-      GROUP BY category_name
-    `;
+  if (startDate && endDate) {
+    pieQuery += ` WHERE c.created_at BETWEEN '${startDate}' AND '${endDate}'`;
+  }
 
-    const pieResult = await conn.query(pieQuery);
-    await conn.close();
-    const pieData = pieResult.toArray().map(row => row.toJSON());
+  pieQuery += `
+    GROUP BY category_name
+  `;
 
-    const pieChartData = {
-      labels: pieData.map(row => row.category_name),
-      datasets: [
-        {
-          data: pieData.map(row => row.sales),
-          backgroundColor: pieData.map((row, index) => getRandomColor(index)),
-        },
-      ],
-    };
+  const pieResult = await conn.query(pieQuery);
+  await conn.close();
+  const pieData = pieResult.toArray().map(row => row.toJSON());
 
-    setPieChartData(pieChartData);
+  const pieChartData = {
+    labels: pieData.map(row => row.category_name),
+    datasets: [
+    {
+      data: pieData.map(row => row.sales),
+      // Garante que a cor do gráfico de pizza seja a mesma do gráfico de linha
+      backgroundColor: pieData.map(row => colorMap.get(row.category_name)),
+    },
+    ],
+  	};
+
+  setPieChartData(pieChartData);
   };
 
   const handleFilter = () => {
@@ -225,8 +229,8 @@ const generateColorVariations = (baseColor) => {
 
   return (
     <div className="dashboard-analytics">
-      <Header /> {/* Add the Header component here */}
-      <h2>Dashboard de vendas por categoria</h2>
+      <Header />
+      <h2>Dashboard de Vendas por Categoria</h2>
       <div className="filters">
         <label>
           Data de início:

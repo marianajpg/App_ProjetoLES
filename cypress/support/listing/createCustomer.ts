@@ -47,8 +47,10 @@ class CreateCustomer {
   fillCartao(cardData: any) {
     cy.get(Cartao.numeroCartao).clear().type(cardData.cardNumber);
     cy.get(Cartao.nomeImpresso).clear().type(cardData.cardHolderName);
-    cy.get(Cartao.validade).clear().type(cardData.cardExpirationDate);
+    cy.get(Cartao.validade).type(cardData.cardExpirationDate);
+    cy.get(Cartao.cvv).click(0,0);
     cy.get(Cartao.cvv).clear().type(cardData.cardCVV);
+    cy.get('.cadastro_cliente > h2').click();
     cy.get(Cartao.bandeira).select(cardData.cardBrand);
   }
 

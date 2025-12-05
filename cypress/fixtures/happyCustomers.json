@@ -1,10 +1,10 @@
 {
   "customersToEdit":[
      {
-    "id": 6,
-    "phone":"1147961437",
+    "id": 5,
+    "phone":"114534561437",
     "deliveryAddress": [{
-      "id": 42,
+      "id": 27,
       "residenceType": "RESIDENCIAL",
       "streetType": "RUA",
       "street": "Rua do Rosário",
@@ -52,7 +52,7 @@
     "email": "rafael.menezes@dominio.com",
     "password": "Raf@2025",
     "passwordConfirmation": "Raf@2025",
-    "cpf": "369.258.147-77",
+    "cpf": "369.348.147-77",
     "phone": "81966667788",
     "birthdaydate": "14/09/1986",
     "gender": "M",
@@ -71,7 +71,7 @@
     "card": {
       "cardNumber": "378734493671000",
       "cardHolderName": "RAFAEL MENEZES",
-      "cardExpirationDate": "10/30",
+      "cardExpirationDate": "10/2030",
       "cardCVV": "963",
       "cardBrand": "AMEX"
     },
@@ -112,7 +112,7 @@
     "card": {
       "cardNumber": "3530111333300000",
       "cardHolderName": "JULIANA CARDOSO",
-      "cardExpirationDate": "12/27",
+      "cardExpirationDate": "12/2027",
       "cardCVV": "147",
       "cardBrand": "VISA"
     }
@@ -141,7 +141,7 @@
     "card": {
       "cardNumber": "6011000990139424",
       "cardHolderName": "EDUARDO FERREIRA",
-      "cardExpirationDate": "06/26",
+      "cardExpirationDate": "06/2026",
       "cardCVV": "258",
       "cardBrand": "ELO"
     }
